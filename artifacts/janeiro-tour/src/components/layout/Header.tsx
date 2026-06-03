@@ -25,18 +25,6 @@ type LabelMap = Record<Lang, string>;
 interface NavItem { href: string; label: LabelMap; }
 interface NavGroup { label: LabelMap; items: NavItem[]; }
 
-const toursGroup: NavGroup = {
-  label: { en: "Tours", es: "Tours", pt: "Passeios" },
-  items: [
-    { href: "/tours", label: { en: "All Tours", es: "Todos los Tours", pt: "Todos os Passeios" } },
-    { href: "/tours?category=private", label: { en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" } },
-    { href: "/tours?category=culture", label: { en: "Cultural Experiences", es: "Experiencias Culturales", pt: "Experiências Culturais" } },
-    { href: "/tours?category=nature", label: { en: "Adventure Experiences", es: "Aventura y Naturaleza", pt: "Aventura e Natureza" } },
-    { href: "/tours?category=transfer", label: { en: "Airport Transfers", es: "Traslados al Aeropuerto", pt: "Traslados Aeroporto" } },
-    { href: "/tours?category=package", label: { en: "Multi-Day Packages", es: "Paquetes Multi-Día", pt: "Pacotes Multi-Dias" } },
-  ],
-};
-
 const destinationsGroup: NavGroup = {
   label: { en: "Destinations", es: "Destinos", pt: "Destinos" },
   items: [
@@ -44,7 +32,18 @@ const destinationsGroup: NavGroup = {
     { href: "/destinations/2", label: { en: "São Paulo", es: "São Paulo", pt: "São Paulo" } },
     { href: "/destinations/5", label: { en: "Bahia", es: "Bahía", pt: "Bahia" } },
     { href: "/destinations/3", label: { en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu" } },
-    { href: "/destinations", label: { en: "All Destinations", es: "Todos los Destinos", pt: "Todos os Destinos" } },
+    { href: "/destinations/4", label: { en: "Recife", es: "Recife", pt: "Recife" } },
+  ],
+};
+
+const experiencesGroup: NavGroup = {
+  label: { en: "Experiences", es: "Experiencias", pt: "Experiências" },
+  items: [
+    { href: "/tours", label: { en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências" } },
+    { href: "/tours?category=private", label: { en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" } },
+    { href: "/tours?category=culture", label: { en: "Cultural Experiences", es: "Experiencias Culturales", pt: "Experiências Culturais" } },
+    { href: "/tours?category=nature", label: { en: "Adventure Experiences", es: "Experiencias de Aventura", pt: "Experiências de Aventura" } },
+    { href: "/tours?category=transfer", label: { en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto" } },
   ],
 };
 
@@ -52,24 +51,12 @@ const aboutGroup: NavGroup = {
   label: { en: "About Us", es: "Nosotros", pt: "Sobre Nós" },
   items: [
     { href: "/about", label: { en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" } },
-    { href: "/about#why-us", label: { en: "Why Choose Us", es: "¿Por qué Elegirnos?", pt: "Por que nos Escolher?" } },
-    { href: "/about#sustainability", label: { en: "Sustainability", es: "Sostenibilidad", pt: "Sustentabilidade" } },
-    { href: "/about#reviews", label: { en: "Reviews & Testimonials", es: "Reseñas", pt: "Avaliações" } },
+    { href: "/about#why-us", label: { en: "Why Travel With Us", es: "¿Por qué Viajar con Nosotros?", pt: "Por que Viajar Conosco?" } },
+    { href: "/about#reviews", label: { en: "Reviews", es: "Reseñas", pt: "Avaliações" } },
   ],
 };
 
-const guideGroup: NavGroup = {
-  label: { en: "Travel Guide", es: "Guía de Viaje", pt: "Guia de Viagem" },
-  items: [
-    { href: "/blog", label: { en: "Brazil Travel Guide", es: "Guía de Brasil", pt: "Guia do Brasil" } },
-    { href: "/blog?q=rio", label: { en: "Rio de Janeiro Guide", es: "Guía de Río", pt: "Guia do Rio" } },
-    { href: "/blog?q=bahia", label: { en: "Bahia Guide", es: "Guía de Bahía", pt: "Guia da Bahia" } },
-    { href: "/blog?q=iguazu", label: { en: "Foz do Iguaçu Guide", es: "Guía de Iguazú", pt: "Guia do Iguaçu" } },
-    { href: "/blog?q=tips", label: { en: "Travel Tips", es: "Consejos de Viaje", pt: "Dicas de Viagem" } },
-  ],
-};
-
-const navGroups: NavGroup[] = [toursGroup, destinationsGroup, aboutGroup, guideGroup];
+const navGroups: NavGroup[] = [destinationsGroup, experiencesGroup, aboutGroup];
 
 function DropdownPanel({ group, lang, onClose }: { group: NavGroup; lang: Lang; onClose?: () => void }) {
   return (
@@ -119,7 +106,6 @@ export function Header() {
     ? "bg-transparent"
     : "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100";
   const textColor = isHero ? "text-white" : "text-gray-800";
-  const hoverColor = isHero ? "hover:text-primary" : "hover:text-primary";
 
   const ctaLabels: Record<Lang, string> = { en: "Book Now", es: "Reservar", pt: "Reservar" };
   const langLabels: Record<Lang, string> = { en: "EN", es: "ES", pt: "PT" };
@@ -127,14 +113,14 @@ export function Header() {
   return (
     <>
       <header className={cn("fixed top-0 left-0 right-0 z-50 transition-all duration-300", headerBg)}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[68px] flex items-center justify-between gap-8">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center z-50" onClick={() => setMobileOpen(false)}>
             <img
               src="/janeiro-logo.png"
               alt="Janeiro Tour & Travel"
-              className={cn("h-10 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
+              className={cn("h-9 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
                 const next = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
@@ -159,8 +145,8 @@ export function Header() {
                   <Link href="/">
                     <span className={cn(
                       "px-4 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer inline-block",
-                      textColor, hoverColor,
-                      location === "/" && "text-primary"
+                      textColor, "hover:text-primary",
+                      location === "/" && !isHero && "text-primary"
                     )}>
                       {l === "en" ? "Home" : l === "es" ? "Inicio" : "Início"}
                     </span>
@@ -173,7 +159,7 @@ export function Header() {
                     <NavigationMenuTrigger
                       className={cn(
                         "px-4 py-2 text-sm font-medium bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent transition-colors",
-                        textColor, hoverColor,
+                        textColor, "hover:text-primary",
                         "data-[state=open]:text-primary"
                       )}
                     >
@@ -187,12 +173,25 @@ export function Header() {
                   </NavigationMenuItem>
                 ))}
 
-                {/* Contact (no dropdown) */}
+                {/* Travel Guide — plain link */}
+                <NavigationMenuItem>
+                  <Link href="/blog">
+                    <span className={cn(
+                      "px-4 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer inline-block",
+                      textColor, "hover:text-primary",
+                      location === "/blog" && "text-primary"
+                    )}>
+                      {l === "en" ? "Travel Guide" : l === "es" ? "Guía de Viaje" : "Guia de Viagem"}
+                    </span>
+                  </Link>
+                </NavigationMenuItem>
+
+                {/* Contact */}
                 <NavigationMenuItem>
                   <Link href="/contact">
                     <span className={cn(
                       "px-4 py-2 text-sm font-medium transition-colors rounded-md cursor-pointer inline-block",
-                      textColor, hoverColor,
+                      textColor, "hover:text-primary",
                       location === "/contact" && "text-primary"
                     )}>
                       {l === "en" ? "Contact" : l === "es" ? "Contacto" : "Contato"}
@@ -218,7 +217,7 @@ export function Header() {
                   <ChevronDown className="w-3 h-3 opacity-60" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="min-w-[120px]">
+              <DropdownMenuContent align="end" className="min-w-[130px]">
                 <DropdownMenuItem onClick={() => setLang("en")} className={l === "en" ? "text-primary font-semibold" : ""}>
                   🇬🇧 English
                 </DropdownMenuItem>
@@ -238,11 +237,11 @@ export function Header() {
               rel="noopener noreferrer"
               className={cn(
                 "w-9 h-9 rounded-full flex items-center justify-center transition-colors",
-                isHero ? "text-white hover:bg-white/10" : "text-gray-600 hover:bg-green-50 hover:text-green-600"
+                isHero ? "text-white hover:bg-white/10" : "text-gray-500 hover:bg-green-50 hover:text-green-600"
               )}
               title="WhatsApp"
             >
-              <MessageCircle className="w-4.5 h-4.5 w-[18px] h-[18px]" />
+              <MessageCircle className="w-[18px] h-[18px]" />
             </a>
 
             {/* Book Now CTA */}
@@ -271,7 +270,7 @@ export function Header() {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/20" onClick={() => setMobileOpen(false)} />
-          <div className="absolute top-[72px] left-0 right-0 bottom-0 bg-white overflow-y-auto">
+          <div className="absolute top-[68px] left-0 right-0 bottom-0 bg-white overflow-y-auto">
             <nav className="flex flex-col divide-y divide-gray-100">
 
               {/* Home */}
@@ -310,6 +309,15 @@ export function Header() {
                 </div>
               ))}
 
+              {/* Travel Guide */}
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center px-6 py-4 text-base font-medium text-gray-800 hover:text-primary hover:bg-gray-50"
+              >
+                {l === "en" ? "Travel Guide" : l === "es" ? "Guía de Viaje" : "Guia de Viagem"}
+              </Link>
+
               {/* Contact */}
               <Link
                 href="/contact"
@@ -321,7 +329,6 @@ export function Header() {
 
               {/* Bottom Actions */}
               <div className="px-6 py-5 flex flex-col gap-3">
-                {/* Language */}
                 <div className="flex gap-2">
                   {(["en", "es", "pt"] as Lang[]).map((code) => (
                     <button
@@ -338,7 +345,6 @@ export function Header() {
                     </button>
                   ))}
                 </div>
-                {/* WhatsApp + Book Now */}
                 <a
                   href="https://wa.me/5521972633333"
                   target="_blank"

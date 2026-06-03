@@ -1,0 +1,129 @@
+Redesign the website navigation, typography and footer to create a premium, elegant and modern travel brand experience.
+
+The website should feel closer to Airbnb, Apple and premium international travel brands.
+
+Navigation Requirements:
+
+Keep the menu extremely clean and minimal.
+
+Main Navigation:
+
+Home
+Destinations
+Experiences
+About Us
+Travel Guide
+Contact
+
+Destinations Dropdown:
+
+Rio de Janeiro
+São Paulo
+Bahia
+Foz do Iguaçu
+Recife
+
+Do not add any other destinations.
+
+Experiences Dropdown:
+
+All Experiences
+Private Tours
+Cultural Experiences
+Adventure Experiences
+Airport Transfers
+
+About Us Dropdown:
+
+Our Story
+Why Travel With Us
+Reviews
+
+Navigation Design:
+
+Minimal and elegant
+Premium appearance
+No excessive colors
+No large colorful buttons
+Soft hover effects
+Smooth animations
+Clean spacing
+Transparent navigation over hero section
+Sticky navigation on scroll
+Similar visual quality to Airbnb
+
+Header:
+
+Use the Janeiro Tour logo as the primary visual identity
+Respect the brand colors from the logo
+Use only one accent color derived from the logo
+Keep the interface clean and sophisticated
+
+Typography:
+
+Unify typography across the entire website.
+
+Requirements:
+
+Use a premium modern font such as Inter, Manrope or Plus Jakarta Sans
+Use the same typography system across all pages
+Create a clear hierarchy for headings, subheadings and body text
+Eliminate inconsistent font sizes
+Eliminate inconsistent font weights
+Improve readability on desktop and mobile
+Create a luxury travel brand feel
+
+Footer Requirements:
+
+Completely redesign the footer.
+
+The footer must:
+
+Respect the Janeiro Tour logo and brand identity
+Use elegant colors inspired by the logo
+Feel premium and trustworthy
+Match the rest of the website
+Avoid generic template footers
+
+Footer Structure:
+
+Column 1:
+
+Logo
+Short brand description
+
+Column 2:
+Destinations
+
+Rio de Janeiro
+São Paulo
+Bahia
+Foz do Iguaçu
+Recife
+
+Column 3:
+Experiences
+
+Private Tours
+Cultural Experiences
+Airport Transfers
+Adventure Experiences
+
+Column 4:
+Contact
+
+WhatsApp
+Email
+Social Media
+
+Bottom Footer:
+
+Copyright
+Terms & Conditions
+Privacy Policy
+
+Overall Design Goal:
+
+Create a refined, premium, modern and international travel brand.
+
+The website should feel elegant, trustworthy and high-end, similar to Airbnb and premium travel companies, while maintaining the Janeiro Tour identity and focusing on conversion without visual clutter.
