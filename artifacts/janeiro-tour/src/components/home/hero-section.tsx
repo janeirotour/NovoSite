@@ -3,14 +3,37 @@ import { useGetSettings } from "@workspace/api-client-react";
 import { SearchWidget } from "@/components/ui/search-widget";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 
-const HERO_IMAGE = "/images/hero-janeirotour.webp";
-const HERO_FALLBACK = "https://janeirotour.com/wp-content/uploads/2025/10/IMG_2261-scaled-1.webp";
+const slides = [
+  {
+    src: "/images/banner-janeiro.jpg",
+    alt: "Janeiro Tour group at Cristo Redentor",
+    positionY: "center",
+  },
+  {
+    src: "/images/hero-janeirotour.webp",
+    alt: "Little Africa Walking Tour — Rio de Janeiro",
+    positionY: "center",
+  },
+  {
+    src: "/images/hero-iguazu.png",
+    alt: "Foz do Iguaçu — Cataratas",
+    positionY: "bottom",
+  },
+  {
+    src: "/images/hero-rio.png",
+    alt: "Rio de Janeiro aerial view",
+    positionY: "center",
+  },
+];
 
 export function HeroSection() {
   const { t, lang } = useLanguage();
   const { data: settings } = useGetSettings();
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
 
   const headline = t(settings, "heroHeadline",
     lang === "en" ? "Brazil Through the Eyes of Those Who Love It" :
@@ -24,26 +47,49 @@ export function HeroSection() {
     "Lugares reais. Pessoas reais. Experiências que ficam com você muito depois de partir."
   );
 
+  const goTo = useCallback((index: number) => {
+    setFading(true);
+    setTimeout(() => {
+      setCurrent((index + slides.length) % slides.length);
+      setFading(false);
+    }, 400);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      goTo(current + 1);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [current, goTo]);
+
   return (
     <div className="relative">
       <div className="relative h-[92vh] min-h-[620px] w-full overflow-hidden">
-        <img
-          src={HERO_IMAGE}
-          alt="Janeiro Tour — Brazil Travel"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = HERO_FALLBACK;
-          }}
-        />
 
-        {/* Gradient overlay — bottom-heavy for text readability, subtle at top */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/70" />
+        {/* Slides */}
+        {slides.map((slide, i) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt={slide.alt}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+            style={{
+              objectPosition: `center ${slide.positionY}`,
+              opacity: i === current ? (fading ? 0 : 1) : 0,
+              zIndex: i === current ? 1 : 0,
+            }}
+          />
+        ))}
+
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/50 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60 z-10" />
 
         {/* Content */}
-        <div className="absolute inset-0 flex flex-col justify-end pb-28 md:pb-32 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto left-0 right-0">
+        <div className="absolute inset-0 z-20 flex flex-col justify-end pb-28 md:pb-32 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto left-0 right-0">
           <div className="max-w-3xl">
-            <p className="text-primary font-semibold text-sm md:text-base tracking-widest uppercase mb-4 drop-shadow">
-              {lang === "en" ? "Janeiro Tour & Travel" : lang === "es" ? "Janeiro Tour & Travel" : "Janeiro Tour & Travel"}
+            <p className="text-[#FFB600] font-semibold text-sm md:text-base tracking-widest uppercase mb-4 drop-shadow">
+              Janeiro Tour &amp; Travel
             </p>
             <h1 className="text-white font-bold text-4xl md:text-6xl lg:text-7xl leading-[1.1] mb-5 drop-shadow-lg">
               {headline}
@@ -72,6 +118,29 @@ export function HeroSection() {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Slide controls */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+          <button
+            onClick={() => goTo(current - 1)}
+            className="w-7 h-7 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/40 transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-white" : "w-1.5 bg-white/40"}`}
+            />
+          ))}
+          <button
+            onClick={() => goTo(current + 1)}
+            className="w-7 h-7 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/40 transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
