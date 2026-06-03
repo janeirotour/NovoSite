@@ -1,0 +1,3 @@
+- [Janeiro Tour stack](janeiro-tour-stack.md) — pnpm monorepo; api-server port 8080 at /api; janeiro-tour Vite/React at /; PostgreSQL via DATABASE_URL
+- [Admin auth](admin-auth.md) — session-based; credentials admin/admin123 (bcrypt in DB); login at /admin, dashboard at /admin/dashboard
+- [Nav & Regiondo design](nav-regiondo.md) — premium dropdown nav with NavigationMenu (shadcn), logo at /janeiro-logo.png; Regiondo widget uses useEffect+useRef script injection on tour-detail.tsx

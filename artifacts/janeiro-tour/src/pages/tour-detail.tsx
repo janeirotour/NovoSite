@@ -1,12 +1,44 @@
+import { useRef, useEffect } from "react";
 import { useParams, Link } from "wouter";
 import { useGetTour, useListReviews, useListFaqs } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
-import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft } from "lucide-react";
+import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+function RegionodoWidget({ code }: { code: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !code.trim()) return;
+
+    container.innerHTML = "";
+
+    const template = document.createElement("div");
+    template.innerHTML = code;
+
+    template.childNodes.forEach((node) => {
+      if (node.nodeName !== "SCRIPT") {
+        container.appendChild(node.cloneNode(true));
+      }
+    });
+
+    template.querySelectorAll("script").forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      oldScript.getAttributeNames().forEach((name) => {
+        newScript.setAttribute(name, oldScript.getAttribute(name)!);
+      });
+      newScript.textContent = oldScript.textContent;
+      container.appendChild(newScript);
+    });
+  }, [code]);
+
+  return <div ref={containerRef} className="regiondo-widget w-full" />;
+}
 
 export default function TourDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -43,13 +75,14 @@ export default function TourDetailPage() {
   const images = [tour.imageUrl, ...(tour.galleryImages as string[])].filter(Boolean);
   const itinerary = (tour.itinerary as Array<{ order: number; title: string; description: string; duration?: string }>) || [];
   const avgRating = reviews?.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
+  const hasRegionodo = !!(tour.regiondoWidget as string | null | undefined)?.trim();
 
   return (
     <MainLayout>
-      {/* Hero Gallery */}
-      <section className="relative h-[55vh] min-h-[400px] bg-neutral-900 overflow-hidden">
+      {/* Hero */}
+      <section className="relative h-[55vh] min-h-[420px] bg-neutral-900 overflow-hidden">
         <img src={images[0]} alt={title} className="w-full h-full object-cover opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 max-w-7xl mx-auto">
           <Link href="/tours" className="inline-flex items-center gap-1 text-white/80 hover:text-white mb-4 transition-colors text-sm">
             <ChevronLeft size={16} /> Back to Tours
@@ -250,14 +283,17 @@ export default function TourDetailPage() {
 
         {/* Sticky Booking Sidebar */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24 space-y-4">
+          <div className="sticky top-28 space-y-4">
             <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
+              {/* Price Header */}
               <div className="bg-primary p-5">
                 <p className="text-primary-foreground/80 text-sm font-medium">From</p>
                 <p className="text-3xl font-bold text-primary-foreground">${tour.priceFrom} <span className="text-lg font-normal">{tour.currency}</span></p>
                 <p className="text-primary-foreground/80 text-xs mt-1">per person</p>
               </div>
+
               <div className="p-5 space-y-3">
+                {/* Quick Info */}
                 <div className="flex items-center gap-3 text-sm">
                   <Clock size={16} className="text-muted-foreground" />
                   <span>{tour.durationHours} hours duration</span>
@@ -270,19 +306,36 @@ export default function TourDetailPage() {
                   <Globe size={16} className="text-muted-foreground" />
                   <span>{(tour.languages as string[]).join(", ")}</span>
                 </div>
+
                 <Separator />
-                {/* Regiondo Booking Widget Placeholder */}
-                <div className="border-2 border-dashed border-primary/30 rounded-xl p-6 text-center bg-primary/5">
-                  <p className="text-sm font-semibold text-primary mb-1">Book This Tour</p>
-                  <p className="text-xs text-muted-foreground">Regiondo booking widget goes here</p>
-                </div>
-                <a href="https://wa.me/+5521972633333" target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground gap-2">
-                    <span>WhatsApp Us</span>
+
+                {/* Regiondo Widget or Placeholder */}
+                {hasRegionodo ? (
+                  <div className="mt-2">
+                    <RegionodoWidget code={tour.regiondoWidget as string} />
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-primary/30 rounded-xl p-6 text-center bg-primary/5">
+                    <p className="text-sm font-semibold text-primary mb-1">Book This Tour</p>
+                    <p className="text-xs text-muted-foreground mb-3">Online booking powered by Regiondo</p>
+                    <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer">
+                      <Button className="w-full bg-primary hover:bg-primary/90 font-semibold">
+                        Request Availability
+                      </Button>
+                    </a>
+                  </div>
+                )}
+
+                {/* WhatsApp CTA */}
+                <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="block">
+                  <Button variant="outline" className="w-full border-green-300 text-green-700 hover:bg-green-50 gap-2">
+                    <MessageCircle size={16} />
+                    <span>Ask on WhatsApp</span>
                   </Button>
                 </a>
               </div>
             </div>
+
             {/* Trust Badges */}
             <div className="bg-card border rounded-xl p-4 space-y-2">
               {["Free cancellation available", "Multilingual guides", "Small group experience", "Secure online payment"].map((badge) => (
@@ -302,7 +355,9 @@ export default function TourDetailPage() {
           <p className="text-xs text-muted-foreground">From</p>
           <p className="text-xl font-bold text-primary">${tour.priceFrom} <span className="text-sm font-normal">{tour.currency}</span></p>
         </div>
-        <Button className="flex-1 max-w-xs h-12 text-base font-semibold bg-primary hover:bg-primary/90">Book Now</Button>
+        <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="flex-1 max-w-xs">
+          <Button className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90">Book Now</Button>
+        </a>
       </div>
     </MainLayout>
   );
