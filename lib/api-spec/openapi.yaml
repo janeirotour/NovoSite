@@ -3,13 +3,28 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Janeiro Tour API - Premium Brazil Travel Platform
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: tours
+    description: Tour operations
+  - name: destinations
+    description: Destination operations
+  - name: blog
+    description: Blog post operations
+  - name: faqs
+    description: FAQ operations
+  - name: reviews
+    description: Review operations
+  - name: settings
+    description: Site settings
+  - name: admin
+    description: Admin operations
+
 paths:
   /healthz:
     get:
@@ -24,6 +39,591 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Tours
+  /tours:
+    get:
+      operationId: listTours
+      tags: [tours]
+      summary: List all tours
+      parameters:
+        - name: destination
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [private, group, all]
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of tours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tour"
+    post:
+      operationId: createTour
+      tags: [tours]
+      summary: Create a tour
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tour"
+
+  /tours/featured:
+    get:
+      operationId: listFeaturedTours
+      tags: [tours]
+      summary: List featured tours for homepage
+      responses:
+        "200":
+          description: Featured tours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tour"
+
+  /tours/{id}:
+    get:
+      operationId: getTour
+      tags: [tours]
+      summary: Get a tour by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Tour detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tour"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateTour
+      tags: [tours]
+      summary: Update a tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tour"
+    delete:
+      operationId: deleteTour
+      tags: [tours]
+      summary: Delete a tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /tours/{id}/slug/{slug}:
+    get:
+      operationId: getTourBySlug
+      tags: [tours]
+      summary: Get a tour by slug
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tour detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tour"
+
+  # Destinations
+  /destinations:
+    get:
+      operationId: listDestinations
+      tags: [destinations]
+      summary: List all destinations
+      parameters:
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+    post:
+      operationId: createDestination
+      tags: [destinations]
+      summary: Create a destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DestinationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+
+  /destinations/{id}:
+    get:
+      operationId: getDestination
+      tags: [destinations]
+      summary: Get a destination by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Destination detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+    patch:
+      operationId: updateDestination
+      tags: [destinations]
+      summary: Update a destination
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DestinationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+    delete:
+      operationId: deleteDestination
+      tags: [destinations]
+      summary: Delete a destination
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Blog
+  /blog:
+    get:
+      operationId: listBlogPosts
+      tags: [blog]
+      summary: List blog posts
+      parameters:
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+    post:
+      operationId: createBlogPost
+      tags: [blog]
+      summary: Create a blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+
+  /blog/{id}:
+    get:
+      operationId: getBlogPost
+      tags: [blog]
+      summary: Get a blog post by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Blog post detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+    patch:
+      operationId: updateBlogPost
+      tags: [blog]
+      summary: Update a blog post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+    delete:
+      operationId: deleteBlogPost
+      tags: [blog]
+      summary: Delete a blog post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # FAQs
+  /faqs:
+    get:
+      operationId: listFaqs
+      tags: [faqs]
+      summary: List FAQs
+      parameters:
+        - name: tourId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: FAQ list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Faq"
+    post:
+      operationId: createFaq
+      tags: [faqs]
+      summary: Create a FAQ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FaqInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Faq"
+
+  /faqs/{id}:
+    patch:
+      operationId: updateFaq
+      tags: [faqs]
+      summary: Update a FAQ
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FaqUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Faq"
+    delete:
+      operationId: deleteFaq
+      tags: [faqs]
+      summary: Delete a FAQ
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Reviews
+  /reviews:
+    get:
+      operationId: listReviews
+      tags: [reviews]
+      summary: List reviews
+      parameters:
+        - name: tourId
+          in: query
+          schema:
+            type: integer
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Review list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: Create a review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /reviews/{id}:
+    patch:
+      operationId: updateReview
+      tags: [reviews]
+      summary: Update a review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+    delete:
+      operationId: deleteReview
+      tags: [reviews]
+      summary: Delete a review
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Site Settings
+  /settings:
+    get:
+      operationId: getSettings
+      tags: [settings]
+      summary: Get site settings
+      responses:
+        "200":
+          description: Site settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSettings"
+    patch:
+      operationId: updateSettings
+      tags: [settings]
+      summary: Update site settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SiteSettingsUpdate"
+      responses:
+        "200":
+          description: Updated settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteSettings"
+
+  # Admin Auth
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [admin]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLoginInput"
+      responses:
+        "200":
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAuthResult"
+        "401":
+          description: Invalid credentials
+
+  /admin/logout:
+    post:
+      operationId: adminLogout
+      tags: [admin]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+
+  /admin/me:
+    get:
+      operationId: getAdminMe
+      tags: [admin]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Admin info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminMe"
+        "401":
+          description: Not authenticated
+
+  # Stats endpoint for admin dashboard
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Dashboard stats summary
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +634,700 @@ components:
       required:
         - status
 
+    Tour:
+      type: object
+      required: [id, slug, title, destination, category, durationHours, priceFrom, currency, tourType, languages, groupSizeMax, imageUrl, highlights, overview, includedItems, notIncludedItems, itinerary, meetingPoint, cancellationPolicy, published, featured, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: ["string", "null"]
+        titlePt:
+          type: ["string", "null"]
+        destination:
+          type: string
+        category:
+          type: string
+        durationHours:
+          type: number
+        priceFrom:
+          type: number
+        currency:
+          type: string
+        tourType:
+          type: string
+          enum: [private, group, both]
+        languages:
+          type: array
+          items:
+            type: string
+        groupSizeMax:
+          type: integer
+        imageUrl:
+          type: string
+        galleryImages:
+          type: array
+          items:
+            type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        overview:
+          type: string
+        overviewEs:
+          type: ["string", "null"]
+        overviewPt:
+          type: ["string", "null"]
+        includedItems:
+          type: array
+          items:
+            type: string
+        notIncludedItems:
+          type: array
+          items:
+            type: string
+        itinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItineraryStep"
+        meetingPoint:
+          type: string
+        cancellationPolicy:
+          type: string
+        regiondoWidget:
+          type: ["string", "null"]
+        seoTitle:
+          type: ["string", "null"]
+        seoDescription:
+          type: ["string", "null"]
+        published:
+          type: boolean
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+
+    TourInput:
+      type: object
+      required: [slug, title, destination, category, durationHours, priceFrom, currency, tourType, languages, groupSizeMax, imageUrl, highlights, overview, includedItems, notIncludedItems, itinerary, meetingPoint, cancellationPolicy]
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: string
+        titlePt:
+          type: string
+        destination:
+          type: string
+        category:
+          type: string
+        durationHours:
+          type: number
+        priceFrom:
+          type: number
+        currency:
+          type: string
+        tourType:
+          type: string
+          enum: [private, group, both]
+        languages:
+          type: array
+          items:
+            type: string
+        groupSizeMax:
+          type: integer
+        imageUrl:
+          type: string
+        galleryImages:
+          type: array
+          items:
+            type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        overview:
+          type: string
+        overviewEs:
+          type: string
+        overviewPt:
+          type: string
+        includedItems:
+          type: array
+          items:
+            type: string
+        notIncludedItems:
+          type: array
+          items:
+            type: string
+        itinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItineraryStep"
+        meetingPoint:
+          type: string
+        cancellationPolicy:
+          type: string
+        regiondoWidget:
+          type: string
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        published:
+          type: boolean
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    TourUpdate:
+      type: object
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: string
+        titlePt:
+          type: string
+        destination:
+          type: string
+        category:
+          type: string
+        durationHours:
+          type: number
+        priceFrom:
+          type: number
+        currency:
+          type: string
+        tourType:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+        groupSizeMax:
+          type: integer
+        imageUrl:
+          type: string
+        galleryImages:
+          type: array
+          items:
+            type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        overview:
+          type: string
+        overviewEs:
+          type: string
+        overviewPt:
+          type: string
+        includedItems:
+          type: array
+          items:
+            type: string
+        notIncludedItems:
+          type: array
+          items:
+            type: string
+        itinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItineraryStep"
+        meetingPoint:
+          type: string
+        cancellationPolicy:
+          type: string
+        regiondoWidget:
+          type: string
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        published:
+          type: boolean
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    ItineraryStep:
+      type: object
+      required: [order, title, description]
+      properties:
+        order:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        duration:
+          type: ["string", "null"]
+
+    Destination:
+      type: object
+      required: [id, slug, name, country, imageUrl, description, featured, sortOrder]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        nameEs:
+          type: ["string", "null"]
+        namePt:
+          type: ["string", "null"]
+        country:
+          type: string
+        imageUrl:
+          type: string
+        heroImageUrl:
+          type: ["string", "null"]
+        description:
+          type: string
+        descriptionEs:
+          type: ["string", "null"]
+        descriptionPt:
+          type: ["string", "null"]
+        seoTitle:
+          type: ["string", "null"]
+        seoDescription:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    DestinationInput:
+      type: object
+      required: [slug, name, country, imageUrl, description]
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        nameEs:
+          type: string
+        namePt:
+          type: string
+        country:
+          type: string
+        imageUrl:
+          type: string
+        heroImageUrl:
+          type: string
+        description:
+          type: string
+        descriptionEs:
+          type: string
+        descriptionPt:
+          type: string
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    DestinationUpdate:
+      type: object
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        nameEs:
+          type: string
+        namePt:
+          type: string
+        country:
+          type: string
+        imageUrl:
+          type: string
+        heroImageUrl:
+          type: string
+        description:
+          type: string
+        descriptionEs:
+          type: string
+        descriptionPt:
+          type: string
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        featured:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    BlogPost:
+      type: object
+      required: [id, slug, title, excerpt, content, imageUrl, author, category, readTimeMinutes, featured, published, createdAt]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: ["string", "null"]
+        titlePt:
+          type: ["string", "null"]
+        excerpt:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        readTimeMinutes:
+          type: integer
+        seoTitle:
+          type: ["string", "null"]
+        seoDescription:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+        published:
+          type: boolean
+        createdAt:
+          type: string
+
+    BlogPostInput:
+      type: object
+      required: [slug, title, excerpt, content, imageUrl, author, category, readTimeMinutes]
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: string
+        titlePt:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        readTimeMinutes:
+          type: integer
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        featured:
+          type: boolean
+        published:
+          type: boolean
+
+    BlogPostUpdate:
+      type: object
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        titleEs:
+          type: string
+        titlePt:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        readTimeMinutes:
+          type: integer
+        seoTitle:
+          type: string
+        seoDescription:
+          type: string
+        featured:
+          type: boolean
+        published:
+          type: boolean
+
+    Faq:
+      type: object
+      required: [id, question, answer, sortOrder]
+      properties:
+        id:
+          type: integer
+        tourId:
+          type: ["integer", "null"]
+        question:
+          type: string
+        questionEs:
+          type: ["string", "null"]
+        questionPt:
+          type: ["string", "null"]
+        answer:
+          type: string
+        answerEs:
+          type: ["string", "null"]
+        answerPt:
+          type: ["string", "null"]
+        sortOrder:
+          type: integer
+
+    FaqInput:
+      type: object
+      required: [question, answer]
+      properties:
+        tourId:
+          type: integer
+        question:
+          type: string
+        questionEs:
+          type: string
+        questionPt:
+          type: string
+        answer:
+          type: string
+        answerEs:
+          type: string
+        answerPt:
+          type: string
+        sortOrder:
+          type: integer
+
+    FaqUpdate:
+      type: object
+      properties:
+        question:
+          type: string
+        questionEs:
+          type: string
+        questionPt:
+          type: string
+        answer:
+          type: string
+        answerEs:
+          type: string
+        answerPt:
+          type: string
+        sortOrder:
+          type: integer
+
+    Review:
+      type: object
+      required: [id, authorName, authorCountry, rating, comment, featured, createdAt]
+      properties:
+        id:
+          type: integer
+        tourId:
+          type: ["integer", "null"]
+        authorName:
+          type: string
+        authorCountry:
+          type: string
+        authorAvatarUrl:
+          type: ["string", "null"]
+        rating:
+          type: integer
+        comment:
+          type: string
+        tourName:
+          type: ["string", "null"]
+        source:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+        createdAt:
+          type: string
+
+    ReviewInput:
+      type: object
+      required: [authorName, authorCountry, rating, comment]
+      properties:
+        tourId:
+          type: integer
+        authorName:
+          type: string
+        authorCountry:
+          type: string
+        authorAvatarUrl:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+        tourName:
+          type: string
+        source:
+          type: string
+        featured:
+          type: boolean
+
+    ReviewUpdate:
+      type: object
+      properties:
+        authorName:
+          type: string
+        authorCountry:
+          type: string
+        authorAvatarUrl:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: string
+        tourName:
+          type: string
+        source:
+          type: string
+        featured:
+          type: boolean
+
+    SiteSettings:
+      type: object
+      required: [id, heroHeadline, heroSubheadline, heroPrimaryCtaText, heroSecondaryCtaText, contactEmail, contactPhone, contactWhatsapp, address]
+      properties:
+        id:
+          type: integer
+        heroHeadline:
+          type: string
+        heroHeadlineEs:
+          type: ["string", "null"]
+        heroHeadlinePt:
+          type: ["string", "null"]
+        heroSubheadline:
+          type: string
+        heroSubheadlineEs:
+          type: ["string", "null"]
+        heroSubheadlinePt:
+          type: ["string", "null"]
+        heroPrimaryCtaText:
+          type: string
+        heroSecondaryCtaText:
+          type: string
+        contactEmail:
+          type: string
+        contactPhone:
+          type: string
+        contactWhatsapp:
+          type: string
+        address:
+          type: string
+        facebookUrl:
+          type: ["string", "null"]
+        instagramUrl:
+          type: ["string", "null"]
+        tripadvisorUrl:
+          type: ["string", "null"]
+        googleReviewsUrl:
+          type: ["string", "null"]
+
+    SiteSettingsUpdate:
+      type: object
+      properties:
+        heroHeadline:
+          type: string
+        heroHeadlineEs:
+          type: string
+        heroHeadlinePt:
+          type: string
+        heroSubheadline:
+          type: string
+        heroSubheadlineEs:
+          type: string
+        heroSubheadlinePt:
+          type: string
+        heroPrimaryCtaText:
+          type: string
+        heroSecondaryCtaText:
+          type: string
+        contactEmail:
+          type: string
+        contactPhone:
+          type: string
+        contactWhatsapp:
+          type: string
+        address:
+          type: string
+        facebookUrl:
+          type: string
+        instagramUrl:
+          type: string
+        tripadvisorUrl:
+          type: string
+        googleReviewsUrl:
+          type: string
+
+    AdminLoginInput:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AdminAuthResult:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    AdminMe:
+      type: object
+      required: [username, role]
+      properties:
+        username:
+          type: string
+        role:
+          type: string
+
+    AdminStats:
+      type: object
+      required: [totalTours, totalDestinations, totalReviews, totalBlogPosts, featuredTours, publishedTours, averageRating]
+      properties:
+        totalTours:
+          type: integer
+        totalDestinations:
+          type: integer
+        totalReviews:
+          type: integer
+        totalBlogPosts:
+          type: integer
+        featuredTours:
+          type: integer
+        publishedTours:
+          type: integer
+        averageRating:
+          type: number

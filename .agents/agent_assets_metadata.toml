@@ -1,0 +1,74 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "u2lT0eLKjUFvVXh4Sz54i"
+uri = "file://artifacts/janeiro-tour/public/images/hero-rio.png"
+type = "image"
+title = "Rio de Janeiro skyline"
+
+[[generated]]
+id = "yvBj2FJpbZHcaolYape5l"
+uri = "file://artifacts/janeiro-tour/public/images/hero-iguazu.png"
+type = "image"
+title = "Iguazu Falls hero"
+
+[[generated]]
+id = "kPIyjCmCHgZ36jl2Wsqsn"
+uri = "file://artifacts/janeiro-tour/public/images/dest-salvador.png"
+type = "image"
+title = "Salvador destination"
+
+[[generated]]
+id = "VWz9WaOZ0hyKyTJaqbRLd"
+uri = "file://artifacts/janeiro-tour/public/images/dest-amazon.png"
+type = "image"
+title = "Amazon Rainforest"
+
+[[generated]]
+id = "2o8lX-1kMjgULquPLRxcK"
+uri = "file://artifacts/janeiro-tour/public/images/dest-saopaulo.png"
+type = "image"
+title = "Sao Paulo destination"
+
+[[generated]]
+id = "vA6lMM6_h5IdQxqGIg1h-"
+uri = "file://artifacts/janeiro-tour/public/images/dest-paraty.png"
+type = "image"
+title = "Paraty destination"
+
+[[generated]]
+id = "951LhFKXwiROEDl7LeOc3"
+uri = "file://artifacts/janeiro-tour/public/images/dest-florianopolis.png"
+type = "image"
+title = "Florianopolis destination"
+
+[[generated]]
+id = "1mmJ-xK9IS0TEcW_VAC_Y"
+uri = "file://artifacts/janeiro-tour/public/images/dest-pantanal.png"
+type = "image"
+title = "Pantanal destination"
+
+[[generated]]
+id = "XjiQ49l6fUa7UJRmJu0Cb"
+uri = "file://artifacts/janeiro-tour/public/images/exp-christ.png"
+type = "image"
+title = "Christ the Redeemer"
+
+[[generated]]
+id = "NmZDXT8pyhlqzh8d44FjX"
+uri = "file://artifacts/janeiro-tour/public/images/exp-city.png"
+type = "image"
+title = "City Tours"
+
+[[generated]]
+id = "w04vcc77X-88HGcnoX0-P"
+uri = "file://artifacts/janeiro-tour/public/images/exp-nature.png"
+type = "image"
+title = "Nature Experience"
+
+[[generated]]
+id = "MB2ykm2MyxXNnbBCKlrF8"
+uri = "file://artifacts/janeiro-tour/public/images/exp-beach.png"
+type = "image"
+title = "Beach Experience"

@@ -1,0 +1,260 @@
+Create a modern, interactive, high-converting travel booking website for Janeiro Tour, inspired by janeirotour.com, but redesigned as a premium national Brazil travel brand.
+
+Brand:
+Janeiro Tour
+
+Use the existing Janeiro Tour logo and respect the current visual identity, colors and brand style from janeirotour.com, but make the design much more modern, premium, interactive and international.
+
+Main goal:
+Create a tourism website for international travelers who want to book tours, transfers, private experiences and travel services across Brazil.
+
+Default language:
+English
+
+Also include full multilingual support for:
+
+* Spanish
+* Brazilian Portuguese
+
+Target audience:
+
+* United States
+* Canada
+* Europe
+* Latin America
+* English-speaking travelers visiting Brazil
+
+Design style:
+
+* Premium travel agency
+* Modern and interactive
+* High-converting
+* Mobile-first
+* Fast loading
+* Dynamic Brazil destination visuals
+* Inspired by GetYourGuide, Klook, Airbnb Experiences, Expedia and modern luxury travel brands
+* Not a traditional local travel agency layout
+
+Visual direction:
+Use rich cinematic travel photography from Brazil, including:
+
+* Rio de Janeiro
+* Christ the Redeemer
+* Sugarloaf Mountain
+* Copacabana
+* Iguazu Falls
+* Amazon Rainforest
+* Salvador Bahia
+* São Paulo
+* Paraty
+* Florianópolis
+* Pantanal
+
+Homepage sections:
+
+1. Dynamic hero banner
+   Headline:
+   "Discover the Best of Brazil"
+
+Subheadline:
+"Premium tours, private experiences, airport transfers and travel services across Brazil."
+
+Primary CTA:
+"Explore Tours"
+
+Secondary CTA:
+"Plan Your Trip"
+
+Include a dynamic visual hero with Brazil destination imagery and strong booking-oriented call-to-action buttons.
+
+2. Search and filter section
+   Create a tour search area where users can search by:
+
+* Destination
+* Experience type
+* Date
+* Private or group tour
+* Language
+
+3. Featured destinations
+   Create cards for:
+
+* Rio de Janeiro
+* São Paulo
+* Iguazu Falls
+* Amazon
+* Salvador
+* Paraty
+* Florianópolis
+* Pantanal
+
+4. Popular experiences
+   Include cards for:
+
+* Christ the Redeemer Tours
+* Rio City Tours
+* Airport Transfers
+* Private Brazil Experiences
+* Nature Adventures
+* Cultural Experiences
+* Beach Experiences
+* Multi-day Brazil Packages
+
+5. Why choose Janeiro Tour
+   Include:
+
+* Local experts
+* Multilingual support
+* Secure online booking
+* Private and small group tours
+* Trusted travel assistance
+* Flexible cancellation
+
+6. Reviews and trust section
+   Include:
+
+* Star ratings
+* Traveler testimonials
+* Secure payment icons
+* TripAdvisor / Google Reviews placeholder
+* "Trusted by international travelers"
+
+7. Brazil travel inspiration
+   Create a blog / guide section with cards for:
+
+* Best Places to Visit in Brazil
+* How to Visit Christ the Redeemer
+* Rio de Janeiro Travel Guide
+* Iguazu Falls Travel Guide
+* Brazil Travel Tips for Americans
+
+8. Final CTA
+   Headline:
+   "Ready to Discover Brazil?"
+
+CTA:
+"Start Planning Your Experience"
+
+Pages to create:
+
+* Home
+* Tours
+* Destinations
+* Individual destination pages
+* Individual tour pages
+* Airport Transfers
+* Private Tours
+* Brazil Travel Packages
+* Blog / Travel Guides
+* About Us
+* Contact
+* FAQ
+* Admin Dashboard
+
+Tour page structure:
+Each tour page should include:
+
+* Hero image gallery
+* Tour title
+* Price placeholder
+* Duration
+* Destination
+* Language
+* Group size
+* Highlights
+* Overview
+* What's included
+* What's not included
+* Itinerary timeline
+* Meeting point / pickup information
+* Cancellation policy
+* FAQ
+* Reviews
+* Booking widget placeholder
+
+Booking integration:
+Add a dedicated booking section where I can embed a Regiondo booking widget later.
+Use a clear placeholder:
+"Regiondo booking widget goes here"
+
+Admin dashboard:
+Create an admin section where I can edit the website content without coding.
+
+Admin should allow editing:
+
+* Homepage hero text
+* Hero images
+* Featured destinations
+* Tour products
+* Tour titles
+* Tour descriptions
+* Tour images
+* Prices
+* Durations
+* Languages
+* Availability text
+* Blog posts
+* FAQ items
+* Reviews
+* Contact information
+* CTA text
+* SEO title and meta description for each page
+* Language translations
+
+Admin dashboard requirements:
+
+* Simple and clean interface
+* Protected admin login
+* Editable forms
+* Save changes to a database
+* Image upload support
+* Ability to add, edit and delete tours
+* Ability to add, edit and delete destinations
+* Ability to add, edit and delete blog posts
+* Ability to manage multilingual content in English, Spanish and Brazilian Portuguese
+
+Technical requirements:
+
+* Use a modern full-stack web framework
+* Responsive design
+* SEO-friendly routing
+* Clean URLs
+* Fast loading
+* Optimized images
+* Sitemap support
+* Robots.txt
+* Meta titles and descriptions
+* Open Graph tags
+* JSON-LD schema for tours and travel services
+* Accessibility best practices
+* Mobile-first layout
+* Smooth but lightweight animations
+
+SEO goals:
+Optimize the structure for keywords such as:
+
+* Brazil tours
+* Rio de Janeiro tours
+* Christ the Redeemer tour
+* Brazil private tours
+* Brazil airport transfers
+* Brazil travel packages
+* Iguazu Falls tours
+* Amazon rainforest tours
+* Things to do in Brazil
+
+Design requirements:
+
+* Respect Janeiro Tour's current logo and brand colors
+* Use a premium travel color palette
+* Strong contrast for CTA buttons
+* Modern cards
+* Interactive destination sections
+* Sticky booking CTA on tour pages
+* Clean navigation
+* Language switcher in the header
+* WhatsApp contact button
+* Trust badges near booking CTAs
+
+Do not create a generic travel template.
+Create a premium, conversion-focused, editable national Brazil travel platform for Janeiro Tour.
