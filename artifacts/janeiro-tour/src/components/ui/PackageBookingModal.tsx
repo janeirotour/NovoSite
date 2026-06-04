@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Loader2, CreditCard, CalendarDays, Users } from "lucide-react";
+import { X, Loader2, CreditCard, CalendarDays, Users, Plane, Hotel, MapPin, Globe, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -14,15 +14,32 @@ interface PackageBookingModalProps {
 }
 
 interface CustomerForm {
+  // Personal
   name: string;
   email: string;
   phone: string;
   country: string;
+  // Arrival flight
+  arrivalFlightNumber: string;
+  arrivalFlightDate: string;
+  // Departure flight
+  departureFlightNumber: string;
+  departureFlightDate: string;
+  // Hotel / logistics
+  hotelAddress: string;
+  pickupLocation: string;
+  dropoffLocation: string;
+  language: string;
   notes: string;
 }
 
 const INPUT_CLASS =
   "w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors";
+
+const SELECT_CLASS =
+  "w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors";
+
+const SECTION_HEADER = "flex items-center gap-2 text-sm font-semibold text-foreground mb-3 mt-1";
 
 export function PackageBookingModal({
   isOpen,
@@ -40,14 +57,21 @@ export function PackageBookingModal({
     email: "",
     phone: "",
     country: "",
+    arrivalFlightNumber: "",
+    arrivalFlightDate: arrivalDate || "",
+    departureFlightNumber: "",
+    departureFlightDate: "",
+    hotelAddress: "",
+    pickupLocation: "",
+    dropoffLocation: "",
+    language: "English",
     notes: "",
   });
 
   if (!isOpen) return null;
 
-  const handleChange = (key: keyof CustomerForm, value: string) => {
+  const set = (key: keyof CustomerForm, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,12 +89,20 @@ export function PackageBookingModal({
         body: JSON.stringify({
           packageSlug,
           pax,
-          arrivalDate: arrivalDate || undefined,
+          arrivalDate: form.arrivalFlightDate || arrivalDate || undefined,
           customer: {
             name: form.name.trim(),
             email: form.email.trim(),
             phone: form.phone.trim(),
             country: form.country.trim() || undefined,
+            hotelAddress: form.hotelAddress.trim() || undefined,
+            pickupLocation: form.pickupLocation.trim() || undefined,
+            dropoffLocation: form.dropoffLocation.trim() || undefined,
+            arrivalFlightNumber: form.arrivalFlightNumber.trim() || undefined,
+            arrivalFlightDate: form.arrivalFlightDate || undefined,
+            departureFlightNumber: form.departureFlightNumber.trim() || undefined,
+            departureFlightDate: form.departureFlightDate || undefined,
+            language: form.language || undefined,
             notes: form.notes.trim() || undefined,
           },
         }),
@@ -92,16 +124,14 @@ export function PackageBookingModal({
 
   const formattedDate = arrivalDate
     ? new Date(arrivalDate + "T12:00:00").toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        weekday: "long", year: "numeric", month: "long", day: "numeric",
       })
     : "Date not selected";
 
   return (
     <div className="fixed inset-0 z-[80] flex items-start justify-center bg-black/60 backdrop-blur-sm overflow-y-auto py-6 px-4">
       <div className="w-full max-w-2xl bg-background rounded-2xl shadow-2xl overflow-hidden my-auto">
+
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b bg-card">
           <div>
@@ -139,66 +169,144 @@ export function PackageBookingModal({
             </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* ── 1. Personal Details ─────────────────────────────── */}
             <div>
-              <h3 className="font-semibold text-sm mb-3">Your Details</h3>
+              <div className={SECTION_HEADER}>
+                <Users size={15} className="text-green-600" />
+                Your Details
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Full Name <span className="text-destructive">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) => handleChange("name", e.target.value)}
-                    placeholder="John Doe"
-                    className={INPUT_CLASS}
-                  />
+                  <input type="text" value={form.name} onChange={e => set("name", e.target.value)}
+                    placeholder="John Doe" className={INPUT_CLASS} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Email Address <span className="text-destructive">*</span>
                   </label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    placeholder="you@example.com"
-                    className={INPUT_CLASS}
-                  />
+                  <input type="email" value={form.email} onChange={e => set("email", e.target.value)}
+                    placeholder="you@example.com" className={INPUT_CLASS} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Phone / WhatsApp <span className="text-destructive">*</span>
                   </label>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    placeholder="+1 555 000 0000"
-                    className={INPUT_CLASS}
-                  />
+                  <input type="tel" value={form.phone} onChange={e => set("phone", e.target.value)}
+                    placeholder="+1 555 000 0000" className={INPUT_CLASS} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Country</label>
-                  <input
-                    type="text"
-                    value={form.country}
-                    onChange={(e) => handleChange("country", e.target.value)}
-                    placeholder="United States"
-                    className={INPUT_CLASS}
-                  />
+                  <label className="block text-sm font-medium mb-1">Country of Residence</label>
+                  <input type="text" value={form.country} onChange={e => set("country", e.target.value)}
+                    placeholder="United States" className={INPUT_CLASS} />
                 </div>
-                <div className="sm:col-span-2">
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* ── 2. Arrival Flight ───────────────────────────────── */}
+            <div>
+              <div className={SECTION_HEADER}>
+                <Plane size={15} className="text-green-600" />
+                Arrival Flight
+                <span className="text-muted-foreground font-normal text-xs ml-1">(so we can arrange your airport transfer)</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Arrival Flight Number</label>
+                  <input type="text" value={form.arrivalFlightNumber} onChange={e => set("arrivalFlightNumber", e.target.value)}
+                    placeholder="AA 1234" className={INPUT_CLASS} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Arrival Date</label>
+                  <input type="date" value={form.arrivalFlightDate} onChange={e => set("arrivalFlightDate", e.target.value)}
+                    className={INPUT_CLASS} />
+                </div>
+              </div>
+            </div>
+
+            {/* ── 3. Departure Flight ─────────────────────────────── */}
+            <div>
+              <div className={SECTION_HEADER}>
+                <Plane size={15} className="text-green-600 rotate-90" />
+                Departure Flight
+                <span className="text-muted-foreground font-normal text-xs ml-1">(so we can schedule your return transfer)</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Departure Flight Number</label>
+                  <input type="text" value={form.departureFlightNumber} onChange={e => set("departureFlightNumber", e.target.value)}
+                    placeholder="LA 5678" className={INPUT_CLASS} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Departure Date</label>
+                  <input type="date" value={form.departureFlightDate} onChange={e => set("departureFlightDate", e.target.value)}
+                    className={INPUT_CLASS} />
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* ── 4. Hotel & Logistics ────────────────────────────── */}
+            <div>
+              <div className={SECTION_HEADER}>
+                <Hotel size={15} className="text-green-600" />
+                Logistics
+                <span className="text-muted-foreground font-normal text-xs ml-1">(Optional)</span>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Hotel Name / Address</label>
+                  <input type="text" value={form.hotelAddress} onChange={e => set("hotelAddress", e.target.value)}
+                    placeholder="e.g. Copacabana Palace, Av. Atlântica 1702" className={INPUT_CLASS} />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      <MapPin size={12} className="inline mr-1 text-muted-foreground" />
+                      Pickup Location
+                    </label>
+                    <input type="text" value={form.pickupLocation} onChange={e => set("pickupLocation", e.target.value)}
+                      placeholder="Hotel lobby / address" className={INPUT_CLASS} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      <MapPin size={12} className="inline mr-1 text-muted-foreground" />
+                      Drop-off Location
+                    </label>
+                    <input type="text" value={form.dropoffLocation} onChange={e => set("dropoffLocation", e.target.value)}
+                      placeholder="Hotel / airport" className={INPUT_CLASS} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      <Globe size={12} className="inline mr-1 text-muted-foreground" />
+                      Preferred Language
+                    </label>
+                    <select value={form.language} onChange={e => set("language", e.target.value)} className={SELECT_CLASS}>
+                      <option value="English">English</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="Portuguese">Portuguese</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
                   <label className="block text-sm font-medium mb-1">
+                    <MessageSquare size={12} className="inline mr-1 text-muted-foreground" />
                     Special Requests / Notes
-                    <span className="text-muted-foreground font-normal ml-1">(optional)</span>
+                    <span className="text-muted-foreground font-normal ml-1 text-xs">(optional)</span>
                   </label>
                   <textarea
                     value={form.notes}
-                    onChange={(e) => handleChange("notes", e.target.value)}
-                    placeholder="Hotel name, dietary requirements, special occasions…"
+                    onChange={e => set("notes", e.target.value)}
+                    placeholder="Dietary requirements, accessibility needs, special occasions..."
                     rows={3}
                     className={`${INPUT_CLASS} resize-none`}
                   />
@@ -233,7 +341,7 @@ export function PackageBookingModal({
             </Button>
 
             <p className="text-xs text-center text-muted-foreground">
-              Secured by Stripe · Your preferred arrival date will be confirmed by our team after payment.
+              Secured by Stripe · Your team will confirm all transfer details after payment.
             </p>
           </form>
         </div>

@@ -276,7 +276,21 @@ router.post("/stripe/package-checkout", async (req, res) => {
       packageSlug: string;
       pax: number;
       arrivalDate?: string;
-      customer: { name: string; email: string; phone?: string; country?: string; notes?: string };
+      customer: {
+        name: string;
+        email: string;
+        phone?: string;
+        country?: string;
+        hotelAddress?: string;
+        pickupLocation?: string;
+        dropoffLocation?: string;
+        arrivalFlightNumber?: string;
+        arrivalFlightDate?: string;
+        departureFlightNumber?: string;
+        departureFlightDate?: string;
+        language?: string;
+        notes?: string;
+      };
     };
 
     if (!packageSlug) return res.status(400).json({ error: "packageSlug is required" });
@@ -302,7 +316,8 @@ router.post("/stripe/package-checkout", async (req, res) => {
     const stripe = await getUncachableStripeClient();
     const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
 
-    const dateLabel = arrivalDate ? ` · Arrival ${arrivalDate}` : "";
+    const effectiveArrivalDate = customer.arrivalFlightDate || arrivalDate;
+    const dateLabel = effectiveArrivalDate ? ` · Arrival ${effectiveArrivalDate}` : "";
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -325,9 +340,17 @@ router.post("/stripe/package-checkout", async (req, res) => {
       metadata: {
         package_slug: packageSlug,
         pax: String(pax),
-        arrival_date: arrivalDate ?? "",
+        arrival_date: effectiveArrivalDate ?? "",
         customer_name: customer.name.slice(0, 200),
         customer_phone: (customer.phone ?? "").slice(0, 100),
+        customer_country: (customer.country ?? "").slice(0, 100),
+        hotel_address: (customer.hotelAddress ?? "").slice(0, 200),
+        pickup_location: (customer.pickupLocation ?? "").slice(0, 200),
+        dropoff_location: (customer.dropoffLocation ?? "").slice(0, 200),
+        arrival_flight: (customer.arrivalFlightNumber ?? "").slice(0, 50),
+        departure_flight: (customer.departureFlightNumber ?? "").slice(0, 50),
+        departure_date: (customer.departureFlightDate ?? "").slice(0, 20),
+        language: (customer.language ?? "").slice(0, 50),
         notes: (customer.notes ?? "").slice(0, 500),
       },
     });

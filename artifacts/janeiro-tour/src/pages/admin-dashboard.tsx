@@ -866,7 +866,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
       slug: pkg.slug, title: pkg.title, subtitle: pkg.subtitle ?? "",
       description: pkg.description, badge: pkg.badge ?? "", badgeColor: pkg.badgeColor ?? "green",
       priceFrom: pkg.priceFrom, originalPrice: pkg.originalPrice ?? "",
-      savingsPercent: pkg.savingsPercent ?? (undefined as unknown as null),
+      savingsPercent: pkg.savingsPercent ?? null,
       imageUrl: pkg.imageUrl, durationLabel: pkg.durationLabel ?? "",
       groupSizeLabel: pkg.groupSizeLabel ?? "",
       highlights: pkg.highlights ?? [], includedItems: pkg.includedItems ?? [],
@@ -878,8 +878,31 @@ import { useState, useRef, useCallback, useEffect } from "react";
     const listToArray = (s: string) => s.split("\n").map(l => l.trim()).filter(Boolean);
     const arrayToList = (a: unknown[]) => (a as string[]).join("\n");
 
+    // toursIncluded is an array of {slug, title, duration} objects — edit as JSON
+    const [toursJson, setToursJson] = useState(() => {
+      try { return JSON.stringify(form.toursIncluded, null, 2); } catch { return "[]"; }
+    });
+    const [toursJsonError, setToursJsonError] = useState<string | null>(null);
+
+    const handleToursJsonChange = (raw: string) => {
+      setToursJson(raw);
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          set("toursIncluded", parsed);
+          setToursJsonError(null);
+        } else {
+          setToursJsonError("Must be a JSON array");
+        }
+      } catch {
+        setToursJsonError("Invalid JSON");
+      }
+    };
+
     return (
       <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+
+        {/* ── Identity ── */}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Slug *</Label>
@@ -902,6 +925,21 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Label>Description *</Label>
           <Textarea rows={3} value={form.description} onChange={e => set("description", e.target.value)} />
         </div>
+
+        {/* ── Photo ── */}
+        <div className="space-y-1">
+          <Label>Package Photo *</Label>
+          <ImageUploader
+            label="Package Image"
+            value={form.imageUrl}
+            onChange={url => set("imageUrl", url)}
+          />
+          {form.imageUrl && (
+            <img src={form.imageUrl} alt="preview" className="mt-2 rounded-lg h-32 w-full object-cover border" />
+          )}
+        </div>
+
+        {/* ── Pricing ── */}
         <div className="grid grid-cols-3 gap-3">
           <div className="space-y-1">
             <Label>Price From (USD) *</Label>
@@ -916,10 +954,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <Input type="number" value={form.savingsPercent ?? ""} onChange={e => set("savingsPercent", e.target.value ? Number(e.target.value) : null)} placeholder="27" />
           </div>
         </div>
-        <div className="space-y-1">
-          <Label>Image URL *</Label>
-          <Input value={form.imageUrl} onChange={e => set("imageUrl", e.target.value)} placeholder="https://..." />
-        </div>
+
+        {/* ── Labels ── */}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Duration Label</Label>
@@ -930,6 +966,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <Input value={form.groupSizeLabel ?? ""} onChange={e => set("groupSizeLabel", e.target.value)} placeholder="Up to 45 people" />
           </div>
         </div>
+
+        {/* ── Badge ── */}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Badge</Label>
@@ -937,9 +975,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
           </div>
           <div className="space-y-1">
             <Label>Badge Color</Label>
-            <select className="w-full border rounded-md px-3 py-2 text-sm" value={form.badgeColor ?? "green"} onChange={e => set("badgeColor", e.target.value)}>
+            <select className="w-full border rounded-md px-3 py-2 text-sm bg-background" value={form.badgeColor ?? "green"} onChange={e => set("badgeColor", e.target.value)}>
               <option value="green">Green</option>
-              <option value="yellow">Yellow</option>
+              <option value="amber">Amber</option>
               <option value="orange">Orange</option>
               <option value="blue">Blue</option>
               <option value="purple">Purple</option>
@@ -947,17 +985,48 @@ import { useState, useRef, useCallback, useEffect } from "react";
             </select>
           </div>
         </div>
+
+        {/* ── Content ── */}
         <div className="space-y-1">
           <Label>Highlights (one per line)</Label>
           <Textarea rows={4} value={arrayToList(form.highlights)} onChange={e => set("highlights", listToArray(e.target.value))} placeholder={"Afro-Brazilian History & Immersion Walking Tour (4h)\nFavela Tour with a community-born guide (3h)"} />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="space-y-1">
+          <Label>Included Items (one per line)</Label>
+          <Textarea rows={4} value={arrayToList(form.includedItems)} onChange={e => set("includedItems", listToArray(e.target.value))} placeholder={"3 curated tours\nRound-trip transport\nAirport arrival & departure transfers"} />
+        </div>
+
+        {/* ── Tours Included JSON ── */}
+        <div className="space-y-1">
+          <Label className="flex items-center gap-2">
+            Tours Included
+            <span className="text-xs text-muted-foreground font-normal">(JSON array of {`{slug, title, duration}`})</span>
+          </Label>
+          <Textarea
+            rows={6}
+            value={toursJson}
+            onChange={e => handleToursJsonChange(e.target.value)}
+            className="font-mono text-xs"
+            placeholder={'[\n  {"slug":"little-africa","title":"Little Africa Tour","duration":"4h"},\n  {"slug":"favela-tour","title":"Favela Tour","duration":"3h"}\n]'}
+          />
+          {toursJsonError && <p className="text-xs text-destructive mt-1">{toursJsonError}</p>}
+        </div>
+
+        {/* ── Published ── */}
+        <div className="flex items-center gap-3 py-2">
           <Switch checked={form.published} onCheckedChange={v => set("published", v)} />
           <Label>Published</Label>
         </div>
+
         <div className="flex gap-3 justify-end pt-2 border-t">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={() => onSave(form)} className="gap-1.5"><Save size={14} /> Save Package</Button>
+          <Button
+            onClick={() => onSave(form)}
+            disabled={!!toursJsonError}
+            className="gap-1.5"
+          >
+            <Save size={14} /> Save Package
+          </Button>
         </div>
       </div>
     );
