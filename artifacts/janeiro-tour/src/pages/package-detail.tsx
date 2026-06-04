@@ -161,10 +161,8 @@ export default function PackageDetailPage() {
                     to your hotel. Rest, explore the surroundings and feel Rio for the first time — no activities
                     scheduled today.
                   </p>
-                  <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border w-fit">
-                    <Car size={11} className="text-green-600" />
-                    Airport arrival transfer — <span className="font-semibold text-foreground">${transferIn}</span>
-                    <span className="text-muted-foreground/60">(${TRANSFER_PRICE_PER_PERSON}/person × {pax})</span>
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border w-fit">
+                    <Car size={11} className="text-green-600" /> Airport arrival transfer included
                   </div>
                 </div>
 
@@ -206,14 +204,16 @@ export default function PackageDetailPage() {
                         </div>
                       ))}
                     </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed mt-3">
+                      After your last activity, our team collects you from the hotel and takes you directly to
+                      Galeão International Airport (GIG) in time for your flight home.
+                    </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border">
                         <Car size={10} className="text-green-600" /> Round-trip transport included
                       </span>
                       <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border">
-                        <Plane size={10} className="text-green-600" />
-                        Departure transfer (GIG) — <span className="font-semibold text-foreground ml-0.5">${transferOut}</span>
-                        <span className="text-muted-foreground/60">(${TRANSFER_PRICE_PER_PERSON}/person × {pax})</span>
+                        <Plane size={10} className="text-green-600" /> Departure transfer (GIG) included
                       </span>
                     </div>
                   </div>

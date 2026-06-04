@@ -1,11 +1,11 @@
-import { useListFeaturedTours, useListDestinations } from "@workspace/api-client-react";
+import { useListFeaturedTours, useListDestinations, useListPackages } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
 import { HeroSection } from "@/components/home/hero-section";
 import { TourCard } from "@/components/ui/tour-card";
 import { DestinationCard } from "@/components/ui/destination-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Users, MapPin, Heart, Star, ExternalLink } from "lucide-react";
+import { ArrowRight, Users, MapPin, Heart, Star, ExternalLink, Clock, Package } from "lucide-react";
 import { useEffect } from "react";
 
 const TRIPADVISOR_URL = "https://www.tripadvisor.com/Attraction_Review-g303488-d14760440-Reviews-Janeiro_Tour_Travel-State_of_Rio_de_Janeiro.html";
@@ -69,6 +69,7 @@ export default function Home() {
   const { lang } = useLanguage();
   const { data: featuredTours, isLoading: toursLoading } = useListFeaturedTours();
   const { data: destinations, isLoading: destLoading } = useListDestinations({ featured: true });
+  const { data: packages, isLoading: pkgsLoading } = useListPackages();
 
   useEffect(() => {
     document.title = "Janeiro Tour | Brazil Travel Experiences";
@@ -242,6 +243,119 @@ export default function Home() {
             <Link href="/tours">
               <Button variant="outline" className="w-full rounded-full">
                 {lang === "en" ? "See all experiences" : lang === "es" ? "Ver todas las experiencias" : "Ver todas as experiências"}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Packages */}
+      <section className="py-20 bg-[#fafaf8]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">
+                {lang === "en" ? "Bundle & save" : lang === "es" ? "Combina y ahorra" : "Combine e economize"}
+              </p>
+              <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">
+                {lang === "en" ? "Rio Experience Packages" : lang === "es" ? "Paquetes de Experiencias en Río" : "Pacotes de Experiências no Rio"}
+              </h2>
+              <p className="text-muted-foreground text-base max-w-xl">
+                {lang === "en"
+                  ? "Three curated experiences, one seamless journey — bundled at a lower price with transfers and transport included."
+                  : lang === "es"
+                  ? "Tres experiencias curadas, un viaje sin interrupciones — combinadas a mejor precio con transfers y transporte incluidos."
+                  : "Três experiências curadas, uma jornada sem pausas — combinadas por um preço menor com transfers e transporte incluídos."}
+              </p>
+            </div>
+            <Link href="/packages" className="hidden md:flex items-center text-sm font-semibold text-primary hover:underline gap-1">
+              {lang === "en" ? "All packages" : lang === "es" ? "Ver paquetes" : "Ver pacotes"}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {pkgsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-[420px] rounded-2xl bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {(packages ?? []).slice(0, 3).map((pkg) => {
+                const tours = (pkg.toursIncluded ?? []) as { title: string; duration: string }[];
+                const BADGE_COLORS: Record<string, string> = {
+                  green: "bg-green-600 text-white",
+                  amber: "bg-amber-500 text-black",
+                  purple: "bg-purple-700 text-white",
+                };
+                const badgeStyle = BADGE_COLORS[pkg.badgeColor ?? "green"] ?? BADGE_COLORS.green;
+                return (
+                  <div key={pkg.id} className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex flex-col">
+                    {/* Image */}
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <img
+                        src={pkg.imageUrl}
+                        alt={pkg.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      {pkg.badge && (
+                        <div className={`absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${badgeStyle}`}>
+                          {pkg.badge}
+                        </div>
+                      )}
+                      {pkg.savingsPercent && (
+                        <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm">
+                          Save {pkg.savingsPercent}%
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5 flex flex-col gap-4 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h3 className="font-bold text-base leading-tight">{pkg.title}</h3>
+                          {pkg.subtitle && <p className="text-xs text-muted-foreground mt-0.5">{pkg.subtitle}</p>}
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-xl font-bold text-green-600">${Number(pkg.priceFrom).toFixed(0)}</p>
+                          <p className="text-xs text-muted-foreground">per person</p>
+                        </div>
+                      </div>
+
+                      {/* Tours list */}
+                      <div className="space-y-1.5">
+                        {tours.slice(0, 3).map((t, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <Package size={11} className="text-green-600 flex-shrink-0" />
+                            <span className="leading-snug line-clamp-1">{t.title}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        {pkg.durationLabel && <span className="flex items-center gap-1"><Clock size={10} />{pkg.durationLabel}</span>}
+                        {pkg.groupSizeLabel && <span className="flex items-center gap-1"><Users size={10} />{pkg.groupSizeLabel}</span>}
+                      </div>
+
+                      <Link href={`/packages/${pkg.slug}`} className="mt-auto">
+                        <Button className="w-full h-10 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold gap-2">
+                          {lang === "en" ? "See Prices & Book" : lang === "es" ? "Ver Precios" : "Ver Preços"}
+                          <ArrowRight size={14} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mt-8 text-center md:hidden">
+            <Link href="/packages">
+              <Button variant="outline" className="w-full rounded-full">
+                {lang === "en" ? "See all packages" : lang === "es" ? "Ver todos los paquetes" : "Ver todos os pacotes"}
               </Button>
             </Link>
           </div>

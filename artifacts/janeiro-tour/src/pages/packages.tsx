@@ -3,7 +3,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Check, Star, ArrowRight, Clock, Users } from "lucide-react";
+import { Check, Star, ArrowRight, Clock, Users, Award, Tag, Layers, Heart, MessageCircle } from "lucide-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 
 const BADGE_STYLES: Record<string, string> = {
@@ -48,13 +48,13 @@ export default function PackagesPage() {
       <section className="border-b bg-muted/30">
         <div className="max-w-5xl mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-sm">
           {[
-            { icon: "🏆", text: lang === "en" ? "Curated by locals" : lang === "es" ? "Curado por locales" : "Curado por locais" },
-            { icon: "💰", text: lang === "en" ? "Save up to 27%" : lang === "es" ? "Ahorra hasta 27%" : "Economize até 27%" },
-            { icon: "🚫", text: lang === "en" ? "No hotel or flights" : lang === "es" ? "Sin hotel ni vuelos" : "Sem hotel nem voos" },
-            { icon: "🤝", text: lang === "en" ? "Black-owned & community-led" : lang === "es" ? "Empresa negra y comunitaria" : "Empresa negra e comunitária" },
+            { icon: <Award size={20} />, text: lang === "en" ? "Curated by locals" : lang === "es" ? "Curado por locales" : "Curado por locais" },
+            { icon: <Tag size={20} />, text: lang === "en" ? "Save up to 27%" : lang === "es" ? "Ahorra hasta 27%" : "Economize até 27%" },
+            { icon: <Layers size={20} />, text: lang === "en" ? "No hotel or flights" : lang === "es" ? "Sin hotel ni vuelos" : "Sem hotel nem voos" },
+            { icon: <Heart size={20} />, text: lang === "en" ? "Black-owned & community-led" : lang === "es" ? "Empresa negra y comunitaria" : "Empresa negra e comunitária" },
           ].map((v) => (
             <div key={v.text} className="flex flex-col items-center gap-1">
-              <span className="text-2xl">{v.icon}</span>
+              <span className="text-green-600">{v.icon}</span>
               <span className="font-medium text-muted-foreground">{v.text}</span>
             </div>
           ))}
@@ -185,7 +185,7 @@ export default function PackagesPage() {
                       </Link>
                       <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="flex-1">
                         <Button variant="outline" className="w-full h-11 border-green-300 text-green-700 hover:bg-green-50 gap-2">
-                          💬 WhatsApp
+                          <MessageCircle size={15} /> WhatsApp
                         </Button>
                       </a>
                     </div>
