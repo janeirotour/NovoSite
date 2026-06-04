@@ -209,6 +209,34 @@ export default function TourDetailPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Itinerary flexibility note — always shown */}
+              <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+                <span className="text-lg leading-none mt-0.5">ℹ️</span>
+                <p>
+                  {lang === "pt"
+                    ? "A ordem das atividades pode ser alterada de acordo com a logística e as condições do dia, sempre priorizando a melhor experiência para o grupo."
+                    : lang === "es"
+                    ? "El orden de las actividades puede cambiar según la logística y las condiciones del día, priorizando siempre la mejor experiencia para el grupo."
+                    : "The order of activities may be adjusted based on logistics and daily conditions, always prioritising the best experience for the group."}
+                </p>
+              </div>
+
+              {/* Transport add-on note — shown only when transport is NOT included */}
+              {!((tour.includedItems as string[]) ?? []).some((item) =>
+                /transport|transfer|pickup|pick.?up|shuttle|van|train|bus/i.test(item)
+              ) && (
+                <div className="mt-3 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
+                  <span className="text-lg leading-none mt-0.5">🚐</span>
+                  <p>
+                    {lang === "pt"
+                      ? "Transporte de ida e volta não está incluso, mas pode ser adicionado como serviço extra no momento da reserva."
+                      : lang === "es"
+                      ? "El transporte de ida y vuelta no está incluido, pero puede añadirse como servicio adicional al momento de reservar."
+                      : "Round-trip transportation is not included but can be added as an optional extra at the time of booking."}
+                  </p>
+                </div>
+              )}
             </section>
           )}
 
