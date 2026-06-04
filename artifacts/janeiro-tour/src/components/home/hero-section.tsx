@@ -10,37 +10,31 @@ const slides = [
   {
     src: "/images/banner-janeiro.jpg",
     alt: "Janeiro Tour group at Cristo Redentor",
-    label: "Janeiro Tour & Travel",
     positionY: "center",
   },
   {
-    src: "https://images.unsplash.com/photo-1544989164-b3095b702f90?w=1920&q=85",
+    src: "/images/exp-christ.png",
     alt: "Cristo Redentor — Rio de Janeiro",
-    label: "Cristo Redentor",
     positionY: "center",
   },
   {
-    src: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1920&q=85",
+    src: "/images/hero-rio.png",
     alt: "Pão de Açúcar — Rio de Janeiro",
-    label: "Pão de Açúcar",
     positionY: "center",
   },
   {
-    src: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=85",
+    src: "/images/hero-iguazu.png",
     alt: "Foz do Iguaçu — Cataratas",
-    label: "Foz do Iguaçu",
     positionY: "bottom",
   },
   {
-    src: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=1920&q=85",
+    src: "/images/dest-salvador.png",
     alt: "Bahia — Salvador",
-    label: "Bahia",
     positionY: "center",
   },
   {
-    src: "https://images.unsplash.com/photo-1527152294799-1069f01bdcc0?w=1920&q=85",
+    src: "/images/dest-amazon.png",
     alt: "Amazônia — Floresta Tropical",
-    label: "Amazônia",
     positionY: "center",
   },
 ];
