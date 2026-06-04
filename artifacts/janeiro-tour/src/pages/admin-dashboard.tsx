@@ -282,7 +282,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Textarea rows={2} value={form.seoDescription as string} onChange={e => set("seoDescription", e.target.value)} maxLength={160} />
         </div>
 
-        <SectionLabel>🎫 Regiondo Booking Widget</SectionLabel>
+        <SectionLabel>Regiondo Booking Widget</SectionLabel>
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 flex gap-2">
           <Code2 size={16} className="flex-shrink-0 mt-0.5" />
           <span>Paste the Regiondo embed code for this tour. It will automatically appear in the booking section on the tour page.</span>
@@ -306,18 +306,18 @@ import { useState, useRef, useCallback, useEffect } from "react";
   // ─── page editor ─────────────────────────────────────────────────────────
 
   const PAGES = [
-    { path: "/", label: "🏠 Homepage" },
-    { path: "/about", label: "ℹ️ About Us" },
-    { path: "/our-story", label: "📖 Our Story" },
-    { path: "/tours", label: "🗺️ Tours" },
-    { path: "/destinations", label: "📍 Destinations" },
-    { path: "/contact", label: "📞 Contact" },
-    { path: "/faq", label: "❓ FAQ" },
-    { path: "/reviews", label: "⭐ Reviews" },
-    { path: "/blog", label: "📝 Travel Guide" },
-    { path: "/transfers", label: "✈️ Airport Transfers" },
-    { path: "/private-tours", label: "🔑 Private Tours" },
-    { path: "/packages", label: "📦 Packages" },
+    { path: "/", label: "Homepage" },
+    { path: "/about", label: "About Us" },
+    { path: "/our-story", label: "Our Story" },
+    { path: "/tours", label: "Tours" },
+    { path: "/destinations", label: "Destinations" },
+    { path: "/contact", label: "Contact" },
+    { path: "/faq", label: "FAQ" },
+    { path: "/reviews", label: "Reviews" },
+    { path: "/blog", label: "Travel Guide" },
+    { path: "/transfers", label: "Airport Transfers" },
+    { path: "/private-tours", label: "Private Tours" },
+    { path: "/packages", label: "Packages" },
   ];
 
   function PageEditorTab() {
@@ -360,7 +360,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
               <Eye size={13} /> Open Live
             </Button>
             <Button size="sm" className="gap-1.5 min-w-[120px]" onClick={save}>
-              {saved ? <><Save size={13} />✓ Saved!</> : <><Save size={13} />Save Changes</>}
+              {saved ? <><Save size={13} />Saved</> : <><Save size={13} />Save Changes</>}
             </Button>
           </div>
         </div>
@@ -404,7 +404,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
   function HomepageFields({ form, setF }: { form: Record<string, string>; setF: (k: string, v: string) => void }) {
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-base border-b pb-2">🌟 Hero Section</h3>
+        <h3 className="font-semibold text-base border-b pb-2">Hero Section</h3>
         <div className="space-y-1"><Label>Headline (English)</Label><Input value={form.heroHeadline ?? ""} onChange={e => setF("heroHeadline", e.target.value)} /></div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Headline — Español</Label><Input value={form.heroHeadlineEs ?? ""} onChange={e => setF("heroHeadlineEs", e.target.value)} /></div>
@@ -420,7 +420,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <div className="space-y-1"><Label>Secondary CTA Button</Label><Input value={form.heroSecondaryCtaText ?? ""} onChange={e => setF("heroSecondaryCtaText", e.target.value)} /></div>
         </div>
 
-        <h3 className="font-semibold text-base border-b pb-2 pt-2">📞 Contact Info</h3>
+        <h3 className="font-semibold text-base border-b pb-2 pt-2">Contact Info</h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Email</Label><Input value={form.contactEmail ?? ""} onChange={e => setF("contactEmail", e.target.value)} /></div>
           <div className="space-y-1"><Label>Phone</Label><Input value={form.contactPhone ?? ""} onChange={e => setF("contactPhone", e.target.value)} /></div>
@@ -428,7 +428,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="space-y-1"><Label>WhatsApp Link</Label><Input value={form.contactWhatsapp ?? ""} onChange={e => setF("contactWhatsapp", e.target.value)} placeholder="https://wa.me/55..." /></div>
         <div className="space-y-1"><Label>Address</Label><Input value={form.address ?? ""} onChange={e => setF("address", e.target.value)} /></div>
 
-        <h3 className="font-semibold text-base border-b pb-2 pt-2">🔗 Social Links</h3>
+        <h3 className="font-semibold text-base border-b pb-2 pt-2">Social Links</h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Instagram</Label><Input value={form.instagramUrl ?? ""} onChange={e => setF("instagramUrl", e.target.value)} /></div>
           <div className="space-y-1"><Label>Facebook</Label><Input value={form.facebookUrl ?? ""} onChange={e => setF("facebookUrl", e.target.value)} /></div>
@@ -442,7 +442,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
   function ContactFields({ form, setF }: { form: Record<string, string>; setF: (k: string, v: string) => void }) {
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-base border-b pb-2">📞 Contact Page Content</h3>
+        <h3 className="font-semibold text-base border-b pb-2">Contact Page Content</h3>
         <p className="text-xs text-muted-foreground">These values are shared with the Homepage settings.</p>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Email</Label><Input value={form.contactEmail ?? ""} onChange={e => setF("contactEmail", e.target.value)} /></div>
@@ -457,9 +457,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
   function AboutFields() {
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-base border-b pb-2">ℹ️ About Us Page</h3>
+        <h3 className="font-semibold text-base border-b pb-2">About Us Page</h3>
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 space-y-2">
-          <p className="font-semibold">📝 To edit the About Us page content:</p>
+          <p className="font-semibold">To edit the About Us page content:</p>
           <p>The About Us page has rich visual sections. Use the <strong>Tours</strong> tab to manage tour cards shown on this page.</p>
           <p>For text edits on the About Us sections (founder story, Afrotourism section, recognition), click <strong>Open Live</strong> above and the page content reflects real-time.</p>
           <p className="text-xs text-amber-700 mt-1">Full inline editing for static pages is on the roadmap — contact info, hero text and social links are all editable from the Homepage tab.</p>
@@ -476,9 +476,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
   function OurStoryFields() {
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-base border-b pb-2">📖 Our Story Page</h3>
+        <h3 className="font-semibold text-base border-b pb-2">Our Story Page</h3>
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 space-y-2">
-          <p className="font-semibold">📝 To edit Our Story content:</p>
+          <p className="font-semibold">To edit Our Story content:</p>
           <p>The Our Story page shows founder information and timeline. Use the preview to see the current content.</p>
           <p className="text-xs text-amber-700 mt-1">Full inline editing for static pages is coming. Contact info updates via Homepage tab.</p>
         </div>
@@ -503,7 +503,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-base">❓ FAQ Items</h3>
+          <h3 className="font-semibold text-base">FAQ Items</h3>
           <Button size="sm" className="gap-1" onClick={() => setAddOpen(true)}><Plus size={13} />Add FAQ</Button>
         </div>
         {isLoading ? <Skeleton className="h-32 w-full" /> : (
@@ -806,7 +806,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
               {(["en", "es", "pt"] as const).map((code, i) => (
                 <button key={code} onClick={() => setLang(code)}
                   className={`flex-1 py-2 text-xs font-medium transition-colors ${lang === code ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}>
-                  {["🇬🇧 English", "🇪🇸 Español", "🇧🇷 Português"][i]}
+                  {["English", "Español", "Português"][i]}
                 </button>
               ))}
             </div>
@@ -1024,7 +1024,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             {(["en", "es", "pt"] as const).map((code, i) => (
               <button key={code} onClick={() => setLang(code)}
                 className={`flex-1 py-2.5 text-sm font-medium transition-colors ${lang === code ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}>
-                {["🇬🇧 English", "🇪🇸 Español", "🇧🇷 Português"][i]}
+                {["English", "Español", "Português"][i]}
               </button>
             ))}
           </div>
@@ -1397,11 +1397,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
       <div>
         <div className="flex items-center justify-between mb-6">
           <div><h2 className="text-2xl font-bold">Homepage Content</h2><p className="text-sm text-muted-foreground mt-1">Edit hero text, CTAs and contact info</p></div>
-          <Button onClick={save} className="min-w-[120px]">{saved ? "✓ Saved!" : "Save Changes"}</Button>
+          <Button onClick={save} className="min-w-[120px]">{saved ? "Saved" : "Save Changes"}</Button>
         </div>
         <div className="space-y-8">
           <div className="bg-card border rounded-xl p-6 space-y-4">
-            <h3 className="font-semibold text-base">🌟 Hero Section</h3>
+            <h3 className="font-semibold text-base">Hero Section</h3>
             <div className="space-y-1"><Label>Headline (English)</Label><Input value={form.heroHeadline ?? ""} onChange={e => setF("heroHeadline",e.target.value)} /></div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1"><Label>Headline — Español</Label><Input value={form.heroHeadlineEs ?? ""} onChange={e => setF("heroHeadlineEs",e.target.value)} /></div>
@@ -1418,7 +1418,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             </div>
           </div>
           <div className="bg-card border rounded-xl p-6 space-y-4">
-            <h3 className="font-semibold text-base">📞 Contact Information</h3>
+            <h3 className="font-semibold text-base">Contact Information</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1"><Label>Email</Label><Input type="email" value={form.contactEmail ?? ""} onChange={e => setF("contactEmail",e.target.value)} /></div>
               <div className="space-y-1"><Label>Phone</Label><Input value={form.contactPhone ?? ""} onChange={e => setF("contactPhone",e.target.value)} /></div>
@@ -1427,7 +1427,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <div className="space-y-1"><Label>Address</Label><Input value={form.address ?? ""} onChange={e => setF("address",e.target.value)} /></div>
           </div>
           <div className="bg-card border rounded-xl p-6 space-y-4">
-            <h3 className="font-semibold text-base">🔗 Social Media</h3>
+            <h3 className="font-semibold text-base">Social Media</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1"><Label>Instagram URL</Label><Input value={form.instagramUrl ?? ""} onChange={e => setF("instagramUrl",e.target.value)} /></div>
               <div className="space-y-1"><Label>Facebook URL</Label><Input value={form.facebookUrl ?? ""} onChange={e => setF("facebookUrl",e.target.value)} /></div>
@@ -1454,12 +1454,12 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="flex items-center justify-between mb-6">
           <div><h2 className="text-2xl font-bold">Settings & SEO</h2><p className="text-sm text-muted-foreground mt-1">Global site configuration and SEO</p></div>
           <Button onClick={() => { updateSettings.mutate({ data: form as Parameters<typeof updateSettings.mutate>[0]["data"] }); setSaved(true); setTimeout(() => setSaved(false), 2500); }} className="min-w-[120px]">
-            {saved ? "✓ Saved!" : "Save Settings"}
+            {saved ? "Saved" : "Save Settings"}
           </Button>
         </div>
         <div className="space-y-6">
           <div className="bg-card border rounded-xl p-6 space-y-4">
-            <h3 className="font-semibold">🔍 SEO Settings</h3>
+            <h3 className="font-semibold">SEO Settings</h3>
             <div className="space-y-1"><Label>Site Title / Brand Name</Label><Input value={form.siteName ?? ""} onChange={e => setF("siteName",e.target.value)} placeholder="Janeiro Tour & Travel" /></div>
             <div className="space-y-1">
               <div className="flex justify-between"><Label>Default SEO Title</Label><span className="text-xs text-muted-foreground">{(form.seoTitle ?? "").length}/60 chars</span></div>
@@ -1472,7 +1472,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <div className="space-y-1"><Label>OG Image URL (social sharing)</Label><Input value={form.ogImageUrl ?? ""} onChange={e => setF("ogImageUrl",e.target.value)} /></div>
           </div>
           <div className="bg-card border rounded-xl p-6 space-y-4">
-            <h3 className="font-semibold">🌐 Languages</h3>
+            <h3 className="font-semibold">Languages</h3>
             <p className="text-sm text-muted-foreground">The site supports English, Spanish and Portuguese. Use the Tour and FAQ editors to add translations.</p>
             <div className="grid grid-cols-3 gap-4">
               {["English (EN) — Default", "Español (ES)", "Português PT-BR"].map(lang => (

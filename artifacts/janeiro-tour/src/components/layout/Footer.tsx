@@ -139,7 +139,7 @@ export function Footer() {
           </div>
           <div className="hidden sm:block w-px h-3 bg-white/15" />
           <div className="flex items-center gap-2 text-white/40 text-xs">
-            <span className="text-sm leading-none">✊🏿</span>
+            <Award size={13} className="text-white/40" />
             <span className="font-medium text-white/50">
               {lang === "en" && "Black-owned Business"}
               {lang === "es" && "Empresa de propietario negro"}

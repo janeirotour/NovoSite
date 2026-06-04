@@ -13,7 +13,6 @@ const TRIPADVISOR_URL = "https://www.tripadvisor.com/Attraction_Review-g303488-d
 const reviews = [
   {
     name: "Thomas L.",
-    flag: "🇺🇸",
     title: "Amazing experience",
     text: "This trip was awesome mainly because of this team. Traveling to a foreign country is great but can be overwhelming trying to figure out what to do and how to do it. These guys turn curiosity into fun, challenges to ease and expectations to awesome experiences. I highly recommend them — I missed them already.",
     source: "Tripadvisor",
@@ -21,7 +20,6 @@ const reviews = [
   },
   {
     name: "Jasmine N.",
-    flag: "🇺🇸",
     title: "Rio Little Africa Tour",
     text: "I did the Little Africa tour with Dandara and had an amazing experience. She was so knowledgeable and informative. I highly recommend.",
     source: "Tripadvisor",
@@ -29,7 +27,6 @@ const reviews = [
   },
   {
     name: "V. Ncube",
-    flag: "🇿🇦",
     title: "Incredible tour of Rio's Afro-Brazilian history",
     text: "Incredible tour of Rio's Afro-Brazilian history. Our guide brought every story to life — the history, the culture, the food. This is what travel should feel like.",
     source: "Tripadvisor",
@@ -37,7 +34,6 @@ const reviews = [
   },
   {
     name: "Michelle H.",
-    flag: "🇬🇧",
     title: "Best Tour in Rio",
     text: "Best Tour in Rio. Professional, warm, and genuinely passionate about sharing their city. You can feel how much they love what they do.",
     source: "Tripadvisor",
@@ -45,7 +41,6 @@ const reviews = [
   },
   {
     name: "Katrina A.",
-    flag: "🇨🇦",
     title: "Couldn't imagine a better tour!",
     text: "Couldn't imagine a better tour! The energy, the knowledge, the connection — everything was perfect. I came back a different person.",
     source: "Tripadvisor",
@@ -53,7 +48,6 @@ const reviews = [
   },
   {
     name: "Dianne S.",
-    flag: "🇺🇸",
     title: "Bom Dia!",
     text: "Dance, eat, explore, and relax. That's exactly what we did. Our guide made sure we felt at home in a city that isn't ours — and now it feels like it is.",
     source: "Tripadvisor",
@@ -337,8 +331,8 @@ export default function Home() {
                   &ldquo;{review.text}&rdquo;
                 </p>
                 <div className="flex items-center gap-3 pt-1 border-t border-gray-50">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-base">
-                    {review.flag}
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                    {review.name[0]}
                   </div>
                   <div>
                     <p className="font-semibold text-sm text-foreground">{review.name}</p>

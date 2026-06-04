@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Heart, Globe, Shield, Star, Users, Leaf, MapPin } from "lucide-react";
+import { type LucideIcon, Heart, Globe, Shield, Star, Users, Leaf, MapPin, Award, Landmark, CheckCircle2 } from "lucide-react";
 
 const values = [
   {
@@ -96,7 +96,7 @@ export default function AboutPage() {
               </h2>
               <div className="flex flex-wrap gap-2 mb-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#3d1c00] text-[#f5c07a]">
-                  ✊🏿 Black-owned Business
+                  <Shield size={11} /> Black-owned Business
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
                   Afrotourism Pioneer
@@ -150,8 +150,8 @@ export default function AboutPage() {
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1598977054078-a4dd2d53c2ef?w=1400&q=60')] bg-cover bg-center" />
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] uppercase tracking-widest mb-5">
-              ✊🏿 Black-owned Business · Afrotourism
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] uppercase tracking-widest mb-5">
+              <Shield size={12} /> Black-owned Business · Afrotourism
             </span>
             <h2 className="font-bold text-3xl md:text-4xl text-white mb-5 leading-tight">
               Rooted in Afro-Brazilian Culture
@@ -162,25 +162,27 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-            {[
-              {
-                icon: "✊🏿",
-                title: "Black-owned Business",
-                desc: "Founded, led and operated by a Black entrepreneur from Rio de Janeiro. We are proud to represent Black excellence in Brazilian tourism.",
-              },
-              {
-                icon: "👥",
-                title: "Afro Team",
-                desc: "Our team is a direct reflection of Brazil's Afro-Brazilian community — guides, storytellers and culture-bearers who share their heritage with every guest.",
-              },
-              {
-                icon: "🌍",
-                title: "Afrotourism",
-                desc: "We specialize in experiences that honor Black culture, history and traditions — from Little Africa in Rio to Afro-Brazilian roots in Salvador, Bahia.",
-              },
-            ].map((item) => (
+            {(
+              [
+                {
+                  icon: Shield as LucideIcon,
+                  title: "Black-owned Business",
+                  desc: "Founded, led and operated by a Black entrepreneur from Rio de Janeiro. We are proud to represent Black excellence in Brazilian tourism.",
+                },
+                {
+                  icon: Users as LucideIcon,
+                  title: "Afro Team",
+                  desc: "Our team is a direct reflection of Brazil's Afro-Brazilian community — guides, storytellers and culture-bearers who share their heritage with every guest.",
+                },
+                {
+                  icon: Globe as LucideIcon,
+                  title: "Afrotourism",
+                  desc: "We specialize in experiences that honor Black culture, history and traditions — from Little Africa in Rio to Afro-Brazilian roots in Salvador, Bahia.",
+                },
+              ] as Array<{ icon: LucideIcon; title: string; desc: string }>
+            ).map((item) => (
               <div key={item.title} className="bg-white/6 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors">
-                <div className="text-3xl mb-5">{item.icon}</div>
+                <item.icon size={28} className="text-[#f5c07a] mb-5" />
                 <h3 className="font-bold text-white text-base mb-3">{item.title}</h3>
                 <p className="text-white/60 text-sm leading-relaxed">{item.desc}</p>
               </div>
@@ -219,8 +221,8 @@ export default function AboutPage() {
 
             {/* Text */}
             <div>
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] uppercase tracking-widest mb-5">
-                🏅 Official Recognition
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] uppercase tracking-widest mb-5">
+                <Award size={12} /> Official Recognition
               </span>
               <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-5 leading-tight">
                 Motion of Recognition and Praise
@@ -241,10 +243,10 @@ export default function AboutPage() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-                  🏛️ Rio de Janeiro City Council
+                  <Landmark size={12} /> Rio de Janeiro City Council
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] border border-[#009743]/20">
-                  ✅ Official recognition in tourism
+                  <CheckCircle2 size={12} /> Official recognition in tourism
                 </span>
               </div>
             </div>

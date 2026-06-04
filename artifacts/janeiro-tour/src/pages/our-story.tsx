@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Shield } from "lucide-react";
 
 const journey = [
   { year: "2014", text: "Dandara began her career promoting local excursions for Brazilians — learning the country from the inside out, building knowledge that no guidebook can teach." },
@@ -66,7 +67,7 @@ export default function OurStoryPage() {
               </h2>
               <div className="flex flex-wrap gap-2 mb-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#3d1c00] text-[#f5c07a]">
-                  ✊🏿 Black-owned Business
+                  <Shield size={11} /> Black-owned Business
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
                   Afrotourism Pioneer

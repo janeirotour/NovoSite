@@ -3,7 +3,7 @@ import { useParams, Link } from "wouter";
 import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
-import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle } from "lucide-react";
+import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -212,7 +212,7 @@ export default function TourDetailPage() {
 
               {/* Itinerary flexibility note — always shown */}
               <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-                <span className="text-lg leading-none mt-0.5">ℹ️</span>
+                <Info size={15} className="flex-shrink-0 mt-0.5 text-amber-700" />
                 <p>
                   {lang === "pt"
                     ? "A ordem das atividades pode ser alterada de acordo com a logística e as condições do dia, sempre priorizando a melhor experiência para o grupo."
@@ -227,7 +227,7 @@ export default function TourDetailPage() {
                 /transport|transfer|pickup|pick.?up|shuttle|van|train|bus/i.test(item)
               ) && (
                 <div className="mt-3 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
-                  <span className="text-lg leading-none mt-0.5">🚐</span>
+                  <Truck size={15} className="flex-shrink-0 mt-0.5 text-blue-700" />
                   <p>
                     {lang === "pt"
                       ? "Transporte de ida e volta não está incluso, mas pode ser adicionado como serviço extra no momento da reserva."

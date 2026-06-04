@@ -31,9 +31,9 @@ const aboutItems = [
 ];
 
 const LANGS: [Lang, string, string][] = [
-  ["en", "🇺🇸", "English"],
-  ["es", "🇪🇸", "Español"],
-  ["pt", "🇧🇷", "Português"],
+  ["en", "EN", "English"],
+  ["es", "ES", "Español"],
+  ["pt", "PT", "Português"],
 ];
 
 function NavDropdown({
@@ -183,13 +183,12 @@ export function Header() {
                   isHero ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 )}
               >
-                <span className="text-base leading-none">{currentLang[1]}</span>
                 <span className="font-medium">{currentLang[0].toUpperCase()}</span>
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </button>
               {langOpen && (
                 <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                  {LANGS.map(([code, flag, label]) => (
+                  {LANGS.map(([code, , label]) => (
                     <button
                       key={code}
                       onClick={() => { setLang(code); setLangOpen(false); }}
@@ -198,7 +197,7 @@ export function Header() {
                         l === code ? "font-semibold text-gray-900" : "text-gray-600"
                       )}
                     >
-                      <span className="text-base">{flag}</span>
+                      <span className="text-xs font-bold text-gray-400 w-6">{code.toUpperCase()}</span>
                       {label}
                     </button>
                   ))}
@@ -281,12 +280,12 @@ export function Header() {
 
               <div className="px-6 py-5 flex flex-col gap-3">
                 <div className="flex gap-2">
-                  {LANGS.map(([code, flag]) => (
+                  {LANGS.map(([code]) => (
                     <button key={code} onClick={() => setLang(code)}
-                      className={cn("flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center gap-1 transition-colors",
+                      className={cn("flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center transition-colors",
                         l === code ? "bg-gray-900 text-white border-gray-900" : "text-gray-600 border-gray-200 hover:border-gray-400"
                       )}>
-                      <span>{flag}</span> {code.toUpperCase()}
+                      {code.toUpperCase()}
                     </button>
                   ))}
                 </div>

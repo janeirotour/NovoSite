@@ -171,8 +171,7 @@ export function HeroSection() {
           </div>
           <div className="hidden md:flex items-center gap-6 text-white/50 text-xs">
             <span className="w-px h-4 bg-white/20" />
-            <span className="text-white/70">🇺🇸 🇬🇧 🇿🇦 🇨🇦 🇫🇷 🇩🇪 🇦🇺 🇧🇷 🇯🇵</span>
-            <span className="text-white/50">+50 countries</span>
+            <span className="text-white/60 font-medium tracking-wide text-xs uppercase">50+ countries</span>
           </div>
         </div>
       </div>
