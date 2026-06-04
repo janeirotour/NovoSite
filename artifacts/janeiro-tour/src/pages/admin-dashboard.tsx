@@ -76,23 +76,45 @@ import { useState, useRef, useCallback, useEffect } from "react";
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const readFileAsDataUrl = (file: File): Promise<string> =>
-      new Promise((resolve, reject) => {
+    const getImageDataUrl = async (file: File): Promise<string> => {
+      const raw = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(new Error("FileReader error: " + reader.error?.message));
+        reader.onerror = () => reject(new Error("Falha ao ler arquivo"));
         reader.readAsDataURL(file);
       });
+      try {
+        const img = new window.Image();
+        await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = () => rej(new Error("load")); img.src = raw; });
+        const MAX = 1600;
+        let { width, height } = img;
+        if (width <= MAX && height <= MAX && file.size < 1.5 * 1024 * 1024) return raw;
+        if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
+        else { width = Math.round(width * MAX / height); height = MAX; }
+        const canvas = document.createElement("canvas");
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return raw;
+        ctx.drawImage(img, 0, 0, width, height);
+        return canvas.toDataURL("image/jpeg", 0.82);
+      } catch {
+        return raw;
+      }
+    };
 
     const handleFile = useCallback(async (file: File) => {
       setUploading(true);
       setError(null);
       try {
-        if (file.size > 10 * 1024 * 1024) {
-          setError("Arquivo muito grande. Use uma imagem menor que 10MB.");
+        if (file.size > 30 * 1024 * 1024) {
+          setError("Arquivo muito grande. Use uma imagem menor que 30MB.");
           return;
         }
-        const dataUrl = await readFileAsDataUrl(file);
+        const dataUrl = await getImageDataUrl(file);
+        if (dataUrl.length > 12 * 1024 * 1024) {
+          setError("Imagem ainda muito grande após compressão. Tente uma com menor resolução.");
+          return;
+        }
         const res = await fetch("/api/upload/image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
