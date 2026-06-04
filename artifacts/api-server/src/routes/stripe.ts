@@ -240,6 +240,106 @@ router.post("/stripe/checkout", async (req, res) => {
   }
 });
 
+// ─── Package checkout (calculates full package price server-side) ─────────────
+const VEHICLE_TIERS_PKG = [
+  { minPax: 1,  maxPax: 2,  vehicle: "Private Car",  price: 120 },
+  { minPax: 3,  maxPax: 11, vehicle: "Minivan",       price: 300 },
+  { minPax: 12, maxPax: 16, vehicle: "Minibus",       price: 500 },
+  { minPax: 17, maxPax: null, vehicle: "Coach Bus",   price: 700 },
+];
+const TRANSFER_PPP = 60; // per person per trip
+
+interface PkgTourEntry {
+  slug: string;
+  title: string;
+  priceFrom: number;
+  pricingRules: { minPax: number; maxPax: number | null; pricePerPerson: number }[];
+}
+
+function pkgVehicleTier(pax: number) {
+  return VEHICLE_TIERS_PKG.find(t => pax >= t.minPax && (t.maxPax === null || pax <= t.maxPax))
+    ?? VEHICLE_TIERS_PKG[VEHICLE_TIERS_PKG.length - 1];
+}
+
+function pkgTourTotal(tour: PkgTourEntry, pax: number) {
+  if (tour.pricingRules?.length > 0) {
+    const tier = tour.pricingRules.find(t => pax >= t.minPax && (t.maxPax === null || pax <= t.maxPax))
+      ?? tour.pricingRules[tour.pricingRules.length - 1];
+    return tier.pricePerPerson * pax;
+  }
+  return tour.priceFrom * pax;
+}
+
+router.post("/stripe/package-checkout", async (req, res) => {
+  try {
+    const { packageSlug, pax, arrivalDate, customer } = req.body as {
+      packageSlug: string;
+      pax: number;
+      arrivalDate?: string;
+      customer: { name: string; email: string; phone?: string; country?: string; notes?: string };
+    };
+
+    if (!packageSlug) return res.status(400).json({ error: "packageSlug is required" });
+    if (!pax || pax < 1 || pax > 45) return res.status(400).json({ error: "Invalid pax" });
+    if (!customer?.name || !customer?.email) return res.status(400).json({ error: "name and email are required" });
+
+    // Load package from DB
+    const { packagesTable } = await import("@workspace/db");
+    const { db: database } = await import("@workspace/db");
+    const { eq: eqOp } = await import("drizzle-orm");
+    const [pkg] = await database.select().from(packagesTable).where(eqOp(packagesTable.slug, packageSlug)).limit(1);
+    if (!pkg) return res.status(404).json({ error: "Package not found" });
+
+    const tours = (pkg.toursIncluded ?? []) as PkgTourEntry[];
+    const vt = pkgVehicleTier(pax);
+    const toursTotal = tours.reduce((s, t) => s + pkgTourTotal(t, pax), 0);
+    const transport2x = vt.price * 2;
+    const transferIn = TRANSFER_PPP * pax;
+    const transferOut = TRANSFER_PPP * pax;
+    const subtotal = toursTotal + transport2x + transferIn + transferOut;
+    const grandTotal = Math.round(subtotal * 0.95 * 100); // cents, 5% off
+
+    const stripe = await getUncachableStripeClient();
+    const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
+
+    const dateLabel = arrivalDate ? ` · Arrival ${arrivalDate}` : "";
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${pkg.title} — ${pax} traveler${pax !== 1 ? "s" : ""}${dateLabel}`,
+              description: `Includes 3 experiences, round-trip transport & airport transfers. 5% bundle discount applied.`,
+            },
+            unit_amount: grandTotal,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/checkout/cancel`,
+      customer_email: customer.email,
+      metadata: {
+        package_slug: packageSlug,
+        pax: String(pax),
+        arrival_date: arrivalDate ?? "",
+        customer_name: customer.name.slice(0, 200),
+        customer_phone: (customer.phone ?? "").slice(0, 100),
+        notes: (customer.notes ?? "").slice(0, 500),
+      },
+    });
+
+    return res.json({ url: session.url });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Checkout failed";
+    req.log?.error(err, "Package checkout error");
+    return res.status(500).json({ error: message });
+  }
+});
+
 router.get("/stripe/checkout/session", async (req, res) => {
   try {
     const { session_id } = req.query as { session_id?: string };

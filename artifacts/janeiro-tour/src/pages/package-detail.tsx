@@ -3,8 +3,9 @@ import { useParams, Link } from "wouter";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Check, Minus, Plus, Clock, Users, ArrowRight, ChevronLeft, Plane, MapPin, Car } from "lucide-react";
+import { Check, Minus, Plus, Clock, Users, ArrowRight, ChevronLeft, Plane, MapPin, Car, CalendarDays, CreditCard, MessageCircle } from "lucide-react";
 import { useState, useMemo } from "react";
+import { PackageBookingModal } from "@/components/ui/PackageBookingModal";
 
 // ─── Vehicle tiers — same across all packages ─────────────────────────────────
 const VEHICLE_TIERS = [
@@ -79,6 +80,10 @@ export default function PackageDetailPage() {
 
   const { grandTotal, discount, toursTotal, transferIn, transferOut, vt } = useMemo(() => calcPackageTotal(tours, pax), [tours, pax]);
   const perPerson = pax > 0 ? grandTotal / pax : grandTotal;
+  const [arrivalDate, setArrivalDate] = useState("");
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
+  const today = new Date().toISOString().split("T")[0];
 
   // Itinerary: Day 2 = tours[0], Day 3 = tours[1] + tours[2]
   const day2Tour  = tours[0];
@@ -343,22 +348,44 @@ export default function PackageDetailPage() {
 
                 <Separator />
 
+                {/* Arrival date picker */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium mb-2">
+                    <CalendarDays size={14} className="text-muted-foreground" />
+                    Arrival date (Day 1)
+                  </label>
+                  <input
+                    type="date"
+                    value={arrivalDate}
+                    min={today}
+                    onChange={(e) => setArrivalDate(e.target.value)}
+                    className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+                  />
+                  {!arrivalDate && (
+                    <p className="text-xs text-muted-foreground mt-1">Select your arrival date to book</p>
+                  )}
+                </div>
+
+                <Separator />
+
                 {/* CTAs */}
                 <div className="space-y-2">
+                  <Button
+                    onClick={() => setShowBookingModal(true)}
+                    disabled={!arrivalDate}
+                    className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold gap-2 disabled:opacity-50"
+                  >
+                    <CreditCard size={15} /> Book &amp; Pay Online
+                  </Button>
                   <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold gap-2">
-                      Book via WhatsApp <ArrowRight size={15} />
+                    <Button variant="outline" className="w-full h-10 border-green-300 text-green-700 hover:bg-green-50 text-sm gap-2">
+                      <MessageCircle size={14} /> Book via WhatsApp
                     </Button>
                   </a>
-                  <Link href="/contact">
-                    <Button variant="outline" className="w-full h-10 border-green-300 text-green-700 hover:bg-green-50 text-sm">
-                      Request a Custom Quote
-                    </Button>
-                  </Link>
                 </div>
 
                 <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                  Free cancellation up to 48h before · Secure payment
+                  Secured by Stripe · Free cancellation up to 48h before
                 </p>
               </div>
             </div>
@@ -414,6 +441,16 @@ export default function PackageDetailPage() {
           </p>
         </div>
       </section>
+
+      <PackageBookingModal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        packageSlug={pkg.slug}
+        packageTitle={pkg.title}
+        pax={pax}
+        arrivalDate={arrivalDate}
+        grandTotal={grandTotal}
+      />
     </MainLayout>
   );
 }
