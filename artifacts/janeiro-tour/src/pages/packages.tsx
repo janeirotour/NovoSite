@@ -177,9 +177,9 @@ export default function PackagesPage() {
 
                     {/* CTA */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-1 border-t mt-auto">
-                      <Link href="/contact" className="flex-1">
+                      <Link href={`/packages/${pkg.slug}`} className="flex-1">
                         <Button className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold gap-2">
-                          {lang === "en" ? "Book This Package" : lang === "es" ? "Reservar Este Paquete" : "Reservar Este Pacote"}
+                          {lang === "en" ? "See Prices & Book" : lang === "es" ? "Ver Precios y Reservar" : "Ver Preços e Reservar"}
                           <ArrowRight size={15} />
                         </Button>
                       </Link>

@@ -21,6 +21,7 @@ import ReviewsPage from "@/pages/reviews";
 import TransfersPage from "@/pages/transfers";
 import PrivateToursPage from "@/pages/private-tours";
 import PackagesPage from "@/pages/packages";
+import PackageDetailPage from "@/pages/package-detail";
 import AdminLoginPage from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import CheckoutSuccessPage from "@/pages/checkout-success";
@@ -88,6 +89,7 @@ function Router() {
       <Route path="/packages">
         <MainLayout><PackagesPage /></MainLayout>
       </Route>
+      <Route path="/packages/:slug" component={PackageDetailPage} />
 
       {/* Checkout Routes */}
       <Route path="/checkout/success" component={CheckoutSuccessPage} />
