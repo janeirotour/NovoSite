@@ -1,0 +1,93 @@
+Update the Admin Dashboard to make the entire website fully editable without coding.
+
+Do not redesign the website.
+Do not change the existing visual identity.
+Only improve the admin system.
+
+Create a simple visual page editor similar to Elementor, but do not build an overly complicated custom page builder from scratch.
+
+The editor should be clean, modern, user-friendly and easy for a non-technical person to use.
+
+Visual Editor Requirements:
+
+* Allow me to edit page content without coding
+* Allow me to click on sections and edit text directly
+* Allow me to update headings, paragraphs, buttons and CTAs
+* Allow me to upload images directly from my computer
+* Allow me to replace hero images, destination images, tour images, experience images and blog images
+* Allow me to edit sections visually
+* Allow me to edit menu labels
+* Allow me to edit footer content
+* Allow me to preview changes before publishing
+* Add Save, Preview and Publish buttons
+
+The visual editor must work for absolutely all pages and content types, including:
+
+* Homepage
+* Destinations
+* Individual destination pages
+* Experiences
+* Individual experience pages
+* Tours
+* Private Tours
+* Airport Transfers
+* About Us
+* Our Story
+* Reviews
+* Contact
+* FAQ
+* Travel Guide
+* Individual blog / travel guide posts
+* Header / Menu
+* Footer
+
+Admin Dashboard Page Management:
+
+* Allow me to add new pages
+* Allow me to edit existing pages
+* Allow me to delete pages
+* Allow me to duplicate pages
+* Allow me to publish or unpublish pages
+* Allow me to reorder pages in the menu
+
+Experiences Management:
+
+* Allow me to add new experiences
+* Allow me to edit existing experiences
+* Allow me to delete experiences
+* Allow me to duplicate experiences
+* Allow me to publish or unpublish experiences
+* Allow me to upload images for each experience
+* Allow me to edit price
+* Allow me to edit duration
+* Allow me to edit destination
+* Allow me to edit category
+* Allow me to edit description
+* Allow me to edit highlights
+* Allow me to edit itinerary
+* Allow me to edit inclusions
+* Allow me to edit exclusions
+* Allow me to edit FAQs
+* Allow me to edit SEO title
+* Allow me to edit SEO meta description
+* Allow me to paste a Regiondo widget embed code for each experience
+
+Travel Guide Management:
+
+* Allow me to add new travel guide posts
+* Allow me to edit existing travel guide posts
+* Allow me to delete travel guide posts
+* Allow me to duplicate travel guide posts
+* Allow me to publish or unpublish travel guide posts
+* Allow me to upload featured images
+* Allow me to edit title
+* Allow me to edit excerpt
+* Allow me to edit content
+* Allow me to edit category
+* Allow me to edit destination
+* Allow me to edit SEO title
+* Allow me to edit SEO meta description
+
+Important:
+
+The goal is to make all website content easy to create, edit, duplicate, delete and manage from the admin dashboard without touching code.
