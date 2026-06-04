@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, json } from "express";
   import { writeFile, mkdir } from "fs/promises";
   import { join, dirname } from "path";
   import { fileURLToPath } from "url";
@@ -9,7 +9,7 @@ import { Router } from "express";
   const WORKSPACE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
   const UPLOADS_DIR = join(WORKSPACE_ROOT, "artifacts", "janeiro-tour", "public", "uploads");
 
-  router.post("/upload/image", async (req, res): Promise<void> => {
+  router.post("/upload/image", json({ limit: "15mb" }), async (req, res): Promise<void> => {
     if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
 
     const { dataUrl, filename } = req.body as { dataUrl?: string; filename?: string };

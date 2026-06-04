@@ -74,16 +74,36 @@ import { useState, useRef, useCallback, useEffect } from "react";
   function ImageUploader({ value, onChange, label = "Image" }: { value: string; onChange: (url: string) => void; label?: string }) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const compressImage = (file: File): Promise<string> =>
+      new Promise((resolve, reject) => {
+        const img = new Image();
+        const objectUrl = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          const MAX = 1600;
+          let { width, height } = img;
+          if (width > MAX || height > MAX) {
+            if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
+            else { width = Math.round(width * MAX / height); height = MAX; }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
+        };
+        img.onerror = reject;
+        img.src = objectUrl;
+      });
 
     const handleFile = useCallback(async (file: File) => {
       setUploading(true);
+      setError(null);
       try {
-        const dataUrl = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
+        const dataUrl = await compressImage(file);
         const res = await fetch("/api/upload/image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -91,9 +111,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
           body: JSON.stringify({ dataUrl, filename: file.name }),
         });
         const data = await res.json() as { url?: string; error?: string };
-        if (data.url) onChange(data.url);
+        if (data.url) {
+          onChange(data.url);
+        } else {
+          setError(data.error ?? "Upload failed. Try using a URL instead.");
+        }
       } catch {
-        // silent
+        setError("Upload failed. Check your connection and try again.");
       } finally {
         setUploading(false);
       }
@@ -106,9 +130,12 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Input value={value} onChange={e => onChange(e.target.value)} placeholder="https://... or upload below" className="flex-1" />
           <Button type="button" variant="outline" size="sm" className="gap-1.5 shrink-0" disabled={uploading} onClick={() => inputRef.current?.click()}>
             {uploading ? <RefreshCw size={13} className="animate-spin" /> : <Upload size={13} />}
-            {uploading ? "Uploading…" : "Upload"}
+            {uploading ? "Enviando…" : "Upload"}
           </Button>
         </div>
+        {error && (
+          <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-2 py-1">{error}</p>
+        )}
         <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
         {value && <img src={value} alt="" className="mt-1 h-28 w-full object-cover rounded-lg border" onError={e => (e.target as HTMLImageElement).style.display = "none"} />}
       </div>
