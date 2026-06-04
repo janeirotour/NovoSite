@@ -3,7 +3,8 @@ import { useParams, Link } from "wouter";
 import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
-import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -54,6 +55,7 @@ export default function TourDetailPage() {
 
   const tour = isNumeric ? tourById : tourBySlug;
   const isLoading = isNumeric ? loadingById : loadingBySlug;
+  const { addItem, openCart } = useCart();
 
   const resolvedId = (tour as { id?: number } | undefined)?.id ?? tourId;
   const { data: reviews } = useListReviews({ tourId: resolvedId });
@@ -355,20 +357,29 @@ export default function TourDetailPage() {
 
                 <Separator />
 
-                {/* Regiondo Widget or Placeholder */}
+                {/* Booking Buttons */}
                 {hasRegionodo ? (
                   <div className="mt-2">
                     <RegionodoWidget code={tour.regiondoWidget as string} />
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed border-primary/30 rounded-xl p-6 text-center bg-primary/5">
-                    <p className="text-sm font-semibold text-primary mb-1">Book This Tour</p>
-                    <p className="text-xs text-muted-foreground mb-3">Online booking powered by Regiondo</p>
-                    <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer">
-                      <Button className="w-full bg-primary hover:bg-primary/90 font-semibold">
-                        Request Availability
-                      </Button>
-                    </a>
+                  <div className="space-y-2">
+                    <Button
+                      className="w-full h-11 bg-primary hover:bg-primary/90 font-semibold gap-2"
+                      onClick={() => {
+                        addItem({
+                          tourSlug: tour.slug,
+                          title: tour.title,
+                          imageUrl: tour.imageUrl,
+                          priceFrom: Number(tour.priceFrom),
+                          currency: tour.currency,
+                        });
+                        openCart();
+                      }}
+                    >
+                      <ShoppingCart size={16} />
+                      Add to Cart
+                    </Button>
                   </div>
                 )}
 
@@ -401,9 +412,22 @@ export default function TourDetailPage() {
           <p className="text-xs text-muted-foreground">From</p>
           <p className="text-xl font-bold text-primary">${tour.priceFrom} <span className="text-sm font-normal">{tour.currency}</span></p>
         </div>
-        <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="flex-1 max-w-xs">
-          <Button className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90">Book Now</Button>
-        </a>
+        <Button
+          className="flex-1 max-w-xs h-12 text-base font-semibold bg-primary hover:bg-primary/90 gap-2"
+          onClick={() => {
+            addItem({
+              tourSlug: tour.slug,
+              title: tour.title,
+              imageUrl: tour.imageUrl,
+              priceFrom: Number(tour.priceFrom),
+              currency: tour.currency,
+            });
+            openCart();
+          }}
+        >
+          <ShoppingCart size={18} />
+          Book Now
+        </Button>
       </div>
     </MainLayout>
   );

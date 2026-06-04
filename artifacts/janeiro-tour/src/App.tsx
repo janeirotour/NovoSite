@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { CartProvider } from "@/contexts/CartContext";
+import { CartSidebar } from "@/components/ui/CartSidebar";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import ToursPage from "@/pages/tours";
@@ -21,6 +23,8 @@ import PrivateToursPage from "@/pages/private-tours";
 import PackagesPage from "@/pages/packages";
 import AdminLoginPage from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
+import CheckoutSuccessPage from "@/pages/checkout-success";
+import CheckoutCancelPage from "@/pages/checkout-cancel";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,6 +89,10 @@ function Router() {
         <MainLayout><PackagesPage /></MainLayout>
       </Route>
 
+      {/* Checkout Routes */}
+      <Route path="/checkout/success" component={CheckoutSuccessPage} />
+      <Route path="/checkout/cancel" component={CheckoutCancelPage} />
+
       {/* Catch all */}
       <Route>
         <MainLayout><NotFound /></MainLayout>
@@ -97,10 +105,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
+        <CartProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+            <CartSidebar />
+          </WouterRouter>
+          <Toaster />
+        </CartProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

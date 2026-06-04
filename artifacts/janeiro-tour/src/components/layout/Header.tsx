@@ -1,7 +1,8 @@
 import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
-import { Menu, X, ChevronDown, Globe, MessageCircle } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Menu, X, ChevronDown, Globe, MessageCircle, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Lang = "en" | "es" | "pt";
@@ -99,6 +100,7 @@ export function Header() {
   const langRef = useRef<HTMLDivElement>(null);
   const { lang, setLang } = useLanguage();
   const l = lang as Lang;
+  const { totalItems, openCart } = useCart();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 60);
@@ -206,6 +208,21 @@ export function Header() {
             </div>
 
             <div className={cn("w-px h-4", isHero ? "bg-white/20" : "bg-gray-200")} />
+
+            {/* Cart */}
+            <button
+              onClick={openCart}
+              className={cn("relative w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+                isHero ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50")}
+              title="Cart"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                  {totalItems > 9 ? "9+" : totalItems}
+                </span>
+              )}
+            </button>
 
             {/* WhatsApp */}
             <a

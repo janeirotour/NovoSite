@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
+import { useCart } from "@/contexts/CartContext";
 import { Tour } from "@workspace/api-client-react";
-import { Clock, MapPin, Users, Globe2, Star, Crown } from "lucide-react";
+import { Clock, MapPin, Users, Globe2, Star, Crown, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const PREMIUM_BADGE_LABELS: Record<string, string> = {
@@ -39,6 +40,7 @@ function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
 
 export function TourCard({ tour }: { tour: Tour }) {
   const { t, lang } = useLanguage();
+  const { addItem } = useCart();
   const premiumBadge = (tour as Tour & { premiumBadge?: string | null }).premiumBadge;
 
   return (
@@ -107,19 +109,38 @@ export function TourCard({ tour }: { tour: Tour }) {
             </div>
           </div>
 
-          <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
-            <div>
-              <span className="text-xs text-muted-foreground block">
-                {lang === "en" ? "From" : lang === "es" ? "Desde" : "A partir de"}
-              </span>
-              <span className="font-bold text-lg text-foreground">
-                {tour.currency} {tour.priceFrom}
-              </span>
+          <div className="mt-auto pt-4 border-t border-border space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs text-muted-foreground block">
+                  {lang === "en" ? "From" : lang === "es" ? "Desde" : "A partir de"}
+                </span>
+                <span className="font-bold text-lg text-foreground">
+                  {tour.currency} {tour.priceFrom}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded font-bold text-sm">
+                <Star className="w-3.5 h-3.5 fill-current" />
+                <span>5.0</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded font-bold text-sm">
-              <Star className="w-3.5 h-3.5 fill-current" />
-              <span>5.0</span>
-            </div>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addItem({
+                  tourSlug: tour.slug,
+                  title: t(tour, "title"),
+                  imageUrl: tour.imageUrl || "/images/exp-city.png",
+                  priceFrom: Number(tour.priceFrom),
+                  currency: tour.currency,
+                });
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {lang === "en" ? "Book Now" : lang === "es" ? "Reservar" : "Reservar"}
+            </button>
           </div>
         </div>
       </div>
