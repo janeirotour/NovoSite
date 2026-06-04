@@ -15,6 +15,7 @@ export type TourTourType = typeof TourTourType[keyof typeof TourTourType];
 export const TourTourType = {
   private: 'private',
   group: 'group',
+  shared: 'shared',
   both: 'both',
 } as const;
 
@@ -56,6 +57,8 @@ export interface Tour {
   meetingPoint: string;
   cancellationPolicy: string;
   /** @nullable */
+  premiumBadge?: string | null;
+  /** @nullable */
   regiondoWidget?: string | null;
   /** @nullable */
   seoTitle?: string | null;
@@ -73,6 +76,7 @@ export type TourInputTourType = typeof TourInputTourType[keyof typeof TourInputT
 export const TourInputTourType = {
   private: 'private',
   group: 'group',
+  shared: 'shared',
   both: 'both',
 } as const;
 
@@ -100,6 +104,7 @@ export interface TourInput {
   itinerary: ItineraryStep[];
   meetingPoint: string;
   cancellationPolicy: string;
+  premiumBadge?: string;
   regiondoWidget?: string;
   seoTitle?: string;
   seoDescription?: string;
@@ -132,6 +137,8 @@ export interface TourUpdate {
   itinerary?: ItineraryStep[];
   meetingPoint?: string;
   cancellationPolicy?: string;
+  /** @nullable */
+  premiumBadge?: string | null;
   regiondoWidget?: string;
   seoTitle?: string;
   seoDescription?: string;
@@ -478,6 +485,7 @@ export type ListToursType = typeof ListToursType[keyof typeof ListToursType];
 export const ListToursType = {
   private: 'private',
   group: 'group',
+  shared: 'shared',
   all: 'all',
 } as const;
 

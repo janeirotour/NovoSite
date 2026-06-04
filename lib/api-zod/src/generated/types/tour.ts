@@ -38,6 +38,8 @@ export interface Tour {
   meetingPoint: string;
   cancellationPolicy: string;
   /** @nullable */
+  premiumBadge?: string | null;
+  /** @nullable */
   regiondoWidget?: string | null;
   /** @nullable */
   seoTitle?: string | null;

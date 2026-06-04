@@ -31,6 +31,8 @@ export interface TourUpdate {
   itinerary?: ItineraryStep[];
   meetingPoint?: string;
   cancellationPolicy?: string;
+  /** @nullable */
+  premiumBadge?: string | null;
   regiondoWidget?: string;
   seoTitle?: string;
   seoDescription?: string;

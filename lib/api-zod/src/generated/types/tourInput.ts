@@ -32,6 +32,7 @@ export interface TourInput {
   itinerary: ItineraryStep[];
   meetingPoint: string;
   cancellationPolicy: string;
+  premiumBadge?: string;
   regiondoWidget?: string;
   seoTitle?: string;
   seoDescription?: string;

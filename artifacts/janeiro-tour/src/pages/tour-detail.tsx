@@ -100,7 +100,15 @@ export default function TourDetailPage() {
           <div className="flex flex-wrap gap-2 mb-3">
             <Badge className="bg-primary/90 text-primary-foreground">{tour.destination}</Badge>
             <Badge variant="outline" className="text-white border-white/50 capitalize">{tour.category}</Badge>
-            {tour.tourType !== "group" && <Badge className="bg-accent text-accent-foreground capitalize">{tour.tourType}</Badge>}
+            {tour.tourType === "private" ? (
+              <Badge className="bg-accent text-accent-foreground font-semibold px-3">
+                {lang === "en" ? "Private Tour" : lang === "es" ? "Tour Privado" : "Tour Privativo"}
+              </Badge>
+            ) : (
+              <Badge className="bg-white/20 text-white border border-white/40 backdrop-blur-sm font-semibold px-3">
+                {lang === "en" ? "Shared Tour" : lang === "es" ? "Tour Compartido" : "Tour Compartilhado"}
+              </Badge>
+            )}
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">{title}</h1>
           <div className="flex flex-wrap items-center gap-6 mt-4 text-white/90 text-sm">

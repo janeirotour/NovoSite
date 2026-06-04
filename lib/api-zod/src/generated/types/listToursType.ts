@@ -12,5 +12,6 @@ export type ListToursType = typeof ListToursType[keyof typeof ListToursType];
 export const ListToursType = {
   private: 'private',
   group: 'group',
+  shared: 'shared',
   all: 'all',
 } as const;

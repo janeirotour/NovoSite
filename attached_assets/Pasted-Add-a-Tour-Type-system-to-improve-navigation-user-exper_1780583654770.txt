@@ -1,0 +1,173 @@
+Add a Tour Type system to improve navigation, user experience and conversions.
+
+Do not redesign the website.
+Do not change the existing branding, colors or structure.
+
+Create a clear distinction between Shared Tours and Private Tours throughout the website.
+
+1. Menu Navigation
+
+Under the "Experiences" menu, add:
+
+* All Experiences
+* Private Tours
+* Shared Tours
+* Airport Transfers
+
+Each option should have its own dedicated page and filtering system.
+
+2. Experiences Page
+
+Add a filtering system.
+
+Filters:
+
+Tour Type
+
+* All Tours
+* Shared Tours
+* Private Tours
+
+Destination
+
+* Rio de Janeiro
+* São Paulo
+* Bahia
+* Foz do Iguaçu
+* Recife
+* Amazon Rainforest
+
+Category
+
+* Cultural Experiences
+* Adventure Experiences
+* Food Experiences
+* Airport Transfers
+* Multi-Day Experiences
+
+3. Experience Cards
+
+Add a Tour Type badge to every experience card.
+
+Examples:
+
+Shared Tour
+Private Tour
+
+Add optional Premium Badges:
+
+* Most Personalized Experience
+* Best for Families
+* Luxury Option
+* Most Popular
+* Recommended
+* Local Expert Guide
+* Fully Customizable
+
+These badges should appear above the tour title.
+
+4. Experience Pages
+
+Display Tour Type prominently near the title.
+
+Examples:
+
+Private Tour
+or
+Shared Tour
+
+Add a short explanation:
+
+Private Tours:
+"Exclusive experience with personalized service and flexible scheduling."
+
+Shared Tours:
+"Join other travelers and enjoy an excellent value experience."
+
+5. Homepage Section
+
+Create a new section called:
+
+Choose Your Travel Style
+
+Card 1:
+
+Private Experiences
+
+Personalized itineraries, flexible schedules and exclusive service designed around your interests.
+
+Button:
+Explore Private Tours
+
+Card 2:
+
+Shared Experiences
+
+Join popular experiences, meet fellow travelers and discover Brazil with excellent value.
+
+Button:
+Explore Shared Tours
+
+6. Admin Dashboard
+
+Add a new field for each experience:
+
+Tour Type
+
+Options:
+
+* Shared Tour
+* Private Tour
+
+Add another field:
+
+Premium Badge
+
+Options:
+
+* None
+* Most Personalized Experience
+* Best for Families
+* Luxury Option
+* Most Popular
+* Recommended
+* Local Expert Guide
+* Fully Customizable
+
+The selected badge should automatically appear on the experience card and experience page.
+
+7. Search & Filtering
+
+Allow visitors to filter experiences by:
+
+* Tour Type
+* Destination
+* Category
+* Duration
+* Price Range
+
+8. Conversion Optimization
+
+Private Tours should receive premium visual emphasis.
+
+Display trust indicators such as:
+
+* Private Guide
+* Flexible Schedule
+* Personalized Experience
+* Best for Families
+
+Shared Tours should highlight:
+
+* Best Value
+* Small Groups
+* Most Popular
+* Social Experience
+
+Important:
+
+Do not redesign the website.
+
+Keep the current visual identity and structure.
+
+Only add the Tour Type system, filtering functionality, premium badges and conversion-focused experience categorization.

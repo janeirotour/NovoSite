@@ -17,9 +17,8 @@ const destinations = [
 
 const experiences = [
   { href: "/tours", en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências" },
-  { href: "/tours?category=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" },
-  { href: "/tours?category=culture", en: "Cultural Experiences", es: "Experiencias Culturales", pt: "Experiências Culturais" },
-  { href: "/tours?category=nature", en: "Adventure Experiences", es: "Experiencias de Aventura", pt: "Experiências de Aventura" },
+  { href: "/tours?type=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" },
+  { href: "/tours?type=group", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados" },
   { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto" },
 ];
 

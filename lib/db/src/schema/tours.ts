@@ -27,6 +27,7 @@ export const toursTable = pgTable("tours", {
   itinerary: jsonb("itinerary").notNull().default([]),
   meetingPoint: text("meeting_point").notNull(),
   cancellationPolicy: text("cancellation_policy").notNull(),
+  premiumBadge: text("premium_badge"),
   regiondoWidget: text("regiondo_widget"),
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),

@@ -248,6 +248,91 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Choose Your Travel Style */}
+      <section className="py-20 bg-[#fafaf8]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">
+              {lang === "en" ? "Built around you" : lang === "es" ? "Diseñado para ti" : "Feito para você"}
+            </p>
+            <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">
+              {lang === "en" ? "Choose Your Travel Style" : lang === "es" ? "Elige Tu Estilo de Viaje" : "Escolha Seu Estilo de Viagem"}
+            </h2>
+            <p className="text-muted-foreground text-base max-w-xl mx-auto">
+              {lang === "en"
+                ? "Every traveler is different. We offer two ways to explore — both curated by local experts who know this land deeply."
+                : lang === "es"
+                ? "Cada viajero es diferente. Ofrecemos dos formas de explorar — ambas diseñadas por expertos locales."
+                : "Cada viajante é diferente. Oferecemos duas formas de explorar — ambas criadas por especialistas locais."}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Shared Tours */}
+            <Link href="/tours?type=group">
+              <div className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-400 hover:-translate-y-1">
+                <div className="aspect-[4/3]">
+                  <img src="/images/group-tour.jpg" alt="Shared Tours" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                </div>
+                <div className="absolute top-5 left-5">
+                  <span className="bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
+                    {lang === "en" ? "Shared Tours" : lang === "es" ? "Tours Compartidos" : "Tours Compartilhados"}
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-7">
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {lang === "en" ? "Connect & Explore Together" : lang === "es" ? "Conectar y Explorar Juntos" : "Conecte e Explore Juntos"}
+                  </h3>
+                  <p className="text-white/80 text-sm leading-relaxed mb-4">
+                    {lang === "en"
+                      ? "Join fellow travelers in a small group for an immersive, social experience. Perfect for solo travelers and those who love meeting people from around the world."
+                      : lang === "es"
+                      ? "Únete a otros viajeros en un grupo pequeño. Perfecto para viajeros solos y quienes aman conocer personas de todo el mundo."
+                      : "Junte-se a outros viajantes em um pequeno grupo. Perfeito para viajantes solo e quem ama conhecer pessoas do mundo todo."}
+                  </p>
+                  <div className="flex items-center gap-2 text-primary font-bold text-sm group-hover:gap-3 transition-all">
+                    {lang === "en" ? "Browse Shared Tours" : lang === "es" ? "Ver Tours Compartidos" : "Ver Tours Compartilhados"}
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Private Tours */}
+            <Link href="/tours?type=private">
+              <div className="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-400 hover:-translate-y-1">
+                <div className="aspect-[4/3]">
+                  <img src="/images/team-carnival.jpg" alt="Private Tours" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                </div>
+                <div className="absolute top-5 left-5">
+                  <span className="bg-accent text-accent-foreground text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">
+                    {lang === "en" ? "Private Tours" : lang === "es" ? "Tours Privados" : "Tours Privativos"}
+                  </span>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-7">
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {lang === "en" ? "Your Journey, Your Way" : lang === "es" ? "Tu Viaje, A Tu Manera" : "Sua Jornada, Do Seu Jeito"}
+                  </h3>
+                  <p className="text-white/80 text-sm leading-relaxed mb-4">
+                    {lang === "en"
+                      ? "A fully private, customized experience with a dedicated guide. Ideal for honeymoons, family trips, or anyone who wants a completely tailored adventure."
+                      : lang === "es"
+                      ? "Una experiencia privada y personalizada con un guía dedicado. Ideal para lunas de miel, viajes familiares o quien quiera una aventura completamente a medida."
+                      : "Uma experiência totalmente privativa e personalizada com um guia dedicado. Ideal para lua de mel, viagens em família ou quem quer uma aventura sob medida."}
+                  </p>
+                  <div className="flex items-center gap-2 text-accent font-bold text-sm group-hover:gap-3 transition-all">
+                    {lang === "en" ? "Browse Private Tours" : lang === "es" ? "Ver Tours Privados" : "Ver Tours Privativos"}
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Real moments — photo section */}
       <section className="py-0 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 pb-4">

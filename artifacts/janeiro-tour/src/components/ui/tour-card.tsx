@@ -1,11 +1,38 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { Tour } from "@workspace/api-client-react";
-import { Clock, MapPin, Users, Globe2, Star } from "lucide-react";
+import { Clock, MapPin, Users, Globe2, Star, Crown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
+const PREMIUM_BADGE_LABELS: Record<string, string> = {
+  "Most Personalized Experience": "Most Personalized",
+  "Best for Families": "Best for Families",
+  "Luxury Option": "Luxury",
+  "Most Popular": "Most Popular",
+  "Recommended": "Recommended",
+  "Local Expert Guide": "Local Expert",
+  "Fully Customizable": "Fully Customizable",
+};
+
+function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
+  const isPrivate = tourType === "private";
+  if (isPrivate) {
+    return (
+      <Badge className="bg-accent text-accent-foreground border-none px-2.5 py-0.5 text-xs font-semibold">
+        {lang === "en" ? "Private Tour" : lang === "es" ? "Tour Privado" : "Tour Privativo"}
+      </Badge>
+    );
+  }
+  return (
+    <Badge className="bg-white/20 text-white border border-white/30 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold">
+      {lang === "en" ? "Shared Tour" : lang === "es" ? "Tour Compartido" : "Tour Compartilhado"}
+    </Badge>
+  );
+}
 
 export function TourCard({ tour }: { tour: Tour }) {
   const { t, lang } = useLanguage();
+  const premiumBadge = (tour as Tour & { premiumBadge?: string | null }).premiumBadge;
 
   return (
     <Link href={`/tours/${tour.slug}`}>
@@ -17,8 +44,8 @@ export function TourCard({ tour }: { tour: Tour }) {
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-          
-          <div className="absolute top-4 left-4 flex gap-2">
+
+          <div className="absolute top-4 left-4 flex gap-2 flex-wrap">
             {tour.featured && (
               <Badge className="bg-primary text-primary-foreground font-bold border-none px-3 py-1">
                 {lang === "en" ? "Top Rated" : lang === "es" ? "Destacado" : "Destaque"}
@@ -28,29 +55,34 @@ export function TourCard({ tour }: { tour: Tour }) {
               {tour.category}
             </Badge>
           </div>
-          
+
           <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
             <div className="flex items-center gap-1.5 text-white">
               <MapPin className="w-4 h-4" />
               <span className="text-sm font-medium drop-shadow-md">{tour.destination}</span>
             </div>
-            {tour.tourType === "private" && (
-              <Badge className="bg-accent text-accent-foreground border-none px-2 py-0.5 text-xs">
-                {lang === "en" ? "Private" : lang === "es" ? "Privado" : "Privativo"}
-              </Badge>
-            )}
+            <TourTypeBadge tourType={tour.tourType} lang={lang} />
           </div>
         </div>
-        
+
         <div className="p-5 flex flex-col flex-1">
+          {premiumBadge && (
+            <div className="flex items-center gap-1.5 mb-2">
+              <Crown className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
+                {PREMIUM_BADGE_LABELS[premiumBadge] ?? premiumBadge}
+              </span>
+            </div>
+          )}
+
           <h3 className="font-serif font-bold text-xl leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-2">
             {t(tour, "title")}
           </h3>
-          
+
           <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-muted-foreground mb-4">
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              <span>{tour.durationHours} {lang === "en" ? "hours" : lang === "es" ? "horas" : "horas"}</span>
+              <span>{tour.durationHours} {lang === "en" ? "hours" : "horas"}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4" />
@@ -61,7 +93,7 @@ export function TourCard({ tour }: { tour: Tour }) {
               <span>{tour.languages.join(", ")}</span>
             </div>
           </div>
-          
+
           <div className="mt-auto pt-4 border-t border-border flex items-center justify-between">
             <div>
               <span className="text-xs text-muted-foreground block">

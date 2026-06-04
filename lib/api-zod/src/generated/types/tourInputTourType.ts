@@ -12,5 +12,6 @@ export type TourInputTourType = typeof TourInputTourType[keyof typeof TourInputT
 export const TourInputTourType = {
   private: 'private',
   group: 'group',
+  shared: 'shared',
   both: 'both',
 } as const;

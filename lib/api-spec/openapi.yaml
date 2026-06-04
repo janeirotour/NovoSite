@@ -63,7 +63,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [private, group, all]
+            enum: [private, group, shared, all]
         - name: featured
           in: query
           schema:
@@ -655,7 +655,7 @@ components:
           type: string
         tourType:
           type: string
-          enum: [private, group, both]
+          enum: [private, group, shared, both]
         languages:
           type: array
           items:
@@ -694,6 +694,8 @@ components:
           type: string
         cancellationPolicy:
           type: string
+        premiumBadge:
+          type: ["string", "null"]
         regiondoWidget:
           type: ["string", "null"]
         seoTitle:
@@ -733,7 +735,7 @@ components:
           type: string
         tourType:
           type: string
-          enum: [private, group, both]
+          enum: [private, group, shared, both]
         languages:
           type: array
           items:
@@ -771,6 +773,8 @@ components:
         meetingPoint:
           type: string
         cancellationPolicy:
+          type: string
+        premiumBadge:
           type: string
         regiondoWidget:
           type: string
@@ -846,6 +850,8 @@ components:
           type: string
         cancellationPolicy:
           type: string
+        premiumBadge:
+          type: ["string", "null"]
         regiondoWidget:
           type: string
         seoTitle:

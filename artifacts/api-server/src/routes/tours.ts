@@ -28,6 +28,7 @@ const mapTour = (tour: typeof toursTable.$inferSelect) => ({
   includedItems: (tour.includedItems as string[]) || [],
   notIncludedItems: (tour.notIncludedItems as string[]) || [],
   itinerary: (tour.itinerary as object[]) || [],
+  premiumBadge: tour.premiumBadge ?? null,
   createdAt: tour.createdAt.toISOString(),
 });
 

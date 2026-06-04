@@ -170,6 +170,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
       tourType: tour?.tourType ?? "group",
       groupSizeMax: tour?.groupSizeMax ?? 15,
       imageUrl: tour?.imageUrl ?? "",
+      premiumBadge: tour?.premiumBadge ?? "",
       overview: tour?.overview ?? "",
       overviewEs: tour?.overviewEs ?? "",
       overviewPt: tour?.overviewPt ?? "",
@@ -240,12 +241,27 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1"><Label>Tour Type</Label>
             <select className="w-full border rounded-md px-3 py-2 text-sm bg-background" value={form.tourType as string} onChange={e => set("tourType", e.target.value)}>
-              <option value="group">Group</option>
-              <option value="private">Private</option>
-              <option value="both">Group & Private</option>
+              <option value="group">Shared Tour</option>
+              <option value="private">Private Tour</option>
+              <option value="both">Shared & Private</option>
             </select>
           </div>
           <div className="space-y-1"><Label>Sort Order</Label><Input type="number" value={form.sortOrder as number} onChange={e => set("sortOrder", parseInt(e.target.value))} /></div>
+        </div>
+        <div className="grid grid-cols-1 gap-3">
+          <div className="space-y-1">
+            <Label>Premium Badge <span className="text-muted-foreground font-normal">(optional — highlights a key selling point)</span></Label>
+            <select className="w-full border rounded-md px-3 py-2 text-sm bg-background" value={form.premiumBadge as string} onChange={e => set("premiumBadge", e.target.value)}>
+              <option value="">— No badge —</option>
+              <option value="Most Popular">Most Popular</option>
+              <option value="Most Personalized Experience">Most Personalized Experience</option>
+              <option value="Best for Families">Best for Families</option>
+              <option value="Luxury Option">Luxury Option</option>
+              <option value="Recommended">Recommended</option>
+              <option value="Local Expert Guide">Local Expert Guide</option>
+              <option value="Fully Customizable">Fully Customizable</option>
+            </select>
+          </div>
         </div>
         <div className="flex gap-6 pt-1">
           <div className="flex items-center gap-2"><Switch checked={form.published as boolean} onCheckedChange={v => set("published", v)} /><Label>Published</Label></div>
