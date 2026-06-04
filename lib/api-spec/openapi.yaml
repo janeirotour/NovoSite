@@ -24,6 +24,10 @@ tags:
     description: Site settings
   - name: admin
     description: Admin operations
+  - name: extras
+    description: Tour optional extras / add-ons
+  - name: reservations
+    description: Booking reservations
 
 paths:
   /healthz:
@@ -618,6 +622,178 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AdminStats"
+
+  # Extras
+  /tours/{slug}/extras:
+    get:
+      operationId: listTourExtras
+      tags: [extras]
+      summary: List active extras for a tour
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of extras
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TourExtra"
+
+  /admin/extras:
+    get:
+      operationId: listAllExtras
+      tags: [extras]
+      summary: List all extras (admin), optionally filtered by tourId
+      parameters:
+        - name: tourId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of extras
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TourExtra"
+
+  /admin/tours/{tourId}/extras:
+    post:
+      operationId: createTourExtra
+      tags: [extras]
+      summary: Create a new extra for a tour
+      parameters:
+        - name: tourId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourExtraInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TourExtra"
+
+  /admin/extras/{id}:
+    put:
+      operationId: updateTourExtra
+      tags: [extras]
+      summary: Update a tour extra
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourExtraUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TourExtra"
+    delete:
+      operationId: deleteTourExtra
+      tags: [extras]
+      summary: Delete a tour extra
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # Reservations
+  /admin/reservations:
+    get:
+      operationId: listReservations
+      tags: [reservations]
+      summary: List all reservations (admin)
+      parameters:
+        - name: bookingStatus
+          in: query
+          schema:
+            type: string
+        - name: paymentStatus
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+
+  /admin/reservations/{id}:
+    get:
+      operationId: getReservation
+      tags: [reservations]
+      summary: Get a single reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+    patch:
+      operationId: updateReservationStatus
+      tags: [reservations]
+      summary: Update reservation booking/payment status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
 
 components:
   schemas:
@@ -1412,3 +1588,166 @@ components:
           type: integer
         averageRating:
           type: number
+
+    TourExtra:
+      type: object
+      required: [id, tourId, name, price, currency, active, sortOrder, createdAt]
+      properties:
+        id:
+          type: integer
+        tourId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+        currency:
+          type: string
+        active:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    TourExtraInput:
+      type: object
+      required: [name, price]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+          default: USD
+        active:
+          type: boolean
+          default: true
+        sortOrder:
+          type: integer
+          default: 0
+
+    TourExtraUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+        active:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    SelectedExtra:
+      type: object
+      required: [id, name, price, currency]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+
+    Reservation:
+      type: object
+      required: [id, reservationRef, tourSlug, tourTitle, customerName, customerEmail, pax, basePrice, extrasTotal, totalAmount, currency, paymentStatus, bookingStatus, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        reservationRef:
+          type: string
+        tourSlug:
+          type: string
+        tourTitle:
+          type: string
+        customerName:
+          type: string
+        customerEmail:
+          type: string
+        customerPhone:
+          type: string
+          nullable: true
+        customerCountry:
+          type: string
+          nullable: true
+        hotelAddress:
+          type: string
+          nullable: true
+        pickupLocation:
+          type: string
+          nullable: true
+        dropoffLocation:
+          type: string
+          nullable: true
+        flightNumber:
+          type: string
+          nullable: true
+        preferredDate:
+          type: string
+          nullable: true
+        preferredTime:
+          type: string
+          nullable: true
+        pax:
+          type: integer
+        language:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        selectedExtras:
+          type: array
+          items:
+            $ref: "#/components/schemas/SelectedExtra"
+        basePrice:
+          type: number
+        extrasTotal:
+          type: number
+        totalAmount:
+          type: number
+        currency:
+          type: string
+        paymentStatus:
+          type: string
+        bookingStatus:
+          type: string
+        stripeSessionId:
+          type: string
+          nullable: true
+        stripePaymentId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ReservationStatusUpdate:
+      type: object
+      properties:
+        bookingStatus:
+          type: string
+          enum: [pending_confirmation, confirmed, cancelled, completed]
+        paymentStatus:
+          type: string
+          enum: [pending, paid, failed, refunded]
+        notes:
+          type: string

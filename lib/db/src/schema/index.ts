@@ -5,3 +5,5 @@ export * from "./faqs";
 export * from "./reviews";
 export * from "./settings";
 export * from "./admins";
+export * from "./extras";
+export * from "./reservations";

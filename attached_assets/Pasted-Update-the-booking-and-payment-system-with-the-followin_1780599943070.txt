@@ -1,0 +1,221 @@
+Update the booking and payment system with the following requirements.
+
+Do not change the current website structure.
+Do not redesign the website.
+Do not change unrelated pages or sections.
+Keep the current Janeiro Tour & Travel visual identity.
+
+1. Reservation Management in Admin Dashboard
+
+Create a Reservations / Orders section inside the admin dashboard.
+
+The admin must be able to see:
+
+* Reservation ID
+* Customer name
+* Customer email
+* Customer phone / WhatsApp
+* Product booked
+* Product type
+* Selected date
+* Selected time
+* Number of participants
+* Selected extras
+* Total amount
+* Payment status
+* Booking status
+* Stripe payment ID
+* Customer notes
+* Date and time of booking
+
+Booking status options:
+
+* Pending Confirmation
+* Confirmed
+* Cancelled
+* Completed
+
+2. Email Notifications
+
+Send an automatic email to the admin whenever a new reservation is created.
+
+Admin notification email should include:
+
+* Customer name
+* Customer email
+* Customer phone / WhatsApp
+* Product booked
+* Selected date
+* Selected time
+* Number of participants
+* Extras selected
+* Total amount
+* Payment status
+* Customer notes
+
+Send an automatic confirmation email to the customer after successful Stripe payment.
+
+Customer email should include:
+
+* Booking summary
+* Product name
+* Selected date
+* Selected time
+* Number of participants
+* Extras selected
+* Total paid
+* Important customer information
+* Message: "Your booking request has been received and will be confirmed by our team."
+
+3. Customer Booking Form Before Checkout
+
+Before sending the customer to Stripe Checkout, show a booking form.
+
+The customer must be able to enter:
+
+* Full name
+* Email
+* Phone / WhatsApp
+* Country
+* Hotel / accommodation address
+* Pickup location
+* Drop-off location, if applicable
+* Flight number, if applicable
+* Preferred date
+* Preferred time
+* Number of participants
+* Language preference
+* Special requests / notes
+
+The form fields should be reusable for all current and future products.
+
+4. Calendar Date and Time Selection
+
+On each product page, allow the customer to select:
+
+* Preferred date
+* Preferred time
+
+Important:
+
+This does not need to be a complex availability calendar yet.
+
+Label the selected date and time as:
+
+"Date and time to be confirmed by our team"
+
+The admin should receive the selected date and time in the reservation details.
+
+5. Optional Extras
+
+Create an optional extras system for each product.
+
+The admin must be able to add, edit, remove and price optional extras for every product.
+
+Examples:
+
+* Round-trip transportation
+* Private transportation
+* Hotel pickup
+* Extra passenger
+* Child seat
+* Additional stop
+* Guide upgrade
+* Meal upgrade
+
+Each optional extra must have:
+
+* Extra name
+* Description
+* Price
+* Currency
+* Active / inactive status
+
+Customers must be able to select optional extras before checkout.
+
+Selected extras must be added automatically to the final total.
+
+Selected extras must appear in:
+
+* Cart / checkout summary
+* Stripe checkout metadata
+* Admin reservation details
+* Admin email notification
+* Customer confirmation email
+
+6. Read Existing Optional Values
+
+If a product already has optional pricing or transportation prices, the system should detect and use those values.
+
+Do not hardcode optional extras.
+
+Use the product's editable optional extras fields from the admin dashboard.
+
+This must become the standard booking pattern for all current and future products.
+
+7. Cart / Booking Summary
+
+Before redirecting to Stripe Checkout, show a clear booking summary:
+
+* Product name
+* Base price
+* Number of participants
+* Selected date
+* Selected time
+* Selected extras
+* Extra prices
+* Final total
+
+The final total must update automatically when extras are selected.
+
+8. Stripe Integration
+
+Send the correct final total to Stripe Checkout.
+
+Use Stripe Checkout securely.
+
+Do not store card details on the website.
+
+Use Stripe webhooks to confirm payment success.
+
+After successful payment:
+
+* Create or update the reservation in the admin dashboard
+* Send admin email notification
+* Send customer confirmation email
+* Redirect customer to a thank-you page
+
+9. Design Updates
+
+Keep the existing design.
+
+Only make these small visual changes:
+
+* Change hover color from yellow to green
+* Change product price color in cart / booking summary to green
+* Use the same green consistently for booking totals, hover states and selected extras
+
+Do not change the overall website colors or layout.
+
+10. Future Product Standard
+
+Apply this booking system as the default pattern for every future product.
+
+Every new product should automatically support:
+
+* Booking form
+* Date selection
+* Time selection
+* Optional extras
+* Booking summary
+* Stripe checkout
+* Admin reservation tracking
+* Admin email notification
+* Customer confirmation email
+
+Important:
+
+Do not rebuild the website.
+Do not redesign the website.
+Do not change the current structure.
+Only improve the booking, reservation, optional extras, Stripe checkout and admin tracking system.

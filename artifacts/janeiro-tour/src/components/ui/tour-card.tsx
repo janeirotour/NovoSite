@@ -134,6 +134,7 @@ export function TourCard({ tour }: { tour: Tour }) {
                   imageUrl: tour.imageUrl || "/images/exp-city.png",
                   priceFrom: Number(tour.priceFrom),
                   currency: tour.currency,
+                  pax: 1,
                 });
               }}
               className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"

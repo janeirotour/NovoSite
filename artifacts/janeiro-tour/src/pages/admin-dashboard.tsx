@@ -8,6 +8,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useListReviews, useCreateReview, useUpdateReview, useDeleteReview,
     useListFaqs, useCreateFaq, useUpdateFaq, useDeleteFaq,
     useGetSettings, useUpdateSettings,
+    useListReservations, useUpdateReservationStatus,
+    useListAllExtras, useCreateTourExtra, useUpdateTourExtra, useDeleteTourExtra,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
     getGetSettingsQueryKey, getGetAdminStatsQueryKey,
@@ -27,7 +29,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
     LayoutDashboard, MapPin, Package, FileText, Star, HelpCircle,
     Settings, LogOut, Plus, Pencil, Trash2, BarChart3, Globe, Image,
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
-    Bold, Italic, Link2, ImagePlus
+    Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
+    CheckCircle2, Clock, AlertCircle, DollarSign,
   } from "lucide-react";
 
   // ─── helpers ───────────────────────────────────────────────────────────────
@@ -691,6 +694,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
                 { value: "faqs", icon: HelpCircle, label: "FAQs" },
                 { value: "homepage", icon: Image, label: "Homepage" },
                 { value: "settings", icon: Settings, label: "Settings & SEO" },
+                { value: "reservations", icon: ClipboardList, label: "Reservations" },
+                { value: "extras", icon: Tag, label: "Tour Extras" },
               ].map(({ value, icon: Icon, label }) => (
                 <TabsTrigger key={value} value={value} className="gap-1.5 text-sm">
                   <Icon size={14} />{label}
@@ -730,6 +735,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <TabsContent value="faqs"><FaqsTab /></TabsContent>
             <TabsContent value="homepage"><HomepageTab /></TabsContent>
             <TabsContent value="settings"><SettingsTab /></TabsContent>
+            <TabsContent value="reservations"><ReservationsTab /></TabsContent>
+            <TabsContent value="extras"><ExtrasTab /></TabsContent>
           </Tabs>
         </div>
       </div>
@@ -1544,4 +1551,300 @@ import { useState, useRef, useCallback, useEffect } from "react";
       </div>
     );
   }
-  
+
+  // ─── reservations tab ───────────────────────────────────────────────────
+
+  const STATUS_LABELS: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
+    pending_confirmation: { label: "Pending", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200", Icon: Clock },
+    confirmed:            { label: "Confirmed", color: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200", Icon: CheckCircle2 },
+    cancelled:            { label: "Cancelled", color: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200", Icon: XIcon },
+    completed:            { label: "Completed", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200", Icon: CheckCircle2 },
+  };
+
+  const PAYMENT_LABELS: Record<string, string> = { pending: "Pending", paid: "Paid", refunded: "Refunded", failed: "Failed" };
+
+  function StatusBadge({ status }: { status: string }) {
+    const s = STATUS_LABELS[status] ?? { label: status, color: "bg-gray-100 text-gray-800", Icon: AlertCircle };
+    return (
+      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${s.color}`}>
+        <s.Icon size={11} />{s.label}
+      </span>
+    );
+  }
+
+  type Reservation = {
+    id: number; bookingRef: string; tourSlug: string; tourTitle: string;
+    customerName: string; customerEmail: string; customerPhone?: string | null; customerCountry?: string | null;
+    hotelAddress?: string | null; pickupLocation?: string | null; dropoffLocation?: string | null; flightNumber?: string | null;
+    preferredDate?: string | null; preferredTime?: string | null; pax: number; language?: string | null; notes?: string | null;
+    basePrice: number | string; extrasTotal: number | string; totalAmount: number | string; currency: string;
+    paymentStatus: string; bookingStatus: string; adminNotes?: string | null; createdAt: string | Date;
+  };
+
+  function ReservationsTab() {
+    const { data: reservations = [], isLoading, refetch } = useListReservations() as { data: Reservation[]; isLoading: boolean; refetch: () => void };
+    const updateStatus = useUpdateReservationStatus();
+    const [filter, setFilter] = useState("all");
+    const [selected, setSelected] = useState<Reservation | null>(null);
+    const [adminNotes, setAdminNotes] = useState("");
+    const [newStatus, setNewStatus] = useState("");
+
+    const filtered = filter === "all" ? reservations : reservations.filter((r) => r.bookingStatus === filter);
+
+    const openDetail = (r: Reservation) => { setSelected(r); setAdminNotes(r.adminNotes ?? ""); setNewStatus(r.bookingStatus); };
+
+    const handleSave = async () => {
+      if (!selected) return;
+      await updateStatus.mutateAsync({ id: selected.id, data: { bookingStatus: newStatus as "pending_confirmation" | "confirmed" | "cancelled" | "completed", notes: adminNotes } });
+      refetch();
+      setSelected(null);
+    };
+
+    if (isLoading) return <div className="py-20 text-center text-muted-foreground">Loading reservations…</div>;
+
+    const totalCollected = reservations.filter(r => r.paymentStatus === "paid").reduce((s, r) => s + Number(r.totalAmount), 0);
+
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div><h2 className="text-2xl font-bold">Reservations</h2><p className="text-sm text-muted-foreground mt-1">All customer bookings</p></div>
+          <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 rounded-xl px-4 py-2">
+            <DollarSign size={16} className="text-green-600" />
+            <span className="text-sm font-bold text-green-600">${totalCollected.toFixed(0)} collected</span>
+          </div>
+        </div>
+
+        <div className="flex gap-2 mb-5 flex-wrap">
+          {(["all", "pending_confirmation", "confirmed", "cancelled", "completed"] as const).map((s) => (
+            <button key={s} onClick={() => setFilter(s)}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${filter === s ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted"}`}>
+              {s === "all" ? "All" : STATUS_LABELS[s]?.label ?? s}
+              {" "}<span className="opacity-60">({s === "all" ? reservations.length : reservations.filter(r => r.bookingStatus === s).length})</span>
+            </button>
+          ))}
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="py-20 text-center text-muted-foreground bg-card border rounded-xl">
+            <ClipboardList size={40} className="mx-auto mb-3 opacity-30" /><p>No reservations yet</p>
+          </div>
+        ) : (
+          <div className="bg-card border rounded-xl overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Ref</TableHead><TableHead>Tour</TableHead><TableHead>Customer</TableHead>
+                  <TableHead>Date</TableHead><TableHead className="text-center">Pax</TableHead>
+                  <TableHead>Status</TableHead><TableHead>Payment</TableHead><TableHead className="text-right">Total</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((r) => (
+                  <TableRow key={r.id} className="cursor-pointer hover:bg-muted/50" onClick={() => openDetail(r)}>
+                    <TableCell className="font-mono text-xs font-semibold">{r.bookingRef}</TableCell>
+                    <TableCell><p className="truncate max-w-[140px] text-sm font-medium">{r.tourTitle}</p></TableCell>
+                    <TableCell><p className="text-sm font-medium">{r.customerName}</p><p className="text-xs text-muted-foreground">{r.customerEmail}</p></TableCell>
+                    <TableCell className="text-sm">{r.preferredDate ?? "—"}</TableCell>
+                    <TableCell className="text-center text-sm">{r.pax}</TableCell>
+                    <TableCell><StatusBadge status={r.bookingStatus} /></TableCell>
+                    <TableCell><span className={`text-xs font-medium ${r.paymentStatus === "paid" ? "text-green-600" : "text-muted-foreground"}`}>{PAYMENT_LABELS[r.paymentStatus] ?? r.paymentStatus}</span></TableCell>
+                    <TableCell className="text-right font-bold text-green-600">${Number(r.totalAmount).toFixed(0)} {r.currency}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        {selected && (
+          <Dialog open onOpenChange={() => setSelected(null)}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  <span className="font-mono text-primary">{selected.bookingRef}</span>
+                  <StatusBadge status={selected.bookingStatus} />
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-5">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><p className="text-muted-foreground text-xs mb-0.5">Tour</p><p className="font-semibold">{selected.tourTitle}</p></div>
+                  <div><p className="text-muted-foreground text-xs mb-0.5">Travelers</p><p className="font-semibold">{selected.pax} person{selected.pax > 1 ? "s" : ""}</p></div>
+                  <div><p className="text-muted-foreground text-xs mb-0.5">Preferred Date</p><p className="font-semibold">{selected.preferredDate ?? "Not specified"}</p></div>
+                  <div><p className="text-muted-foreground text-xs mb-0.5">Preferred Time</p><p className="font-semibold">{selected.preferredTime ?? "Not specified"}</p></div>
+                </div>
+                <div className="border rounded-xl p-4 space-y-3">
+                  <h4 className="font-semibold text-sm">Customer</h4>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div><p className="text-muted-foreground text-xs">Name</p><p>{selected.customerName}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Email</p><p>{selected.customerEmail}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Phone</p><p>{selected.customerPhone ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Country</p><p>{selected.customerCountry ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Hotel / Address</p><p>{selected.hotelAddress ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Pickup</p><p>{selected.pickupLocation ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Drop-off</p><p>{selected.dropoffLocation ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Flight</p><p>{selected.flightNumber ?? "—"}</p></div>
+                    <div><p className="text-muted-foreground text-xs">Language</p><p>{selected.language ?? "—"}</p></div>
+                  </div>
+                  {selected.notes && <div><p className="text-muted-foreground text-xs mb-1">Notes</p><p className="text-sm bg-muted/50 rounded p-2">{selected.notes}</p></div>}
+                </div>
+                <div className="border rounded-xl p-4">
+                  <h4 className="font-semibold text-sm mb-2">Financials</h4>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between"><span className="text-muted-foreground">Base</span><span>${Number(selected.basePrice).toFixed(0)} {selected.currency}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Extras</span><span>${Number(selected.extrasTotal).toFixed(0)} {selected.currency}</span></div>
+                    <div className="flex justify-between font-bold border-t pt-1 mt-1"><span>Total</span><span className="text-green-600">${Number(selected.totalAmount).toFixed(0)} {selected.currency}</span></div>
+                    <div className="flex justify-between text-xs mt-1"><span className="text-muted-foreground">Payment</span><span className={selected.paymentStatus === "paid" ? "text-green-600 font-medium" : ""}>{PAYMENT_LABELS[selected.paymentStatus] ?? selected.paymentStatus}</span></div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Update Status</label>
+                    <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)} className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                      {Object.entries(STATUS_LABELS).map(([v, s]) => <option key={v} value={v}>{s.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-1 block">Admin Notes</label>
+                    <textarea value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={3} placeholder="Internal notes about this booking…"
+                      className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3 justify-end mt-2">
+                <Button variant="outline" onClick={() => setSelected(null)}>Close</Button>
+                <Button onClick={handleSave} disabled={updateStatus.isPending} className="gap-1">
+                  <Save size={14} />{updateStatus.isPending ? "Saving…" : "Save Changes"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    );
+  }
+
+  // ─── extras tab ─────────────────────────────────────────────────────────
+
+  type TourExtra = { id: number; tourSlug: string; name: string; description?: string | null; price: number | string; currency: string; isActive: boolean };
+  const EMPTY_EXTRA = { name: "", description: "", price: "", currency: "USD" };
+  const ICLASS = "w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary";
+
+  function ExtrasTab() {
+    const { data: tours = [] } = useListTours();
+    const { data: allExtras = [], refetch } = useListAllExtras() as { data: TourExtra[]; refetch: () => void };
+    const createExtra = useCreateTourExtra();
+    const updateExtra = useUpdateTourExtra();
+    const deleteExtra = useDeleteTourExtra();
+    const [selectedSlug, setSelectedSlug] = useState("");
+    const [form, setForm] = useState(EMPTY_EXTRA);
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editForm, setEditForm] = useState(EMPTY_EXTRA);
+
+    const tourExtras = allExtras.filter((e) => e.tourSlug === selectedSlug);
+
+    const selectedTourObj = (tours as { id: number; slug: string; title: string }[]).find(t => t.slug === selectedSlug);
+
+    const handleAdd = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!selectedSlug || !form.name.trim() || !form.price || !selectedTourObj) return;
+      await createExtra.mutateAsync({ tourId: selectedTourObj.id, data: { name: form.name.trim(), description: form.description.trim() || undefined, price: parseFloat(form.price), currency: form.currency } });
+      setForm(EMPTY_EXTRA);
+      refetch();
+    };
+
+    const handleEditSave = async (id: number) => {
+      if (!editForm.name.trim() || !editForm.price) return;
+      await updateExtra.mutateAsync({ id, data: { name: editForm.name.trim(), description: editForm.description.trim() || undefined, price: parseFloat(editForm.price), currency: editForm.currency } });
+      setEditingId(null);
+      refetch();
+    };
+
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold">Tour Extras &amp; Add-ons</h2>
+          <p className="text-sm text-muted-foreground mt-1">Configure optional add-ons shown on each tour page during booking</p>
+        </div>
+
+        <div className="mb-6">
+          <label className="text-sm font-medium mb-2 block">Select Tour</label>
+          <select value={selectedSlug} onChange={(e) => setSelectedSlug(e.target.value)} className={ICLASS + " max-w-sm"}>
+            <option value="">— Choose a tour —</option>
+            {(tours as { slug: string; title: string }[]).map((t) => <option key={t.slug} value={t.slug}>{t.title}</option>)}
+          </select>
+        </div>
+
+        {selectedSlug && (
+          <div className="grid lg:grid-cols-[1fr_360px] gap-6">
+            <div>
+              <h3 className="font-semibold mb-3">
+                Extras for <span className="text-primary">{selectedSlug}</span>
+                <span className="ml-2 text-xs font-normal text-muted-foreground">({tourExtras.length})</span>
+              </h3>
+              {tourExtras.length === 0 ? (
+                <div className="py-12 text-center text-muted-foreground bg-card border rounded-xl">
+                  <Tag size={36} className="mx-auto mb-2 opacity-30" /><p>No extras yet — add one on the right</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {tourExtras.map((extra) => (
+                    <div key={extra.id} className="bg-card border rounded-xl p-4">
+                      {editingId === extra.id ? (
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="col-span-2"><input value={editForm.name} onChange={(e) => setEditForm(f => ({ ...f, name: e.target.value }))} placeholder="Name" className={ICLASS} /></div>
+                            <input value={editForm.price} type="number" min="0" step="0.01" onChange={(e) => setEditForm(f => ({ ...f, price: e.target.value }))} placeholder="Price" className={ICLASS} />
+                            <select value={editForm.currency} onChange={(e) => setEditForm(f => ({ ...f, currency: e.target.value }))} className={ICLASS}>
+                              <option value="USD">USD</option><option value="BRL">BRL</option><option value="EUR">EUR</option>
+                            </select>
+                            <div className="col-span-2"><input value={editForm.description} onChange={(e) => setEditForm(f => ({ ...f, description: e.target.value }))} placeholder="Description (optional)" className={ICLASS} /></div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={() => handleEditSave(extra.id)} disabled={updateExtra.isPending}><Save size={13} /> Save</Button>
+                            <Button size="sm" variant="outline" onClick={() => setEditingId(null)}>Cancel</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-semibold text-sm">{extra.name}</p>
+                            {extra.description && <p className="text-xs text-muted-foreground mt-0.5">{extra.description}</p>}
+                            <p className="text-green-600 font-bold text-sm mt-1">+${Number(extra.price).toFixed(0)} {extra.currency}</p>
+                          </div>
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="sm" onClick={() => { setEditingId(extra.id); setEditForm({ name: extra.name, description: extra.description ?? "", price: String(extra.price), currency: extra.currency }); }}><Pencil size={13} /></Button>
+                            <ConfirmDelete label={extra.name} onConfirm={async () => { await deleteExtra.mutateAsync({ id: extra.id }); refetch(); }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3">Add New Extra</h3>
+              <form onSubmit={handleAdd} className="bg-card border rounded-xl p-5 space-y-4">
+                <div><label className="text-sm font-medium mb-1 block">Name <span className="text-destructive">*</span></label>
+                  <input value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Professional Photos" className={ICLASS} required /></div>
+                <div><label className="text-sm font-medium mb-1 block">Description</label>
+                  <input value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Short description (optional)" className={ICLASS} /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div><label className="text-sm font-medium mb-1 block">Price <span className="text-destructive">*</span></label>
+                    <input value={form.price} type="number" min="0" step="0.01" onChange={(e) => setForm(f => ({ ...f, price: e.target.value }))} placeholder="25" className={ICLASS} required /></div>
+                  <div><label className="text-sm font-medium mb-1 block">Currency</label>
+                    <select value={form.currency} onChange={(e) => setForm(f => ({ ...f, currency: e.target.value }))} className={ICLASS}>
+                      <option value="USD">USD</option><option value="BRL">BRL</option><option value="EUR">EUR</option>
+                    </select></div>
+                </div>
+                <Button type="submit" className="w-full gap-2" disabled={createExtra.isPending}>
+                  <Plus size={15} />{createExtra.isPending ? "Adding…" : "Add Extra"}
+                </Button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }

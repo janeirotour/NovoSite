@@ -1,22 +1,50 @@
 import { Router, type IRouter } from "express";
-import { db, toursTable } from "@workspace/db";
+import { db, toursTable, reservationsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { storage } from "../storage";
 import { getUncachableStripeClient } from "../stripeClient";
+import { createReservation } from "./reservations";
 
 const router: IRouter = Router();
 
-interface CartItem {
+interface SelectedExtra {
+  id: number;
+  name: string;
+  price: number;
+  currency: string;
+}
+
+interface BookingItem {
   tourSlug: string;
   pax: number;
   title: string;
+  selectedExtras?: SelectedExtra[];
+  preferredDate?: string;
+  preferredTime?: string;
 }
+
+interface CustomerData {
+  name: string;
+  email: string;
+  phone?: string;
+  country?: string;
+  hotelAddress?: string;
+  pickupLocation?: string;
+  dropoffLocation?: string;
+  flightNumber?: string;
+  language?: string;
+  notes?: string;
+}
+
+type StripeLineItem =
+  | { price: string; quantity: number }
+  | { price_data: { currency: string; product_data: { name: string }; unit_amount: number }; quantity: number };
 
 router.post("/stripe/checkout", async (req, res) => {
   try {
-    const { items, customerEmail } = req.body as {
-      items: CartItem[];
-      customerEmail?: string;
+    const { items, customer } = req.body as {
+      items: BookingItem[];
+      customer?: CustomerData;
     };
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -24,13 +52,19 @@ router.post("/stripe/checkout", async (req, res) => {
     }
 
     const stripe = await getUncachableStripeClient();
+    const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
 
-    const lineItems: { price: string; quantity: number }[] = [];
-    const missingProducts: string[] = [];
+    const lineItems: StripeLineItem[] = [];
+    const reservationIds: number[] = [];
 
     for (const item of items) {
       const [tour] = await db
-        .select({ id: toursTable.id, title: toursTable.title })
+        .select({
+          id: toursTable.id,
+          title: toursTable.title,
+          priceFrom: toursTable.priceFrom,
+          currency: toursTable.currency,
+        })
         .from(toursTable)
         .where(eq(toursTable.slug, item.tourSlug))
         .limit(1);
@@ -40,26 +74,58 @@ router.post("/stripe/checkout", async (req, res) => {
       }
 
       const priceId = await storage.getStripePriceForTour(item.tourSlug);
-
       if (!priceId) {
-        missingProducts.push(item.tourSlug);
-        continue;
+        return res.status(400).json({
+          error: `No Stripe price configured for: ${item.tourSlug}. Run the seed script.`,
+        });
       }
 
       lineItems.push({ price: priceId, quantity: Math.max(1, item.pax) });
-    }
 
-    if (missingProducts.length > 0) {
-      return res.status(400).json({
-        error: `Products not yet configured in Stripe for: ${missingProducts.join(", ")}. Please run the seed script first.`,
-      });
-    }
+      const extras = item.selectedExtras ?? [];
+      const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
 
-    if (lineItems.length === 0) {
-      return res.status(400).json({ error: "No valid items in cart" });
-    }
+      if (extrasTotal > 0) {
+        lineItems.push({
+          price_data: {
+            currency: (tour.currency ?? "USD").toLowerCase(),
+            product_data: { name: `Extras — ${tour.title}` },
+            unit_amount: Math.round(extrasTotal * 100),
+          },
+          quantity: 1,
+        });
+      }
 
-    const baseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
+      if (customer?.name && customer?.email) {
+        const basePrice = Number(tour.priceFrom);
+        const totalAmount = basePrice * item.pax + extrasTotal;
+
+        const reservation = await createReservation({
+          tourSlug: item.tourSlug,
+          tourTitle: tour.title,
+          customerName: customer.name,
+          customerEmail: customer.email,
+          customerPhone: customer.phone,
+          customerCountry: customer.country,
+          hotelAddress: customer.hotelAddress,
+          pickupLocation: customer.pickupLocation,
+          dropoffLocation: customer.dropoffLocation,
+          flightNumber: customer.flightNumber,
+          preferredDate: item.preferredDate,
+          preferredTime: item.preferredTime,
+          pax: item.pax,
+          language: customer.language,
+          notes: customer.notes,
+          selectedExtras: extras,
+          basePrice,
+          extrasTotal,
+          totalAmount,
+          currency: tour.currency ?? "USD",
+        });
+
+        reservationIds.push(reservation.id);
+      }
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -67,17 +133,29 @@ router.post("/stripe/checkout", async (req, res) => {
       mode: "payment",
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/checkout/cancel`,
-      ...(customerEmail ? { customer_email: customerEmail } : {}),
+      ...(customer?.email ? { customer_email: customer.email } : {}),
       metadata: {
-        tour_slugs: items.map((i) => i.tourSlug).join(","),
-        pax_counts: items.map((i) => i.pax).join(","),
+        reservation_ids: reservationIds.join(","),
+        customer_name: (customer?.name ?? "").slice(0, 200),
       },
     });
 
+    if (reservationIds.length > 0 && session.id) {
+      await Promise.all(
+        reservationIds.map((resId) =>
+          db
+            .update(reservationsTable)
+            .set({ stripeSessionId: session.id })
+            .where(eq(reservationsTable.id, resId))
+        )
+      );
+    }
+
     return res.json({ url: session.url });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Checkout failed";
     req.log?.error(err, "Stripe checkout error");
-    return res.status(500).json({ error: err.message || "Checkout failed" });
+    return res.status(500).json({ error: message });
   }
 });
 
@@ -98,8 +176,9 @@ router.get("/stripe/checkout/session", async (req, res) => {
       currency: session.currency,
       lineItems: session.line_items?.data ?? [],
     });
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || "Failed to fetch session" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch session";
+    return res.status(500).json({ error: message });
   }
 });
 

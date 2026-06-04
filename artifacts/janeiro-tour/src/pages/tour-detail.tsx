@@ -1,14 +1,25 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
-import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs } from "@workspace/api-client-react";
+import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourExtras } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
-import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart } from "lucide-react";
+import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart, Minus, Plus, Calendar, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+const TIME_SLOTS = [
+  "07:00", "08:00", "09:00", "10:00", "11:00", "12:00",
+  "13:00", "14:00", "15:00", "16:00",
+];
+
+function getTomorrowStr() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().split("T")[0];
+}
 
 function RegionodoWidget({ code }: { code: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,6 +71,41 @@ export default function TourDetailPage() {
   const resolvedId = (tour as { id?: number } | undefined)?.id ?? tourId;
   const { data: reviews } = useListReviews({ tourId: resolvedId });
   const { data: faqs } = useListFaqs({ tourId: resolvedId });
+
+  const [localPax, setLocalPax] = useState(2);
+  const [selectedExtraIds, setSelectedExtraIds] = useState<Set<number>>(new Set());
+  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
+
+  const tourSlugForExtras = tour?.slug ?? (isNumeric ? "" : param);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: tourExtras = [] } = useListTourExtras(tourSlugForExtras, { query: { enabled: !!tourSlugForExtras } as any });
+
+  const toggleExtra = (id: number) => {
+    setSelectedExtraIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const buildCartItem = () => ({
+    tourSlug: tour!.slug,
+    title: tour!.title,
+    imageUrl: tour!.imageUrl,
+    priceFrom: Number(tour!.priceFrom),
+    currency: tour!.currency,
+    pax: localPax,
+    selectedExtras: tourExtras
+      .filter((e) => selectedExtraIds.has(e.id))
+      .map((e) => ({ id: e.id, name: e.name, price: e.price, currency: e.currency })),
+    preferredDate: preferredDate || undefined,
+    preferredTime: preferredTime || undefined,
+  });
+
+  const selectedExtrasTotal = tourExtras
+    .filter((e) => selectedExtraIds.has(e.id))
+    .reduce((s, e) => s + e.price, 0);
 
   if (isLoading) {
     return (
@@ -357,6 +403,103 @@ export default function TourDetailPage() {
 
                 <Separator />
 
+                {/* Travelers */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <Users size={15} className="text-muted-foreground" />
+                    Travelers
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setLocalPax((p) => Math.max(1, p - 1))}
+                      className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-40"
+                      disabled={localPax <= 1}
+                    >
+                      <Minus size={13} />
+                    </button>
+                    <span className="w-5 text-center text-sm font-bold">{localPax}</span>
+                    <button
+                      onClick={() => setLocalPax((p) => Math.min(Number(tour.groupSizeMax) || 20, p + 1))}
+                      className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-muted transition-colors"
+                    >
+                      <Plus size={13} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Preferred Date */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium mb-1.5">
+                    <Calendar size={14} className="text-muted-foreground" />
+                    Preferred Date
+                  </label>
+                  <input
+                    type="date"
+                    value={preferredDate}
+                    min={getTomorrowStr()}
+                    onChange={(e) => setPreferredDate(e.target.value)}
+                    className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+
+                {/* Preferred Time */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium mb-1.5">
+                    <Clock size={14} className="text-muted-foreground" />
+                    Preferred Time
+                  </label>
+                  <select
+                    value={preferredTime}
+                    onChange={(e) => setPreferredTime(e.target.value)}
+                    className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    <option value="">Select a time…</option>
+                    {TIME_SLOTS.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Extras */}
+                {tourExtras.length > 0 && (
+                  <div>
+                    <p className="flex items-center gap-2 text-sm font-medium mb-2">
+                      <Tag size={14} className="text-muted-foreground" />
+                      Add-ons &amp; Extras
+                    </p>
+                    <div className="space-y-1.5">
+                      {tourExtras.map((extra) => (
+                        <label
+                          key={extra.id}
+                          className="flex items-center gap-2.5 cursor-pointer rounded-lg p-2 hover:bg-muted/50 transition-colors"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedExtraIds.has(extra.id)}
+                            onChange={() => toggleExtra(extra.id)}
+                            className="rounded accent-green-600"
+                          />
+                          <span className="flex-1 text-sm">{extra.name}</span>
+                          <span className="text-green-600 font-semibold text-sm">+${extra.price}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedExtrasTotal > 0 && (
+                  <div className="bg-green-50 rounded-lg px-3 py-2 text-sm dark:bg-green-950/30">
+                    <div className="flex justify-between font-semibold">
+                      <span>Total (incl. extras)</span>
+                      <span className="text-green-600">
+                        ${(Number(tour.priceFrom) * localPax + selectedExtrasTotal).toFixed(0)} {tour.currency}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <Separator />
+
                 {/* Booking Buttons */}
                 {hasRegionodo ? (
                   <div className="mt-2">
@@ -365,15 +508,9 @@ export default function TourDetailPage() {
                 ) : (
                   <div className="space-y-2">
                     <Button
-                      className="w-full h-11 bg-primary hover:bg-primary/90 font-semibold gap-2"
+                      className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold gap-2"
                       onClick={() => {
-                        addItem({
-                          tourSlug: tour.slug,
-                          title: tour.title,
-                          imageUrl: tour.imageUrl,
-                          priceFrom: Number(tour.priceFrom),
-                          currency: tour.currency,
-                        });
+                        addItem(buildCartItem());
                         openCart();
                       }}
                     >
@@ -413,15 +550,9 @@ export default function TourDetailPage() {
           <p className="text-xl font-bold text-primary">${tour.priceFrom} <span className="text-sm font-normal">{tour.currency}</span></p>
         </div>
         <Button
-          className="flex-1 max-w-xs h-12 text-base font-semibold bg-primary hover:bg-primary/90 gap-2"
+          className="flex-1 max-w-xs h-12 text-base font-semibold bg-green-600 hover:bg-green-700 text-white gap-2"
           onClick={() => {
-            addItem({
-              tourSlug: tour.slug,
-              title: tour.title,
-              imageUrl: tour.imageUrl,
-              priceFrom: Number(tour.priceFrom),
-              currency: tour.currency,
-            });
+            addItem(buildCartItem());
             openCart();
           }}
         >

@@ -1,5 +1,12 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
+export interface SelectedExtra {
+  id: number;
+  name: string;
+  price: number;
+  currency: string;
+}
+
 export interface CartItem {
   tourSlug: string;
   title: string;
@@ -7,13 +14,18 @@ export interface CartItem {
   priceFrom: number;
   currency: string;
   pax: number;
+  selectedExtras: SelectedExtra[];
+  preferredDate?: string;
+  preferredTime?: string;
 }
 
 interface CartContextValue {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "pax"> & { pax?: number }) => void;
+  addItem: (item: Omit<CartItem, "selectedExtras"> & { selectedExtras?: SelectedExtra[] }) => void;
   removeItem: (tourSlug: string) => void;
   updatePax: (tourSlug: string, pax: number) => void;
+  updateExtras: (tourSlug: string, extras: SelectedExtra[]) => void;
+  updateDateTime: (tourSlug: string, preferredDate?: string, preferredTime?: string) => void;
   clearCart: () => void;
   isOpen: boolean;
   openCart: () => void;
@@ -41,17 +53,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  const addItem = (incoming: Omit<CartItem, "pax"> & { pax?: number }) => {
+  const addItem = (incoming: Omit<CartItem, "selectedExtras"> & { selectedExtras?: SelectedExtra[] }) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.tourSlug === incoming.tourSlug);
       if (existing) {
         return prev.map((i) =>
           i.tourSlug === incoming.tourSlug
-            ? { ...i, pax: i.pax + (incoming.pax ?? 1) }
+            ? {
+                ...i,
+                pax: incoming.pax,
+                selectedExtras: incoming.selectedExtras ?? i.selectedExtras,
+                preferredDate: incoming.preferredDate ?? i.preferredDate,
+                preferredTime: incoming.preferredTime ?? i.preferredTime,
+              }
             : i
         );
       }
-      return [...prev, { ...incoming, pax: incoming.pax ?? 1 }];
+      return [...prev, { ...incoming, selectedExtras: incoming.selectedExtras ?? [] }];
     });
     setIsOpen(true);
   };
@@ -62,9 +80,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updatePax = (tourSlug: string, pax: number) => {
     if (pax < 1) return;
-    setItems((prev) =>
-      prev.map((i) => (i.tourSlug === tourSlug ? { ...i, pax } : i))
-    );
+    setItems((prev) => prev.map((i) => (i.tourSlug === tourSlug ? { ...i, pax } : i)));
+  };
+
+  const updateExtras = (tourSlug: string, extras: SelectedExtra[]) => {
+    setItems((prev) => prev.map((i) => (i.tourSlug === tourSlug ? { ...i, selectedExtras: extras } : i)));
+  };
+
+  const updateDateTime = (tourSlug: string, preferredDate?: string, preferredTime?: string) => {
+    setItems((prev) => prev.map((i) => (i.tourSlug === tourSlug ? { ...i, preferredDate, preferredTime } : i)));
   };
 
   const clearCart = () => setItems([]);
@@ -72,11 +96,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const closeCart = () => setIsOpen(false);
 
   const totalItems = items.reduce((sum, i) => sum + i.pax, 0);
-  const totalPrice = items.reduce((sum, i) => sum + i.priceFrom * i.pax, 0);
+  const totalPrice = items.reduce((sum, i) => {
+    const extrasTotal = i.selectedExtras?.reduce((s, e) => s + e.price, 0) ?? 0;
+    return sum + i.priceFrom * i.pax + extrasTotal;
+  }, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updatePax, clearCart, isOpen, openCart, closeCart, totalItems, totalPrice }}
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updatePax,
+        updateExtras,
+        updateDateTime,
+        clearCart,
+        isOpen,
+        openCart,
+        closeCart,
+        totalItems,
+        totalPrice,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -471,6 +471,100 @@ export interface AdminStats {
   averageRating: number;
 }
 
+export interface TourExtra {
+  id: number;
+  tourId: number;
+  name: string;
+  description?: string | null;
+  price: number;
+  currency: string;
+  active: boolean;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface TourExtraInput {
+  name: string;
+  description?: string;
+  price: number;
+  currency?: string;
+  active?: boolean;
+  sortOrder?: number;
+}
+
+export interface TourExtraUpdate {
+  name?: string;
+  description?: string;
+  price?: number;
+  currency?: string;
+  active?: boolean;
+  sortOrder?: number;
+}
+
+export interface SelectedExtra {
+  id: number;
+  name: string;
+  price: number;
+  currency: string;
+}
+
+export interface Reservation {
+  id: number;
+  reservationRef: string;
+  tourSlug: string;
+  tourTitle: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  customerCountry?: string | null;
+  hotelAddress?: string | null;
+  pickupLocation?: string | null;
+  dropoffLocation?: string | null;
+  flightNumber?: string | null;
+  preferredDate?: string | null;
+  preferredTime?: string | null;
+  pax: number;
+  language?: string | null;
+  notes?: string | null;
+  selectedExtras?: SelectedExtra[];
+  basePrice: number;
+  extrasTotal: number;
+  totalAmount: number;
+  currency: string;
+  paymentStatus: string;
+  bookingStatus: string;
+  stripeSessionId?: string | null;
+  stripePaymentId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ReservationStatusUpdateBookingStatus = typeof ReservationStatusUpdateBookingStatus[keyof typeof ReservationStatusUpdateBookingStatus];
+
+
+export const ReservationStatusUpdateBookingStatus = {
+  pending_confirmation: 'pending_confirmation',
+  confirmed: 'confirmed',
+  cancelled: 'cancelled',
+  completed: 'completed',
+} as const;
+
+export type ReservationStatusUpdatePaymentStatus = typeof ReservationStatusUpdatePaymentStatus[keyof typeof ReservationStatusUpdatePaymentStatus];
+
+
+export const ReservationStatusUpdatePaymentStatus = {
+  pending: 'pending',
+  paid: 'paid',
+  failed: 'failed',
+  refunded: 'refunded',
+} as const;
+
+export interface ReservationStatusUpdate {
+  bookingStatus?: ReservationStatusUpdateBookingStatus;
+  paymentStatus?: ReservationStatusUpdatePaymentStatus;
+  notes?: string;
+}
+
 export type ListToursParams = {
 destination?: string;
 category?: string;
@@ -504,5 +598,14 @@ tourId?: number;
 export type ListReviewsParams = {
 tourId?: number;
 featured?: boolean;
+};
+
+export type ListAllExtrasParams = {
+tourId?: number;
+};
+
+export type ListReservationsParams = {
+bookingStatus?: string;
+paymentStatus?: string;
 };
 

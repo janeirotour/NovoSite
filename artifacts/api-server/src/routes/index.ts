@@ -9,6 +9,8 @@ import settingsRouter from "./settings";
 import adminRouter from "./admin";
 import uploadRouter from "./upload";
 import stripeRouter from "./stripe";
+import extrasRouter from "./extras";
+import reservationsRouter from "./reservations";
 
 const router: IRouter = Router();
 
@@ -22,6 +24,8 @@ router.use(settingsRouter);
 router.use(adminRouter);
 router.use(uploadRouter);
 router.use(stripeRouter);
+router.use(extrasRouter);
+router.use(reservationsRouter);
 
 export default router;
   

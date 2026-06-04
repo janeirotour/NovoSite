@@ -919,3 +919,243 @@ export const GetAdminStatsResponse = zod.object({
 })
 
 
+/**
+ * @summary List active extras for a tour
+ */
+export const ListTourExtrasParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const ListTourExtrasResponseItem = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number(),
+  "currency": zod.string(),
+  "active": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+export const ListTourExtrasResponse = zod.array(ListTourExtrasResponseItem)
+
+
+/**
+ * @summary List all extras (admin), optionally filtered by tourId
+ */
+export const ListAllExtrasQueryParams = zod.object({
+  "tourId": zod.coerce.number().optional()
+})
+
+export const ListAllExtrasResponseItem = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number(),
+  "currency": zod.string(),
+  "active": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAllExtrasResponse = zod.array(ListAllExtrasResponseItem)
+
+
+/**
+ * @summary Create a new extra for a tour
+ */
+export const CreateTourExtraParams = zod.object({
+  "tourId": zod.coerce.number()
+})
+
+export const createTourExtraBodyCurrencyDefault = `USD`;
+export const createTourExtraBodyActiveDefault = true;
+export const createTourExtraBodySortOrderDefault = 0;
+
+export const CreateTourExtraBody = zod.object({
+  "name": zod.string(),
+  "description": zod.string().optional(),
+  "price": zod.number(),
+  "currency": zod.string().default(createTourExtraBodyCurrencyDefault),
+  "active": zod.boolean().default(createTourExtraBodyActiveDefault),
+  "sortOrder": zod.number().default(createTourExtraBodySortOrderDefault)
+})
+
+
+/**
+ * @summary Update a tour extra
+ */
+export const UpdateTourExtraParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateTourExtraBody = zod.object({
+  "name": zod.string().optional(),
+  "description": zod.string().optional(),
+  "price": zod.number().optional(),
+  "currency": zod.string().optional(),
+  "active": zod.boolean().optional(),
+  "sortOrder": zod.number().optional()
+})
+
+export const UpdateTourExtraResponse = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number(),
+  "currency": zod.string(),
+  "active": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Delete a tour extra
+ */
+export const DeleteTourExtraParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary List all reservations (admin)
+ */
+export const ListReservationsQueryParams = zod.object({
+  "bookingStatus": zod.coerce.string().optional(),
+  "paymentStatus": zod.coerce.string().optional()
+})
+
+export const ListReservationsResponseItem = zod.object({
+  "id": zod.number(),
+  "reservationRef": zod.string(),
+  "tourSlug": zod.string(),
+  "tourTitle": zod.string(),
+  "customerName": zod.string(),
+  "customerEmail": zod.string(),
+  "customerPhone": zod.string().nullish(),
+  "customerCountry": zod.string().nullish(),
+  "hotelAddress": zod.string().nullish(),
+  "pickupLocation": zod.string().nullish(),
+  "dropoffLocation": zod.string().nullish(),
+  "flightNumber": zod.string().nullish(),
+  "preferredDate": zod.string().nullish(),
+  "preferredTime": zod.string().nullish(),
+  "pax": zod.number(),
+  "language": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "selectedExtras": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+})).optional(),
+  "basePrice": zod.number(),
+  "extrasTotal": zod.number(),
+  "totalAmount": zod.number(),
+  "currency": zod.string(),
+  "paymentStatus": zod.string(),
+  "bookingStatus": zod.string(),
+  "stripeSessionId": zod.string().nullish(),
+  "stripePaymentId": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+export const ListReservationsResponse = zod.array(ListReservationsResponseItem)
+
+
+/**
+ * @summary Get a single reservation
+ */
+export const GetReservationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetReservationResponse = zod.object({
+  "id": zod.number(),
+  "reservationRef": zod.string(),
+  "tourSlug": zod.string(),
+  "tourTitle": zod.string(),
+  "customerName": zod.string(),
+  "customerEmail": zod.string(),
+  "customerPhone": zod.string().nullish(),
+  "customerCountry": zod.string().nullish(),
+  "hotelAddress": zod.string().nullish(),
+  "pickupLocation": zod.string().nullish(),
+  "dropoffLocation": zod.string().nullish(),
+  "flightNumber": zod.string().nullish(),
+  "preferredDate": zod.string().nullish(),
+  "preferredTime": zod.string().nullish(),
+  "pax": zod.number(),
+  "language": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "selectedExtras": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+})).optional(),
+  "basePrice": zod.number(),
+  "extrasTotal": zod.number(),
+  "totalAmount": zod.number(),
+  "currency": zod.string(),
+  "paymentStatus": zod.string(),
+  "bookingStatus": zod.string(),
+  "stripeSessionId": zod.string().nullish(),
+  "stripePaymentId": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Update reservation booking/payment status
+ */
+export const UpdateReservationStatusParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateReservationStatusBody = zod.object({
+  "bookingStatus": zod.enum(['pending_confirmation', 'confirmed', 'cancelled', 'completed']).optional(),
+  "paymentStatus": zod.enum(['pending', 'paid', 'failed', 'refunded']).optional(),
+  "notes": zod.string().optional()
+})
+
+export const UpdateReservationStatusResponse = zod.object({
+  "id": zod.number(),
+  "reservationRef": zod.string(),
+  "tourSlug": zod.string(),
+  "tourTitle": zod.string(),
+  "customerName": zod.string(),
+  "customerEmail": zod.string(),
+  "customerPhone": zod.string().nullish(),
+  "customerCountry": zod.string().nullish(),
+  "hotelAddress": zod.string().nullish(),
+  "pickupLocation": zod.string().nullish(),
+  "dropoffLocation": zod.string().nullish(),
+  "flightNumber": zod.string().nullish(),
+  "preferredDate": zod.string().nullish(),
+  "preferredTime": zod.string().nullish(),
+  "pax": zod.number(),
+  "language": zod.string().nullish(),
+  "notes": zod.string().nullish(),
+  "selectedExtras": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+})).optional(),
+  "basePrice": zod.number(),
+  "extrasTotal": zod.number(),
+  "totalAmount": zod.number(),
+  "currency": zod.string(),
+  "paymentStatus": zod.string(),
+  "bookingStatus": zod.string(),
+  "stripeSessionId": zod.string().nullish(),
+  "stripePaymentId": zod.string().nullish(),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+})
+
+
