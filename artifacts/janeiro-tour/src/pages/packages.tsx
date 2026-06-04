@@ -3,7 +3,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Check, Star, ArrowRight, Clock, Users, Award, Tag, Layers, Heart, MessageCircle } from "lucide-react";
+import { Check, Star, ArrowRight, Clock, Users, Award, Tag, Layers, Heart, MessageCircle, Plane, Car } from "lucide-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 
 const BADGE_STYLES: Record<string, string> = {
@@ -159,6 +159,35 @@ export default function PackagesPage() {
                               </div>
                             </div>
                           ))}
+                          {/* Airport transfers — always included in every package */}
+                          <div className="flex gap-3 bg-muted/40 rounded-xl p-3 border">
+                            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                              <Plane size={14} />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-semibold text-sm leading-tight">
+                                {lang === "en" ? "Airport Arrival Transfer (GIG)" : lang === "es" ? "Transfer de Llegada al Aeropuerto (GIG)" : "Transfer de Chegada no Aeroporto (GIG)"}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                                {lang === "en" ? "Pick-up from Galeão airport to your hotel on Day 1" : lang === "es" ? "Recogida del aeropuerto de Galeão a tu hotel el Día 1" : "Busca no aeroporto de Galeão até o hotel no Dia 1"}
+                              </p>
+                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Car size={10} />$60/person</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-3 bg-muted/40 rounded-xl p-3 border">
+                            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                              <Plane size={14} className="rotate-45" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-semibold text-sm leading-tight">
+                                {lang === "en" ? "Airport Departure Transfer (GIG)" : lang === "es" ? "Transfer de Salida al Aeropuerto (GIG)" : "Transfer de Saída para o Aeroporto (GIG)"}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                                {lang === "en" ? "Drop-off from hotel to Galeão airport on Day 3" : lang === "es" ? "Traslado del hotel al aeropuerto de Galeão el Día 3" : "Traslado do hotel para o aeroporto de Galeão no Dia 3"}
+                              </p>
+                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Car size={10} />$60/person</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
