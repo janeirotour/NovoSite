@@ -1,0 +1,181 @@
+Create a new premium cultural experience inspired by a highly-rated local experience in Rio de Janeiro.
+
+Do not copy any text, branding, images, itinerary or content from third-party platforms.
+
+Create an original Janeiro Tour & Travel experience using the existing website structure, branding, categories and admin system.
+
+Do not redesign the website.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT TYPE
+
+Experience
+
+Category:
+Cultural Experiences
+
+Tour Type:
+Shared Tour
+
+Destination:
+Rio de Janeiro
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+TITLE
+
+Rio Nightlife & Local Culture Experience
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+SHORT DESCRIPTION
+
+Discover Rio de Janeiro beyond the tourist attractions through an immersive evening experience combining local culture, music, history, food and authentic social interactions. Explore vibrant neighborhoods, learn about Brazilian traditions and experience Rio like a local.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+EXPERIENCE OVERVIEW
+
+Experience Rio de Janeiro after dark through a carefully curated cultural journey designed for international travelers seeking authentic local experiences.
+
+Meet fellow travelers, discover hidden gems, learn about Brazilian culture, enjoy local flavors and experience the city's vibrant atmosphere accompanied by knowledgeable local hosts.
+
+This experience focuses on cultural immersion, local storytelling and genuine connections rather than traditional sightseeing.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+HIGHLIGHTS
+
+Authentic local cultural experience
+Explore Rio beyond the tourist areas
+Learn about Brazilian traditions
+Meet travelers from around the world
+Local nightlife insights
+Cultural storytelling
+Small group experience
+English-speaking host
+Great for solo travelers, couples and friends
+Safe and welcoming environment
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+SCHEDULE
+
+Available Days:
+
+Monday
+Thursday
+Friday
+Saturday
+Sunday
+
+Suggested Start Time:
+
+7:00 PM
+
+Suggested Duration:
+
+4–5 Hours
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+INCLUDED
+
+Local host
+Cultural walking experience
+Local insights and recommendations
+Small group experience
+Personalized attention
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+NOT INCLUDED
+
+Food and beverages
+Transportation
+Personal expenses
+Optional purchases
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+OPTIONAL ADD-ON
+
+Round-Trip Transportation
+
+Allow customers to add transportation during booking.
+
+Pricing should be editable from the admin dashboard.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+IDEAL FOR
+
+Solo travelers
+Couples
+Friends
+First-time visitors to Rio
+Travelers seeking authentic local experiences
+Cultural travelers
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+FAQ
+
+Is this experience suitable for solo travelers?
+Yes. Many guests join alone and enjoy meeting other travelers.
+
+Is transportation included?
+No. Transportation can be added as an optional upgrade.
+
+What language is the experience offered in?
+English. Additional languages may be available depending on demand.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+ADMIN DASHBOARD REQUIREMENTS
+
+Allow editing:
+
+Title
+Description
+Duration
+Meeting point
+Available days
+Start time
+Images
+Gallery
+Transportation pricing
+FAQs
+SEO title
+SEO description
+Published status
+
+Allow image uploads directly from the computer.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+SEO
+
+Primary Keywords:
+
+Rio nightlife experience
+Rio cultural experience
+Things to do in Rio at night
+Rio local experience
+Rio de Janeiro nightlife tour
+Authentic Rio experience
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+IMPORTANT
+
+Do not change the existing website structure.
+
+Do not redesign the website.
+
+Do not modify Janeiro Tour & Travel branding.
+
+Use the same experience page layout, card design, filters and admin management system already used throughout the website.
+
+Create this as an original Janeiro Tour & Travel product inspired by Rio's culture, nightlife and local experiences rather than a copy of any third-party listing.
