@@ -333,40 +333,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Real moments — photo section */}
-      <section className="py-0 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 pb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] group">
-              <img
-                src="/images/team-carnival.jpg"
-                alt="Janeiro Tour carnival experience"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-5 left-5">
-                <span className="text-white font-semibold text-base drop-shadow">
-                  {lang === "en" ? "Carnival Experience, Rio de Janeiro" : lang === "es" ? "Experiencia Carnaval, Río de Janeiro" : "Experiência Carnaval, Rio de Janeiro"}
-                </span>
-              </div>
-            </div>
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] group">
-              <img
-                src="/images/group-tour.jpg"
-                alt="Janeiro Tour group at Christ the Redeemer"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-5 left-5">
-                <span className="text-white font-semibold text-base drop-shadow">
-                  {lang === "en" ? "Group Tour, Cristo Redentor" : lang === "es" ? "Tour en Grupo, Cristo Redentor" : "Passeio em Grupo, Cristo Redentor"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* TripAdvisor Reviews */}
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto px-4">
