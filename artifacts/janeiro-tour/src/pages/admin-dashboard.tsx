@@ -461,7 +461,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 space-y-2">
           <p className="font-semibold">📝 To edit the About Us page content:</p>
           <p>The About Us page has rich visual sections. Use the <strong>Tours</strong> tab to manage tour cards shown on this page.</p>
-          <p>For text edits on the About Us sections (founder story, Afro-Tourism section, recognition), click <strong>Open Live</strong> above and the page content reflects real-time.</p>
+          <p>For text edits on the About Us sections (founder story, Afrotourism section, recognition), click <strong>Open Live</strong> above and the page content reflects real-time.</p>
           <p className="text-xs text-amber-700 mt-1">Full inline editing for static pages is on the roadmap — contact info, hero text and social links are all editable from the Homepage tab.</p>
         </div>
         <div className="flex gap-2">

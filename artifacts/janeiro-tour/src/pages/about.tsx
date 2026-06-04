@@ -99,7 +99,7 @@ export default function AboutPage() {
                   ✊🏿 Black-owned Business
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
-                  Afro-Tourism Pioneer
+                  Afrotourism Pioneer
                 </span>
               </div>
               <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
@@ -151,7 +151,7 @@ export default function AboutPage() {
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] uppercase tracking-widest mb-5">
-              ✊🏿 Black-owned Business · Afro-Tourism
+              ✊🏿 Black-owned Business · Afrotourism
             </span>
             <h2 className="font-bold text-3xl md:text-4xl text-white mb-5 leading-tight">
               Rooted in Afro-Brazilian Culture
@@ -175,7 +175,7 @@ export default function AboutPage() {
               },
               {
                 icon: "🌍",
-                title: "Afro-Tourism",
+                title: "Afrotourism",
                 desc: "We specialize in experiences that honor Black culture, history and traditions — from Little Africa in Rio to Afro-Brazilian roots in Salvador, Bahia.",
               },
             ].map((item) => (

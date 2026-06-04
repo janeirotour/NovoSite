@@ -69,7 +69,7 @@ export default function OurStoryPage() {
                   ✊🏿 Black-owned Business
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
-                  Afro-Tourism Pioneer
+                  Afrotourism Pioneer
                 </span>
               </div>
               <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
@@ -80,7 +80,7 @@ export default function OurStoryPage() {
                   Founded by Dandara — an Afro-Brazilian entrepreneur born and raised in Rio de Janeiro — Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country, including its powerful Afro-Brazilian heritage.
                 </p>
                 <p>
-                  Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began as a small project driven by passion has grown into a trusted travel company that proudly puts Afro-tourism, Black culture and community at the center of everything we do.
+                  Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began as a small project driven by passion has grown into a trusted travel company that proudly puts Afrotourism, Black culture and community at the center of everything we do.
                 </p>
                 <p>
                   Our Afro team reflects the rich diversity of Brazil — guides, storytellers and culture-bearers who share their heritage with every guest who travels with us.

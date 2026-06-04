@@ -147,7 +147,7 @@ export function Footer() {
             </span>
             <span className="text-white/25">·</span>
             <span>
-              {lang === "en" && "Afro-Tourism"}
+              {lang === "en" && "Afrotourism"}
               {lang === "es" && "Afroturismo"}
               {lang === "pt" && "Afroturismo"}
             </span>

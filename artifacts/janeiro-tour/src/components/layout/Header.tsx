@@ -149,7 +149,7 @@ export function Header() {
             <img
               src="/janeiro-logo.png"
               alt="Janeiro Tour & Travel"
-              className={cn("h-8 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
+              className={cn("h-11 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
                 const next = (e.target as HTMLImageElement).nextElementSibling as HTMLElement | null;
