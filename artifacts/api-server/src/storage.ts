@@ -11,7 +11,7 @@ export class Storage {
         WHERE p.metadata->>'tour_slug' = ${tourSlug}
           AND pr.active = true
           AND p.active = true
-        ORDER BY pr.unit_amount ASC
+        ORDER BY pr.created DESC
         LIMIT 1
       `
     );
