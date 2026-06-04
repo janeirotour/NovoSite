@@ -129,9 +129,9 @@ export function Header() {
   );
 
   const t = {
-    en: { home: "Home", about: "About Us", dest: "Destinations", exp: "Experiences", guide: "Travel Guide", contact: "Contact", book: "Book Now" },
-    es: { home: "Inicio", about: "Nosotros", dest: "Destinos", exp: "Experiencias", guide: "Guía de Viaje", contact: "Contacto", book: "Reservar" },
-    pt: { home: "Início", about: "Sobre Nós", dest: "Destinos", exp: "Experiências", guide: "Guia de Viagem", contact: "Contato", book: "Reservar" },
+    en: { home: "Home", about: "About Us", dest: "Destinations", exp: "Experiences", pkgs: "Packages", guide: "Travel Guide", contact: "Contact", book: "Book Now" },
+    es: { home: "Inicio", about: "Nosotros", dest: "Destinos", exp: "Experiencias", pkgs: "Paquetes", guide: "Guía de Viaje", contact: "Contacto", book: "Reservar" },
+    pt: { home: "Início", about: "Sobre Nós", dest: "Destinos", exp: "Experiências", pkgs: "Pacotes", guide: "Guia de Viagem", contact: "Contato", book: "Reservar" },
   }[l];
 
   const currentLang = LANGS.find(([code]) => code === l)!;
@@ -170,6 +170,7 @@ export function Header() {
             <NavDropdown label={t.dest} items={destinations} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
             <NavDropdown label={t.exp} items={experiences} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
 
+            <Link href="/packages"><span className={cn(navLink, location === "/packages" ? "text-gray-900 font-medium" : "")}>{t.pkgs}</span></Link>
             <Link href="/blog"><span className={cn(navLink, location === "/blog" ? "text-gray-900 font-medium" : "")}>{t.guide}</span></Link>
             <Link href="/contact"><span className={cn(navLink, location === "/contact" ? "text-gray-900 font-medium" : "")}>{t.contact}</span></Link>
           </nav>
@@ -292,6 +293,7 @@ export function Header() {
                 </div>
               ))}
 
+              <Link href="/packages" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.pkgs}</Link>
               <Link href="/blog" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.guide}</Link>
               <Link href="/contact" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.contact}</Link>
 
