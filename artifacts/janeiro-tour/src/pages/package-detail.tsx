@@ -14,8 +14,7 @@ const VEHICLE_TIERS = [
   { minPax: 17, maxPax: null, vehicle: "Coach Bus",   price: 700 },
 ];
 
-// Representative pax counts shown in the pricing table (one per tier + 1 pax)
-const TABLE_SAMPLES = [1, 2, 4, 8, 12, 20];
+const TABLE_ROWS = Array.from({ length: 45 }, (_, i) => i + 1);
 
 function getVehicleTier(pax: number) {
   return (
@@ -348,40 +347,31 @@ export default function PackageDetailPage() {
               <thead>
                 <tr className="bg-muted/60 border-b">
                   <th className="px-5 py-3 text-left font-semibold text-muted-foreground">Travelers</th>
-                  <th className="px-5 py-3 text-left font-semibold text-muted-foreground">Vehicle</th>
-                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Activities</th>
-                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Transport + Transfers</th>
-                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Total (−5%)</th>
+                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Package Total (−5%)</th>
                   <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Per Person</th>
                 </tr>
               </thead>
               <tbody>
-                {TABLE_SAMPLES.map((n, i) => {
-                  const { grandTotal: gt, toursTotal: tt, vt: tier } = calcPackageTotal(tours, n);
-                  const transport = tier.price * 4; // 2 round trips + 2 transfers
-                  const isActive = n === pax || (i < TABLE_SAMPLES.length - 1
-                    ? n <= pax && pax < TABLE_SAMPLES[i + 1]
-                    : n <= pax);
+                {TABLE_ROWS.map((n) => {
+                  const { grandTotal: gt } = calcPackageTotal(tours, n);
+                  const isActive = n === pax;
                   return (
                     <tr
                       key={n}
                       className={`border-b last:border-0 transition-colors ${
-                        isActive ? "bg-green-50 dark:bg-green-950/20" : "hover:bg-muted/30"
+                        isActive ? "bg-green-50 dark:bg-green-950/20 font-semibold" : "hover:bg-muted/30"
                       }`}
                     >
-                      <td className="px-5 py-3 font-medium">
+                      <td className="px-5 py-2.5 font-medium">
                         {n} {n === 1 ? "person" : "people"}
                         {isActive && (
-                          <span className="ml-2 text-[10px] bg-green-600 text-white px-1.5 py-0.5 rounded-full font-bold">
+                          <span className="ml-2 text-[10px] bg-green-600 text-white px-1.5 py-0.5 rounded-full font-bold align-middle">
                             selected
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3 text-muted-foreground">{tier.vehicle}</td>
-                      <td className="px-5 py-3 text-right">${tt.toFixed(0)}</td>
-                      <td className="px-5 py-3 text-right text-muted-foreground">${transport}</td>
-                      <td className="px-5 py-3 text-right font-bold text-green-600">${gt.toFixed(0)}</td>
-                      <td className="px-5 py-3 text-right font-semibold">${(gt / n).toFixed(0)}</td>
+                      <td className="px-5 py-2.5 text-right font-bold text-green-600">${gt.toFixed(0)}</td>
+                      <td className="px-5 py-2.5 text-right">${(gt / n).toFixed(0)}</td>
                     </tr>
                   );
                 })}
