@@ -26,7 +26,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
   import {
     LayoutDashboard, MapPin, Package, FileText, Star, HelpCircle,
     Settings, LogOut, Plus, Pencil, Trash2, BarChart3, Globe, Image,
-    ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight
+    ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
+    Bold, Italic, Link2, ImagePlus
   } from "lucide-react";
 
   // ─── helpers ───────────────────────────────────────────────────────────────
@@ -926,6 +927,81 @@ import { useState, useRef, useCallback, useEffect } from "react";
     );
   }
 
+  function MarkdownEditor({ value, onChange: onChangeMd, placeholder, rows = 14 }: {
+    value: string; onChange: (v: string) => void; placeholder?: string; rows?: number;
+  }) {
+    const taRef = useRef<HTMLTextAreaElement>(null);
+
+    const wrap = (before: string, after: string) => {
+      const ta = taRef.current;
+      if (!ta) return;
+      const s = ta.selectionStart, e = ta.selectionEnd;
+      const sel = value.slice(s, e) || "text";
+      const next = value.slice(0, s) + before + sel + after + value.slice(e);
+      onChangeMd(next);
+      setTimeout(() => { ta.focus(); ta.setSelectionRange(s + before.length, s + before.length + sel.length); }, 0);
+    };
+
+    const insertLink = () => {
+      const ta = taRef.current;
+      if (!ta) return;
+      const s = ta.selectionStart, e = ta.selectionEnd;
+      const sel = value.slice(s, e) || "link text";
+      const url = window.prompt("Link URL (affiliate or page):", "https://");
+      if (!url) return;
+      const md = `[${sel}](${url})`;
+      const next = value.slice(0, s) + md + value.slice(e);
+      onChangeMd(next);
+      setTimeout(() => { ta.focus(); ta.setSelectionRange(s, s + md.length); }, 0);
+    };
+
+    const insertImage = () => {
+      const ta = taRef.current;
+      if (!ta) return;
+      const s = ta.selectionStart;
+      const url = window.prompt("Image URL:", "https://");
+      if (!url) return;
+      const alt = window.prompt("Alt text / caption:", "image") || "image";
+      const md = `\n\n![${alt}](${url})\n\n`;
+      const next = value.slice(0, s) + md + value.slice(s);
+      onChangeMd(next);
+      setTimeout(() => { ta.focus(); ta.setSelectionRange(s + md.length, s + md.length); }, 0);
+    };
+
+    return (
+      <div className="rounded-md border border-input overflow-hidden">
+        <div className="flex items-center gap-0.5 px-2 py-1 bg-muted/40 border-b border-input">
+          <button type="button" onClick={() => wrap("**", "**")} title="Bold"
+            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <Bold className="w-3.5 h-3.5" />
+          </button>
+          <button type="button" onClick={() => wrap("*", "*")} title="Italic"
+            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <Italic className="w-3.5 h-3.5" />
+          </button>
+          <span className="w-px h-4 bg-border mx-1" />
+          <button type="button" onClick={insertLink} title="Insert link / affiliate"
+            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <Link2 className="w-3.5 h-3.5" />
+          </button>
+          <button type="button" onClick={insertImage} title="Insert image"
+            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <ImagePlus className="w-3.5 h-3.5" />
+          </button>
+          <span className="ml-auto text-[10px] text-muted-foreground/60 pr-1">Markdown</span>
+        </div>
+        <textarea
+          ref={taRef}
+          rows={rows}
+          value={value}
+          onChange={e => onChangeMd(e.target.value)}
+          placeholder={placeholder}
+          className="w-full px-3 py-2.5 text-sm font-mono bg-background text-foreground placeholder:text-muted-foreground resize-y focus:outline-none"
+        />
+      </div>
+    );
+  }
+
   function BlogForm({ values, onChange }: { values: Record<string, unknown>; onChange: (k: string, v: unknown) => void }) {
     const [lang, setLang] = useState<"en" | "es" | "pt">("en");
     const str = (k: string) => (values[k] ?? "") as string;
@@ -956,7 +1032,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             {lang === "en" && (<>
               <div className="space-y-1"><Label>Title — English *</Label><Input value={str("title")} onChange={e => onChange("title", e.target.value)} placeholder="Article title" /></div>
               <div className="space-y-1"><Label>Excerpt — English *</Label><Textarea rows={2} value={str("excerpt")} onChange={e => onChange("excerpt", e.target.value)} placeholder="Short description for blog listing" /></div>
-              <div className="space-y-1"><Label>Content — English *</Label><Textarea rows={10} value={str("content")} onChange={e => onChange("content", e.target.value)} placeholder="Full article content..." /></div>
+              <div className="space-y-1"><Label>Content — English *</Label><MarkdownEditor value={str("content")} onChange={v => onChange("content", v)} placeholder="Write in Markdown… **bold**, *italic*, ![alt](url), [link text](url)" /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Title — EN</Label><span className="text-xs text-muted-foreground">{str("seoTitle").length}/60</span></div>
@@ -971,7 +1047,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             {lang === "es" && (<>
               <div className="space-y-1"><Label>Título — Español</Label><Input value={str("titleEs")} onChange={e => onChange("titleEs", e.target.value)} placeholder="Título del artículo" /></div>
               <div className="space-y-1"><Label>Extracto — Español</Label><Textarea rows={2} value={str("excerptEs")} onChange={e => onChange("excerptEs", e.target.value)} placeholder="Descripción corta" /></div>
-              <div className="space-y-1"><Label>Contenido — Español</Label><Textarea rows={10} value={str("contentEs")} onChange={e => onChange("contentEs", e.target.value)} placeholder="Contenido completo del artículo..." /></div>
+              <div className="space-y-1"><Label>Contenido — Español</Label><MarkdownEditor value={str("contentEs")} onChange={v => onChange("contentEs", v)} placeholder="Escribe en Markdown… **negrita**, *cursiva*, ![alt](url), [texto](url)" /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Título — ES</Label><span className="text-xs text-muted-foreground">{str("seoTitleEs").length}/60</span></div>
@@ -986,7 +1062,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             {lang === "pt" && (<>
               <div className="space-y-1"><Label>Título — Português</Label><Input value={str("titlePt")} onChange={e => onChange("titlePt", e.target.value)} placeholder="Título do artigo" /></div>
               <div className="space-y-1"><Label>Excerto — Português</Label><Textarea rows={2} value={str("excerptPt")} onChange={e => onChange("excerptPt", e.target.value)} placeholder="Descrição curta" /></div>
-              <div className="space-y-1"><Label>Conteúdo — Português</Label><Textarea rows={10} value={str("contentPt")} onChange={e => onChange("contentPt", e.target.value)} placeholder="Conteúdo completo do artigo..." /></div>
+              <div className="space-y-1"><Label>Conteúdo — Português</Label><MarkdownEditor value={str("contentPt")} onChange={v => onChange("contentPt", v)} placeholder="Escreva em Markdown… **negrito**, *itálico*, ![alt](url), [texto](url)" /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Título — PT</Label><span className="text-xs text-muted-foreground">{str("seoTitlePt").length}/60</span></div>

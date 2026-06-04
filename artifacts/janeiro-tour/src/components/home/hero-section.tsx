@@ -3,28 +3,44 @@ import { useGetSettings } from "@workspace/api-client-react";
 import { SearchWidget } from "@/components/ui/search-widget";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 
 const slides = [
   {
     src: "/images/banner-janeiro.jpg",
     alt: "Janeiro Tour group at Cristo Redentor",
+    label: "Janeiro Tour & Travel",
     positionY: "center",
   },
   {
-    src: "/images/hero-janeirotour.webp",
-    alt: "Little Africa Walking Tour — Rio de Janeiro",
+    src: "https://images.unsplash.com/photo-1544989164-b3095b702f90?w=1920&q=85",
+    alt: "Cristo Redentor — Rio de Janeiro",
+    label: "Cristo Redentor",
     positionY: "center",
   },
   {
-    src: "/images/hero-iguazu.png",
+    src: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1920&q=85",
+    alt: "Pão de Açúcar — Rio de Janeiro",
+    label: "Pão de Açúcar",
+    positionY: "center",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=85",
     alt: "Foz do Iguaçu — Cataratas",
+    label: "Foz do Iguaçu",
     positionY: "bottom",
   },
   {
-    src: "/images/hero-rio.png",
-    alt: "Rio de Janeiro aerial view",
+    src: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=1920&q=85",
+    alt: "Bahia — Salvador",
+    label: "Bahia",
+    positionY: "center",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1527152294799-1069f01bdcc0?w=1920&q=85",
+    alt: "Amazônia — Floresta Tropical",
+    label: "Amazônia",
     positionY: "center",
   },
 ];
@@ -82,8 +98,18 @@ export function HeroSection() {
         ))}
 
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/50 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/60 z-10" />
+        <div className="absolute inset-0 bg-black/55 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70 z-10" />
+
+        {/* Destination label */}
+        {current > 0 && (
+          <div
+            className="absolute top-6 right-6 z-20 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase text-white border border-white/30 bg-black/30 backdrop-blur-sm transition-opacity duration-500"
+            style={{ opacity: fading ? 0 : 1 }}
+          >
+            {slides[current].label}
+          </div>
+        )}
 
         {/* Content */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end pb-28 md:pb-32 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto left-0 right-0">
@@ -141,6 +167,29 @@ export function HeroSection() {
           >
             <ChevronRight className="w-4 h-4" />
           </button>
+        </div>
+      </div>
+
+      {/* Social Proof Bar */}
+      <div className="bg-neutral-900 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+          <div className="flex items-center gap-2">
+            <div className="flex text-[#FFB600]">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+            </div>
+            <span className="text-white font-semibold text-sm">
+              {lang === "en"
+                ? "Trusted by travelers from around the world"
+                : lang === "es"
+                ? "La confianza de viajeros de todo el mundo"
+                : "Confiado por viajantes do mundo inteiro"}
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-white/50 text-xs">
+            <span className="w-px h-4 bg-white/20" />
+            <span className="text-white/70">🇺🇸 🇬🇧 🇿🇦 🇨🇦 🇫🇷 🇩🇪 🇦🇺 🇧🇷 🇯🇵</span>
+            <span className="text-white/50">+50 countries</span>
+          </div>
         </div>
       </div>
 

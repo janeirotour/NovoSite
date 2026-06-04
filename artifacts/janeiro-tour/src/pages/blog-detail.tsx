@@ -5,6 +5,8 @@ import { useLanguage } from "@/hooks/use-language";
 import { ChevronLeft, Clock, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -35,6 +37,10 @@ export default function BlogDetailPage() {
   }
 
   const title = lang === "es" ? (post.titleEs ?? post.title) : lang === "pt" ? (post.titlePt ?? post.title) : post.title;
+  const content =
+    lang === "es" ? (post.contentEs ?? post.content) :
+    lang === "pt" ? (post.contentPt ?? post.content) :
+    post.content;
 
   return (
     <MainLayout>
@@ -58,10 +64,20 @@ export default function BlogDetailPage() {
 
       {/* Article Content */}
       <article className="max-w-3xl mx-auto px-4 py-16">
-        <div className="prose prose-lg max-w-none">
-          {post.content.split('\n').filter(Boolean).map((para, i) => (
-            <p key={i} className="text-muted-foreground leading-relaxed mb-6">{para}</p>
-          ))}
+        <div className="prose prose-lg max-w-none
+          prose-headings:font-bold prose-headings:text-foreground
+          prose-p:text-muted-foreground prose-p:leading-relaxed
+          prose-strong:text-foreground prose-strong:font-semibold
+          prose-em:text-muted-foreground
+          prose-a:text-primary prose-a:font-medium prose-a:underline-offset-4 hover:prose-a:text-primary/80
+          prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-8
+          prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
+          prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+          prose-ul:text-muted-foreground prose-ol:text-muted-foreground
+          prose-li:leading-relaxed">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {content}
+          </ReactMarkdown>
         </div>
 
         {/* CTA */}

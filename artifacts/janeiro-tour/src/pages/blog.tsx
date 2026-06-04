@@ -1,6 +1,5 @@
 import { Link } from "wouter";
 import { useListBlogPosts } from "@workspace/api-client-react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { Clock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +13,7 @@ export default function BlogPage() {
     lang === "es" ? (post.titleEs ?? post.title) : lang === "pt" ? (post.titlePt ?? post.title) : post.title;
 
   return (
-    <MainLayout>
+    <>
       {/* Hero */}
       <section className="relative bg-neutral-900 py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10" />
@@ -69,6 +68,6 @@ export default function BlogPage() {
           </div>
         )}
       </section>
-    </MainLayout>
+    </>
   );
 }
