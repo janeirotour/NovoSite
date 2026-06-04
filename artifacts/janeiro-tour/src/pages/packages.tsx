@@ -171,7 +171,7 @@ export default function PackagesPage() {
                               <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                                 {lang === "en" ? "Pick-up from Galeão airport to your hotel on Day 1" : lang === "es" ? "Recogida del aeropuerto de Galeão a tu hotel el Día 1" : "Busca no aeroporto de Galeão até o hotel no Dia 1"}
                               </p>
-                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Car size={10} />$60/person</p>
+                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Clock size={10} />~2h · Included</p>
                             </div>
                           </div>
                           <div className="flex gap-3 bg-muted/40 rounded-xl p-3 border">
@@ -185,7 +185,7 @@ export default function PackagesPage() {
                               <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                                 {lang === "en" ? "Drop-off from hotel to Galeão airport on Day 3" : lang === "es" ? "Traslado del hotel al aeropuerto de Galeão el Día 3" : "Traslado do hotel para o aeroporto de Galeão no Dia 3"}
                               </p>
-                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Car size={10} />$60/person</p>
+                              <p className="text-xs text-blue-600 font-medium mt-1 flex items-center gap-1"><Clock size={10} />~2h · Included</p>
                             </div>
                           </div>
                         </div>
