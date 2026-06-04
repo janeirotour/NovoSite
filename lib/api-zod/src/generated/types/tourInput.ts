@@ -6,7 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ItineraryStep } from './itineraryStep';
+import type { PricingTier } from './pricingTier';
 import type { TourInputTourType } from './tourInputTourType';
+import type { TransportationPricing } from './transportationPricing';
 
 export interface TourInput {
   slug: string;
@@ -39,4 +41,7 @@ export interface TourInput {
   published?: boolean;
   featured?: boolean;
   sortOrder?: number;
+  availableTimes?: string[] | null;
+  pricingRules?: PricingTier[] | null;
+  transportationPricing?: TransportationPricing | null;
 }

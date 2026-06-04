@@ -194,6 +194,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
       notIncludedItems: tour?.notIncludedItems ?? [],
       itinerary: tour?.itinerary ?? [],
       sortOrder: tour?.sortOrder ?? 10,
+      availableTimes: tour?.availableTimes ?? [],
+      pricingRules: tour?.pricingRules ?? [],
+      transportationPricing: tour?.transportationPricing ?? null,
     });
 
     const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -358,6 +361,92 @@ import { useState, useRef, useCallback, useEffect } from "react";
             className="font-mono text-xs" />
           <p className="text-xs text-muted-foreground">Leave empty to show a "Request via WhatsApp" button instead.</p>
         </div>
+
+        {/* ─── Available Times ─────────────────────────────────────── */}
+        <SectionLabel>Available Start Times</SectionLabel>
+        <p className="text-xs text-muted-foreground -mt-1">Set which start times are available for this tour. Leave empty to show all standard time slots.</p>
+        {(arrVal("availableTimes") as string[]).map((t, i) => (
+          <div key={i} className="flex gap-2">
+            <input
+              type="time"
+              value={t}
+              onChange={e => setArr("availableTimes", i, e.target.value)}
+              className="border rounded-md px-3 py-2 text-sm bg-background"
+            />
+            <Button type="button" variant="ghost" size="sm" onClick={() => removeArr("availableTimes", i)}><Trash2 size={14} /></Button>
+          </div>
+        ))}
+        <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => addArr("availableTimes")}><Plus size={13} />Add Time Slot</Button>
+
+        {/* ─── Pricing Rules ────────────────────────────────────────── */}
+        <SectionLabel>Dynamic Pricing Rules</SectionLabel>
+        <p className="text-xs text-muted-foreground -mt-1">Define price tiers by group size. Leave empty to use the flat "Price From" rate for all group sizes.</p>
+        {(() => {
+          type PricingTier = { label: string; minPax: number; maxPax: number | null; pricePerPerson: number; currency: string };
+          const rules = (form.pricingRules as PricingTier[]) ?? [];
+          const setRules = (r: PricingTier[]) => set("pricingRules", r);
+          return (
+            <>
+              {rules.map((tier, i) => (
+                <div key={i} className="border rounded-lg p-3 space-y-2 bg-muted/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-muted-foreground">Tier {i + 1}</span>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setRules(rules.filter((_, j) => j !== i))}><Trash2 size={13} /></Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1 col-span-2"><Label className="text-xs">Label (shown to customer)</Label><Input value={tier.label} onChange={e => setRules(rules.map((r, j) => j === i ? { ...r, label: e.target.value } : r))} placeholder="e.g. Per Person, Group Rate, Private Tour" /></div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Min Pax</Label><Input type="number" min={1} value={tier.minPax} onChange={e => setRules(rules.map((r, j) => j === i ? { ...r, minPax: parseInt(e.target.value) || 1 } : r))} /></div>
+                    <div className="space-y-1"><Label className="text-xs">Max Pax (blank = no limit)</Label><Input type="number" min={1} value={tier.maxPax ?? ""} onChange={e => setRules(rules.map((r, j) => j === i ? { ...r, maxPax: e.target.value ? parseInt(e.target.value) : null } : r))} placeholder="∞" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Price/Person (USD)</Label><Input type="number" min={0} step={0.01} value={tier.pricePerPerson} onChange={e => setRules(rules.map((r, j) => j === i ? { ...r, pricePerPerson: parseFloat(e.target.value) || 0 } : r))} /></div>
+                  </div>
+                </div>
+              ))}
+              <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => setRules([...rules, { label: "", minPax: 1, maxPax: null, pricePerPerson: Number(form.priceFrom) || 50, currency: "USD" }])}><Plus size={13} />Add Pricing Tier</Button>
+            </>
+          );
+        })()}
+
+        {/* ─── Transportation Add-On ────────────────────────────────── */}
+        <SectionLabel>Round-Trip Transportation Add-On</SectionLabel>
+        <p className="text-xs text-muted-foreground -mt-1">Optional transportation from guest accommodation to tour meeting point.</p>
+        {(() => {
+          type TransTier = { minPax: number; maxPax: number | null; vehicle: string; price: number; currency: string };
+          type TransPricing = { enabled: boolean; name: string; description: string; tiers: TransTier[] };
+          const trans = (form.transportationPricing as TransPricing | null) ?? { enabled: false, name: "Round-Trip Private Transportation", description: "Private round-trip transportation between your accommodation and the tour meeting point.", tiers: [] };
+          const setTrans = (t: TransPricing) => set("transportationPricing", t);
+          return (
+            <>
+              <div className="flex items-center gap-2">
+                <Switch checked={trans.enabled} onCheckedChange={v => setTrans({ ...trans, enabled: v })} />
+                <Label>Enable transportation add-on for this tour</Label>
+              </div>
+              {trans.enabled && (
+                <>
+                  <div className="space-y-1"><Label className="text-xs">Add-on Name</Label><Input value={trans.name} onChange={e => setTrans({ ...trans, name: e.target.value })} /></div>
+                  <div className="space-y-1"><Label className="text-xs">Description</Label><Textarea rows={2} value={trans.description} onChange={e => setTrans({ ...trans, description: e.target.value })} /></div>
+                  <p className="text-xs font-semibold text-muted-foreground pt-1">Vehicle Tiers by Group Size</p>
+                  {trans.tiers.map((tier, i) => (
+                    <div key={i} className="border rounded-lg p-3 space-y-2 bg-muted/20">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-muted-foreground">Tier {i + 1}</span>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => setTrans({ ...trans, tiers: trans.tiers.filter((_, j) => j !== i) })}><Trash2 size={13} /></Button>
+                      </div>
+                      <div className="grid grid-cols-4 gap-2">
+                        <div className="space-y-1 col-span-2"><Label className="text-xs">Vehicle</Label><Input value={tier.vehicle} onChange={e => setTrans({ ...trans, tiers: trans.tiers.map((t, j) => j === i ? { ...t, vehicle: e.target.value } : t) })} placeholder="e.g. Private Car" /></div>
+                        <div className="space-y-1"><Label className="text-xs">Min Pax</Label><Input type="number" min={1} value={tier.minPax} onChange={e => setTrans({ ...trans, tiers: trans.tiers.map((t, j) => j === i ? { ...t, minPax: parseInt(e.target.value) || 1 } : t) })} /></div>
+                        <div className="space-y-1"><Label className="text-xs">Max Pax</Label><Input type="number" min={1} value={tier.maxPax ?? ""} onChange={e => setTrans({ ...trans, tiers: trans.tiers.map((t, j) => j === i ? { ...t, maxPax: e.target.value ? parseInt(e.target.value) : null } : t) })} placeholder="∞" /></div>
+                        <div className="space-y-1 col-span-2"><Label className="text-xs">Total Price (USD, per vehicle)</Label><Input type="number" min={0} value={tier.price} onChange={e => setTrans({ ...trans, tiers: trans.tiers.map((t, j) => j === i ? { ...t, price: parseFloat(e.target.value) || 0 } : t) })} /></div>
+                      </div>
+                    </div>
+                  ))}
+                  <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => setTrans({ ...trans, tiers: [...trans.tiers, { minPax: 1, maxPax: null, vehicle: "Private Car", price: 120, currency: "USD" }] })}><Plus size={13} />Add Vehicle Tier</Button>
+                </>
+              )}
+            </>
+          );
+        })()}
 
         <div className="flex gap-3 justify-end pt-4 border-t mt-4">
           <Button variant="outline" onClick={onClose}>Cancel</Button>

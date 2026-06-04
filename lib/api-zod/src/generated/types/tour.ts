@@ -6,7 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ItineraryStep } from './itineraryStep';
+import type { PricingTier } from './pricingTier';
 import type { TourTourType } from './tourTourType';
+import type { TransportationPricing } from './transportationPricing';
 
 export interface Tour {
   id: number;
@@ -49,4 +51,7 @@ export interface Tour {
   featured: boolean;
   sortOrder: number;
   createdAt: string;
+  availableTimes?: string[] | null;
+  pricingRules?: PricingTier[] | null;
+  transportationPricing?: TransportationPricing | null;
 }

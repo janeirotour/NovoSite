@@ -35,6 +35,12 @@ export const toursTable = pgTable("tours", {
   featured: boolean("featured").notNull().default(false),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  // Tour-specific available start times e.g. ["09:30", "13:30"]
+  availableTimes: jsonb("available_times"),
+  // Tiered pricing rules: [{label, minPax, maxPax, pricePerPerson, currency}]
+  pricingRules: jsonb("pricing_rules"),
+  // Transportation add-on config: {enabled, name, description, tiers: [{minPax, maxPax, vehicle, price, currency}]}
+  transportationPricing: jsonb("transportation_pricing"),
 });
 
 export const insertTourSchema = createInsertSchema(toursTable).omit({ id: true, createdAt: true });

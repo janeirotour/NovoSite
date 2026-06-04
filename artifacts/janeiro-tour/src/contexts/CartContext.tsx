@@ -7,6 +7,12 @@ export interface SelectedExtra {
   currency: string;
 }
 
+export interface TransportationOption {
+  vehicle: string;
+  price: number;
+  currency: string;
+}
+
 export interface CartItem {
   tourSlug: string;
   title: string;
@@ -17,6 +23,9 @@ export interface CartItem {
   selectedExtras: SelectedExtra[];
   preferredDate?: string;
   preferredTime?: string;
+  transportation?: TransportationOption;
+  calculatedTourPrice?: number;
+  appliedPricingLabel?: string;
 }
 
 interface CartContextValue {
@@ -65,6 +74,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 selectedExtras: incoming.selectedExtras ?? i.selectedExtras,
                 preferredDate: incoming.preferredDate ?? i.preferredDate,
                 preferredTime: incoming.preferredTime ?? i.preferredTime,
+                transportation: incoming.transportation ?? i.transportation,
+                calculatedTourPrice: incoming.calculatedTourPrice ?? i.calculatedTourPrice,
+                appliedPricingLabel: incoming.appliedPricingLabel ?? i.appliedPricingLabel,
               }
             : i
         );
@@ -97,8 +109,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totalItems = items.reduce((sum, i) => sum + i.pax, 0);
   const totalPrice = items.reduce((sum, i) => {
+    const tourPrice = i.calculatedTourPrice ?? i.priceFrom * i.pax;
     const extrasTotal = i.selectedExtras?.reduce((s, e) => s + e.price, 0) ?? 0;
-    return sum + i.priceFrom * i.pax + extrasTotal;
+    const transportTotal = i.transportation?.price ?? 0;
+    return sum + tourPrice + extrasTotal + transportTotal;
   }, 0);
 
   return (

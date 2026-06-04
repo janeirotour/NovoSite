@@ -27,6 +27,29 @@ export interface ItineraryStep {
   duration?: string | null;
 }
 
+export interface PricingTier {
+  label: string;
+  minPax: number;
+  maxPax?: number | null;
+  pricePerPerson: number;
+  currency: string;
+}
+
+export interface TransportationTier {
+  minPax: number;
+  maxPax?: number | null;
+  vehicle: string;
+  price: number;
+  currency: string;
+}
+
+export interface TransportationPricing {
+  enabled: boolean;
+  name: string;
+  description: string;
+  tiers: TransportationTier[];
+}
+
 export interface Tour {
   id: number;
   slug: string;
@@ -68,6 +91,9 @@ export interface Tour {
   featured: boolean;
   sortOrder: number;
   createdAt: string;
+  availableTimes?: string[] | null;
+  pricingRules?: PricingTier[] | null;
+  transportationPricing?: TransportationPricing | null;
 }
 
 export type TourInputTourType = typeof TourInputTourType[keyof typeof TourInputTourType];
@@ -111,6 +137,9 @@ export interface TourInput {
   published?: boolean;
   featured?: boolean;
   sortOrder?: number;
+  availableTimes?: string[] | null;
+  pricingRules?: PricingTier[] | null;
+  transportationPricing?: TransportationPricing | null;
 }
 
 export interface TourUpdate {
@@ -145,6 +174,9 @@ export interface TourUpdate {
   published?: boolean;
   featured?: boolean;
   sortOrder?: number;
+  availableTimes?: string[] | null;
+  pricingRules?: PricingTier[] | null;
+  transportationPricing?: TransportationPricing | null;
 }
 
 export interface Destination {

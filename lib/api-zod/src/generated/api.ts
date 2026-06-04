@@ -65,7 +65,27 @@ export const ListToursResponseItem = zod.object({
   "published": zod.boolean(),
   "featured": zod.boolean(),
   "sortOrder": zod.number(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 export const ListToursResponse = zod.array(ListToursResponseItem)
 
@@ -108,7 +128,27 @@ export const CreateTourBody = zod.object({
   "seoDescription": zod.string().optional(),
   "published": zod.boolean().optional(),
   "featured": zod.boolean().optional(),
-  "sortOrder": zod.number().optional()
+  "sortOrder": zod.number().optional(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 
 
@@ -152,7 +192,27 @@ export const ListFeaturedToursResponseItem = zod.object({
   "published": zod.boolean(),
   "featured": zod.boolean(),
   "sortOrder": zod.number(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 export const ListFeaturedToursResponse = zod.array(ListFeaturedToursResponseItem)
 
@@ -201,7 +261,27 @@ export const GetTourResponse = zod.object({
   "published": zod.boolean(),
   "featured": zod.boolean(),
   "sortOrder": zod.number(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 
 
@@ -247,7 +327,27 @@ export const UpdateTourBody = zod.object({
   "seoDescription": zod.string().optional(),
   "published": zod.boolean().optional(),
   "featured": zod.boolean().optional(),
-  "sortOrder": zod.number().optional()
+  "sortOrder": zod.number().optional(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 
 export const UpdateTourResponse = zod.object({
@@ -287,7 +387,27 @@ export const UpdateTourResponse = zod.object({
   "published": zod.boolean(),
   "featured": zod.boolean(),
   "sortOrder": zod.number(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 
 
@@ -343,7 +463,27 @@ export const GetTourBySlugResponse = zod.object({
   "published": zod.boolean(),
   "featured": zod.boolean(),
   "sortOrder": zod.number(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "availableTimes": zod.array(zod.string()).nullish(),
+  "pricingRules": zod.array(zod.object({
+  "label": zod.string(),
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "pricePerPerson": zod.number(),
+  "currency": zod.string()
+})).nullish(),
+  "transportationPricing": zod.object({
+  "enabled": zod.boolean(),
+  "name": zod.string(),
+  "description": zod.string(),
+  "tiers": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number().nullish(),
+  "vehicle": zod.string(),
+  "price": zod.number(),
+  "currency": zod.string()
+}))
+}).nullish()
 })
 
 

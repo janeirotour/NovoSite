@@ -1006,6 +1006,19 @@ components:
           type: integer
         createdAt:
           type: string
+        availableTimes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        pricingRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingTier"
+          nullable: true
+        transportationPricing:
+          $ref: "#/components/schemas/TransportationPricing"
+          nullable: true
 
     TourInput:
       type: object
@@ -1084,6 +1097,19 @@ components:
           type: boolean
         sortOrder:
           type: integer
+        availableTimes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        pricingRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingTier"
+          nullable: true
+        transportationPricing:
+          $ref: "#/components/schemas/TransportationPricing"
+          nullable: true
 
     TourUpdate:
       type: object
@@ -1160,6 +1186,66 @@ components:
           type: boolean
         sortOrder:
           type: integer
+        availableTimes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        pricingRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingTier"
+          nullable: true
+        transportationPricing:
+          $ref: "#/components/schemas/TransportationPricing"
+          nullable: true
+
+    PricingTier:
+      type: object
+      required: [label, minPax, pricePerPerson, currency]
+      properties:
+        label:
+          type: string
+        minPax:
+          type: integer
+        maxPax:
+          type: integer
+          nullable: true
+        pricePerPerson:
+          type: number
+        currency:
+          type: string
+
+    TransportationTier:
+      type: object
+      required: [minPax, vehicle, price, currency]
+      properties:
+        minPax:
+          type: integer
+        maxPax:
+          type: integer
+          nullable: true
+        vehicle:
+          type: string
+        price:
+          type: number
+        currency:
+          type: string
+
+    TransportationPricing:
+      type: object
+      required: [enabled, name, description, tiers]
+      properties:
+        enabled:
+          type: boolean
+        name:
+          type: string
+        description:
+          type: string
+        tiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransportationTier"
 
     ItineraryStep:
       type: object

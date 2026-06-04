@@ -46,12 +46,13 @@ export function BookingFormModal({ isOpen, onClose }: BookingFormModalProps) {
 
   if (!isOpen) return null;
 
-  const toursSubtotal = items.reduce((sum, i) => sum + i.priceFrom * i.pax, 0);
+  const toursSubtotal = items.reduce((sum, i) => sum + (i.calculatedTourPrice ?? i.priceFrom * i.pax), 0);
+  const transportTotal = items.reduce((sum, i) => sum + (i.transportation?.price ?? 0), 0);
   const extrasTotal = items.reduce(
     (sum, i) => sum + (i.selectedExtras?.reduce((s, e) => s + e.price, 0) ?? 0),
     0
   );
-  const grandTotal = toursSubtotal + extrasTotal;
+  const grandTotal = toursSubtotal + transportTotal + extrasTotal;
 
   const handleChange = (key: keyof CustomerForm, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -78,6 +79,7 @@ export function BookingFormModal({ isOpen, onClose }: BookingFormModalProps) {
             selectedExtras: item.selectedExtras ?? [],
             preferredDate: item.preferredDate,
             preferredTime: item.preferredTime,
+            transportation: item.transportation,
           })),
           customer: {
             name: form.name.trim(),
@@ -292,7 +294,9 @@ export function BookingFormModal({ isOpen, onClose }: BookingFormModalProps) {
               {items.map((item) => {
                 const itemExtrasTotal =
                   item.selectedExtras?.reduce((s, e) => s + e.price, 0) ?? 0;
-                const itemTotal = item.priceFrom * item.pax + itemExtrasTotal;
+                const tourSubtotal = item.calculatedTourPrice ?? item.priceFrom * item.pax;
+                const itemTransport = item.transportation?.price ?? 0;
+                const itemTotal = tourSubtotal + itemTransport + itemExtrasTotal;
                 return (
                   <div key={item.tourSlug} className="bg-card border rounded-xl p-4 space-y-3">
                     <div className="flex gap-3">
@@ -318,9 +322,24 @@ export function BookingFormModal({ isOpen, onClose }: BookingFormModalProps) {
                       </p>
                     )}
 
+                    {item.appliedPricingLabel && (
+                      <p className="text-xs text-muted-foreground">
+                        💰 {item.appliedPricingLabel}
+                      </p>
+                    )}
+
+                    {item.transportation && (
+                      <div className="flex justify-between text-xs py-0.5">
+                        <span className="text-muted-foreground">🚐 {item.transportation.vehicle}</span>
+                        <span className="text-green-600 font-medium">
+                          +${item.transportation.price.toFixed(0)}
+                        </span>
+                      </div>
+                    )}
+
                     {item.selectedExtras && item.selectedExtras.length > 0 && (
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Extras:</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Add-ons:</p>
                         {item.selectedExtras.map((e) => (
                           <div key={e.id} className="flex justify-between text-xs py-0.5">
                             <span className="text-muted-foreground">+ {e.name}</span>

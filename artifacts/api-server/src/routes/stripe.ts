@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import { db, toursTable, reservationsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
-import { storage } from "../storage";
 import { getUncachableStripeClient } from "../stripeClient";
 import { createReservation } from "./reservations";
 
@@ -14,6 +13,12 @@ interface SelectedExtra {
   currency: string;
 }
 
+interface TransportationOption {
+  vehicle: string;
+  price: number;
+  currency: string;
+}
+
 interface BookingItem {
   tourSlug: string;
   pax: number;
@@ -21,6 +26,7 @@ interface BookingItem {
   selectedExtras?: SelectedExtra[];
   preferredDate?: string;
   preferredTime?: string;
+  transportation?: TransportationOption;
 }
 
 interface CustomerData {
@@ -36,9 +42,51 @@ interface CustomerData {
   notes?: string;
 }
 
-type StripeLineItem =
-  | { price: string; quantity: number }
-  | { price_data: { currency: string; product_data: { name: string }; unit_amount: number }; quantity: number };
+type StripeLineItem = {
+  price_data: { currency: string; product_data: { name: string }; unit_amount: number };
+  quantity: number;
+};
+
+interface PricingTier {
+  label: string;
+  minPax: number;
+  maxPax: number | null;
+  pricePerPerson: number;
+  currency: string;
+}
+
+interface TransportationTier {
+  minPax: number;
+  maxPax: number | null;
+  vehicle: string;
+  price: number;
+  currency: string;
+}
+
+interface TransportationPricing {
+  enabled: boolean;
+  name: string;
+  description: string;
+  tiers: TransportationTier[];
+}
+
+function calcTourPrice(pax: number, pricingRules: PricingTier[] | null | undefined, priceFrom: number): { total: number; label: string } {
+  if (!pricingRules || pricingRules.length === 0) {
+    return { total: priceFrom * pax, label: `$${priceFrom} × ${pax} traveler${pax !== 1 ? "s" : ""}` };
+  }
+  const tier = pricingRules.find((t) => pax >= t.minPax && (t.maxPax == null || pax <= t.maxPax));
+  const activeTier = tier ?? pricingRules[pricingRules.length - 1];
+  return {
+    total: activeTier.pricePerPerson * pax,
+    label: `${activeTier.label} — $${activeTier.pricePerPerson} × ${pax}`,
+  };
+}
+
+function getTransportTier(pax: number, transPricing: TransportationPricing | null | undefined): TransportationTier | null {
+  if (!transPricing?.enabled || !transPricing.tiers?.length) return null;
+  const tier = transPricing.tiers.find((t) => pax >= t.minPax && (t.maxPax == null || pax <= t.maxPax));
+  return tier ?? null;
+}
 
 router.post("/stripe/checkout", async (req, res) => {
   try {
@@ -64,6 +112,8 @@ router.post("/stripe/checkout", async (req, res) => {
           title: toursTable.title,
           priceFrom: toursTable.priceFrom,
           currency: toursTable.currency,
+          pricingRules: toursTable.pricingRules,
+          transportationPricing: toursTable.transportationPricing,
         })
         .from(toursTable)
         .where(eq(toursTable.slug, item.tourSlug))
@@ -73,23 +123,54 @@ router.post("/stripe/checkout", async (req, res) => {
         return res.status(404).json({ error: `Tour not found: ${item.tourSlug}` });
       }
 
-      const priceId = await storage.getStripePriceForTour(item.tourSlug);
-      if (!priceId) {
-        return res.status(400).json({
-          error: `No Stripe price configured for: ${item.tourSlug}. Run the seed script.`,
-        });
+      const currency = (tour.currency ?? "USD").toLowerCase();
+
+      // Calculate tour price server-side from pricing rules
+      const { total: tourTotal } = calcTourPrice(
+        item.pax,
+        tour.pricingRules as PricingTier[] | null,
+        Number(tour.priceFrom)
+      );
+
+      lineItems.push({
+        price_data: {
+          currency,
+          product_data: { name: item.title || tour.title },
+          unit_amount: Math.round(tourTotal * 100),
+        },
+        quantity: 1,
+      });
+
+      // Transportation add-on — verify server-side pricing
+      const extras = item.selectedExtras ?? [];
+      let transportTotal = 0;
+
+      if (item.transportation) {
+        // Look up the correct tier from DB to prevent price manipulation
+        const transPricing = tour.transportationPricing as TransportationPricing | null;
+        const serverTier = getTransportTier(item.pax, transPricing);
+        if (serverTier) {
+          transportTotal = serverTier.price;
+          lineItems.push({
+            price_data: {
+              currency,
+              product_data: {
+                name: `${transPricing!.name} (${serverTier.vehicle}) — ${tour.title}`,
+              },
+              unit_amount: Math.round(serverTier.price * 100),
+            },
+            quantity: 1,
+          });
+        }
       }
 
-      lineItems.push({ price: priceId, quantity: Math.max(1, item.pax) });
-
-      const extras = item.selectedExtras ?? [];
+      // Extras
       const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
-
       if (extrasTotal > 0) {
         lineItems.push({
           price_data: {
-            currency: (tour.currency ?? "USD").toLowerCase(),
-            product_data: { name: `Extras — ${tour.title}` },
+            currency,
+            product_data: { name: `Add-ons — ${tour.title}` },
             unit_amount: Math.round(extrasTotal * 100),
           },
           quantity: 1,
@@ -98,7 +179,7 @@ router.post("/stripe/checkout", async (req, res) => {
 
       if (customer?.name && customer?.email) {
         const basePrice = Number(tour.priceFrom);
-        const totalAmount = basePrice * item.pax + extrasTotal;
+        const totalAmount = tourTotal + transportTotal + extrasTotal;
 
         const reservation = await createReservation({
           tourSlug: item.tourSlug,
@@ -177,7 +258,7 @@ router.get("/stripe/checkout/session", async (req, res) => {
       lineItems: session.line_items?.data ?? [],
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch session";
+    const message = err instanceof Error ? err.message : "Failed to retrieve session";
     return res.status(500).json({ error: message });
   }
 });

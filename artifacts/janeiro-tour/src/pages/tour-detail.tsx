@@ -13,10 +13,17 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 
-const TIME_SLOTS = [
+const DEFAULT_TIME_SLOTS = [
   "07:00", "08:00", "09:00", "10:00", "11:00", "12:00",
   "13:00", "14:00", "15:00", "16:00",
 ];
+
+function formatTime(t: string) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const displayHour = h > 12 ? h - 12 : h === 0 ? 12 : h;
+  return `${displayHour}:${String(m).padStart(2, "0")} ${period}`;
+}
 
 function getTomorrowStr() {
   const d = new Date();
@@ -81,6 +88,7 @@ export default function TourDetailPage() {
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [preferredTime, setPreferredTime] = useState("");
   const [dateRequired, setDateRequired] = useState(false);
+  const [transportationSelected, setTransportationSelected] = useState(false);
 
   const tourSlugForExtras = tour?.slug ?? (isNumeric ? "" : param);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,6 +126,41 @@ export default function TourDetailPage() {
     });
   };
 
+  // Dynamic pricing: read tour.pricingRules from DB
+  interface PricingTier { label: string; minPax: number; maxPax: number | null; pricePerPerson: number; currency: string; }
+  interface TransportationTier { minPax: number; maxPax: number | null; vehicle: string; price: number; currency: string; }
+  interface TransportationPricing { enabled: boolean; name: string; description: string; tiers: TransportationTier[]; }
+
+  const pricingRules = (tour?.pricingRules as PricingTier[] | null | undefined);
+  const activePricingTier = pricingRules?.find((t) => localPax >= t.minPax && (t.maxPax == null || localPax <= t.maxPax))
+    ?? (pricingRules ? pricingRules[pricingRules.length - 1] : undefined);
+  const calculatedTourPrice = activePricingTier
+    ? activePricingTier.pricePerPerson * localPax
+    : Number(tour?.priceFrom ?? 0) * localPax;
+  const appliedPricingLabel = activePricingTier
+    ? `${activePricingTier.label} — $${activePricingTier.pricePerPerson}/person × ${localPax}`
+    : `$${tour?.priceFrom}/person × ${localPax}`;
+
+  // Transportation add-on
+  const transData = (tour?.transportationPricing as TransportationPricing | null | undefined);
+  const hasTransportation = !!(transData?.enabled && transData.tiers?.length);
+  const activeTransTier = hasTransportation
+    ? (transData!.tiers.find((t) => localPax >= t.minPax && (t.maxPax == null || localPax <= t.maxPax)) ?? null)
+    : null;
+
+  // Auto-deselect transportation if no tier matches current pax
+  const effectiveTransportation = transportationSelected && activeTransTier ? activeTransTier : null;
+
+  // Tour-specific time slots
+  const tourAvailableTimes = (tour?.availableTimes as string[] | null | undefined);
+  const timeSlots = tourAvailableTimes && tourAvailableTimes.length > 0 ? tourAvailableTimes : DEFAULT_TIME_SLOTS;
+
+  const selectedExtrasTotal = tourExtras
+    .filter((e) => selectedExtraIds.has(e.id))
+    .reduce((s, e) => s + e.price, 0);
+
+  const grandTotal = calculatedTourPrice + (effectiveTransportation?.price ?? 0) + selectedExtrasTotal;
+
   const buildCartItem = () => ({
     tourSlug: tour!.slug,
     title: tour!.title,
@@ -130,6 +173,11 @@ export default function TourDetailPage() {
       .map((e) => ({ id: e.id, name: e.name, price: e.price, currency: e.currency })),
     preferredDate: preferredDate || undefined,
     preferredTime: preferredTime || undefined,
+    transportation: effectiveTransportation
+      ? { vehicle: effectiveTransportation.vehicle, price: effectiveTransportation.price, currency: effectiveTransportation.currency }
+      : undefined,
+    calculatedTourPrice,
+    appliedPricingLabel,
   });
 
   const handleAddToCart = () => {
@@ -141,10 +189,6 @@ export default function TourDetailPage() {
     addItem(buildCartItem());
     openCart();
   };
-
-  const selectedExtrasTotal = tourExtras
-    .filter((e) => selectedExtraIds.has(e.id))
-    .reduce((s, e) => s + e.price, 0);
 
   if (isLoading) {
     return (
@@ -420,9 +464,18 @@ export default function TourDetailPage() {
             <div className="bg-card border rounded-2xl shadow-xl overflow-hidden">
               {/* Price Header */}
               <div className="bg-primary p-5">
-                <p className="text-primary-foreground/80 text-sm font-medium">From</p>
-                <p className="text-3xl font-bold text-primary-foreground">${tour.priceFrom} <span className="text-lg font-normal">{tour.currency}</span></p>
-                <p className="text-primary-foreground/80 text-xs mt-1">per person</p>
+                <p className="text-primary-foreground/80 text-sm font-medium">
+                  {pricingRules && pricingRules.length > 0 ? "Total for your group" : "From"}
+                </p>
+                <p className="text-3xl font-bold text-primary-foreground">
+                  ${calculatedTourPrice.toFixed(0)} <span className="text-lg font-normal">{tour.currency}</span>
+                </p>
+                <p className="text-primary-foreground/80 text-xs mt-1">
+                  {activePricingTier
+                    ? `${activePricingTier.label} · ${localPax} traveler${localPax !== 1 ? "s" : ""}`
+                    : `$${tour.priceFrom}/person · ${localPax} traveler${localPax !== 1 ? "s" : ""}`
+                  }
+                </p>
               </div>
 
               <div className="p-5 space-y-3">
@@ -531,11 +584,42 @@ export default function TourDetailPage() {
                     className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
                     <option value="">Select a time…</option>
-                    {TIME_SLOTS.map((t) => (
-                      <option key={t} value={t}>{t}</option>
+                    {timeSlots.map((t) => (
+                      <option key={t} value={t}>{formatTime(t)}</option>
                     ))}
                   </select>
                 </div>
+
+                {/* Round-Trip Transportation Add-On */}
+                {hasTransportation && (
+                  <div>
+                    <p className="flex items-center gap-2 text-sm font-medium mb-2">
+                      <Truck size={14} className="text-muted-foreground" />
+                      {transData!.name}
+                      <span className="ml-auto text-xs font-normal text-muted-foreground bg-muted rounded px-1.5 py-0.5">Optional</span>
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-2 leading-relaxed">{transData!.description}</p>
+                    {activeTransTier ? (
+                      <label className="flex items-center gap-2.5 cursor-pointer rounded-lg border p-3 hover:bg-muted/50 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={transportationSelected}
+                          onChange={(e) => setTransportationSelected(e.target.checked)}
+                          className="rounded accent-green-600 w-4 h-4 flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-sm font-medium">{activeTransTier.vehicle}</span>
+                          <span className="text-xs text-muted-foreground ml-1.5">for {localPax} traveler{localPax !== 1 ? "s" : ""}</span>
+                        </div>
+                        <span className="text-green-600 font-bold text-sm flex-shrink-0">+${activeTransTier.price}</span>
+                      </label>
+                    ) : (
+                      <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 border border-amber-200">
+                        Transportation not configured for {localPax} traveler{localPax !== 1 ? "s" : ""}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Extras */}
                 {tourExtras.length > 0 && (
@@ -564,16 +648,32 @@ export default function TourDetailPage() {
                   </div>
                 )}
 
-                {selectedExtrasTotal > 0 && (
-                  <div className="bg-green-50 rounded-lg px-3 py-2 text-sm dark:bg-green-950/30">
-                    <div className="flex justify-between font-semibold">
-                      <span>Total (incl. extras)</span>
-                      <span className="text-green-600">
-                        ${(Number(tour.priceFrom) * localPax + selectedExtrasTotal).toFixed(0)} {tour.currency}
-                      </span>
-                    </div>
+                {/* Booking Summary */}
+                <div className="bg-muted/40 rounded-xl p-3 space-y-1.5 text-sm border">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Booking Summary</p>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">
+                      {activePricingTier ? activePricingTier.label : `$${tour.priceFrom}/person`} × {localPax}
+                    </span>
+                    <span className="font-medium">${calculatedTourPrice.toFixed(0)}</span>
                   </div>
-                )}
+                  {effectiveTransportation && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">🚐 {effectiveTransportation.vehicle}</span>
+                      <span className="text-green-600 font-medium">+${effectiveTransportation.price.toFixed(0)}</span>
+                    </div>
+                  )}
+                  {selectedExtrasTotal > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">Add-ons</span>
+                      <span className="text-green-600 font-medium">+${selectedExtrasTotal.toFixed(0)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold pt-1.5 border-t mt-1">
+                    <span>Total</span>
+                    <span className="text-green-600">${grandTotal.toFixed(0)} {tour.currency}</span>
+                  </div>
+                </div>
 
                 <Separator />
 

@@ -1,0 +1,144 @@
+Update tour availability, optional transportation and dynamic pricing rules.
+
+Do not redesign the website.
+Do not change the current structure.
+Apply only the changes below.
+
+1. Little Africa Walking Tour
+
+Page:
+/tours/little-africa-walking-tour
+
+Set daily available start times to:
+
+* 09:30 AM
+* 01:30 PM
+
+Do not show any other time options for this tour.
+
+2. Favela Tour Rio
+
+Page:
+/tours/favela-tour-rio
+
+Set daily available start times to:
+
+* 09:30 AM
+* 01:30 PM
+* 04:00 PM
+
+Do not show any other time options for this tour.
+
+3. Sightseeing Tours
+
+For all sightseeing tours, set the default available start time to:
+
+* 07:00 AM
+
+Do not show other time options for sightseeing tours unless manually added from the admin dashboard.
+
+4. Optional Round-Trip Transportation Add-On
+
+Add the following optional transportation add-on to:
+
+* Little Africa Walking Tour
+* Favela Tour Rio
+* All Aerial Tours
+* Night Tour
+
+Add-on name:
+Round-Trip Private Transportation
+
+Description:
+Private round-trip transportation between the customer’s accommodation and the tour meeting point.
+
+Pricing by group size, per vehicle, both ways:
+
+* 1–2 passengers — Private Car — USD 120
+* 3–11 passengers — Minivan — USD 300
+* 12–16 passengers — Minibus — USD 500
+* 17–42 passengers — Minibus — USD 700
+
+This transportation must be optional, not included in the base tour price.
+
+Customers must be able to select this option before checkout.
+
+If selected, the transportation price must be added to the final booking total.
+
+5. Dynamic Per-Person Pricing Rules
+
+Each tour must calculate pricing according to the pricing rules already added in that tour’s details.
+
+Do not use one fixed price for all tours.
+
+For every tour, the system must read and apply the tour-specific pricing rules from the admin dashboard.
+
+Examples of pricing rules may include:
+
+* Price per person
+* Price by number of participants
+* Adult price
+* Child price
+* Group size pricing
+* Private tour pricing
+* Shared tour pricing
+* Optional add-on pricing
+* Transportation pricing
+
+When the customer selects the number of participants, the final price must update automatically according to that tour’s own pricing rules.
+
+The pricing logic must support:
+
+* Different prices for each tour
+* Different price tiers by group size
+* Different optional extras
+* Different transportation prices
+* Different passenger categories when applicable
+
+6. Admin Dashboard
+
+Make these values editable from the admin dashboard:
+
+* Available times per tour
+* Tour-specific pricing rules
+* Price per person
+* Price by group size
+* Adult / child pricing when applicable
+* Optional transportation add-on
+* Transportation group size
+* Transportation vehicle type
+* Transportation price
+* Active / inactive status
+
+7. Booking Summary
+
+When the customer selects participants, time and optional transportation, show everything clearly in the booking summary:
+
+* Tour name
+* Selected date
+* Selected time
+* Number of participants
+* Applied pricing rule
+* Base tour price
+* Transportation option selected
+* Transportation price
+* Final total
+
+The final total must update automatically before checkout.
+
+8. Stripe Checkout
+
+Send the correct final total to Stripe Checkout, including:
+
+* Tour price based on participants
+* Applied pricing rule
+* Optional transportation if selected
+* Any other selected extras
+
+9. Important
+
+These availability settings, optional extras and dynamic pricing rules must become reusable patterns for future tours.
+
+Do not hardcode in a way that prevents editing later from the admin dashboard.
+
+The admin dashboard must remain the source of truth for pricing, times, extras and transportation settings.
