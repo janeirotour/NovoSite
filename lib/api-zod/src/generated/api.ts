@@ -424,16 +424,16 @@ export const UpdateDestinationParams = zod.object({
 export const UpdateDestinationBody = zod.object({
   "slug": zod.string().optional(),
   "name": zod.string().optional(),
-  "nameEs": zod.string().optional(),
-  "namePt": zod.string().optional(),
+  "nameEs": zod.string().nullish(),
+  "namePt": zod.string().nullish(),
   "country": zod.string().optional(),
   "imageUrl": zod.string().optional(),
-  "heroImageUrl": zod.string().optional(),
+  "heroImageUrl": zod.string().nullish(),
   "description": zod.string().optional(),
-  "descriptionEs": zod.string().optional(),
-  "descriptionPt": zod.string().optional(),
-  "seoTitle": zod.string().optional(),
-  "seoDescription": zod.string().optional(),
+  "descriptionEs": zod.string().nullish(),
+  "descriptionPt": zod.string().nullish(),
+  "seoTitle": zod.string().nullish(),
+  "seoDescription": zod.string().nullish(),
   "featured": zod.boolean().optional(),
   "sortOrder": zod.number().optional()
 })

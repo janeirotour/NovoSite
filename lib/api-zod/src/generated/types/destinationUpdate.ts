@@ -9,16 +9,23 @@
 export interface DestinationUpdate {
   slug?: string;
   name?: string;
-  nameEs?: string;
-  namePt?: string;
+  /** @nullable */
+  nameEs?: string | null;
+  /** @nullable */
+  namePt?: string | null;
   country?: string;
   imageUrl?: string;
-  heroImageUrl?: string;
+  /** @nullable */
+  heroImageUrl?: string | null;
   description?: string;
-  descriptionEs?: string;
-  descriptionPt?: string;
-  seoTitle?: string;
-  seoDescription?: string;
+  /** @nullable */
+  descriptionEs?: string | null;
+  /** @nullable */
+  descriptionPt?: string | null;
+  /** @nullable */
+  seoTitle?: string | null;
+  /** @nullable */
+  seoDescription?: string | null;
   featured?: boolean;
   sortOrder?: number;
 }

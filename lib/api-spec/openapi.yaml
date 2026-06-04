@@ -948,25 +948,25 @@ components:
         name:
           type: string
         nameEs:
-          type: string
+          type: ["string", "null"]
         namePt:
-          type: string
+          type: ["string", "null"]
         country:
           type: string
         imageUrl:
           type: string
         heroImageUrl:
-          type: string
+          type: ["string", "null"]
         description:
           type: string
         descriptionEs:
-          type: string
+          type: ["string", "null"]
         descriptionPt:
-          type: string
+          type: ["string", "null"]
         seoTitle:
-          type: string
+          type: ["string", "null"]
         seoDescription:
-          type: string
+          type: ["string", "null"]
         featured:
           type: boolean
         sortOrder:
