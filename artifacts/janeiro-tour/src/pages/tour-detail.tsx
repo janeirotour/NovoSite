@@ -16,28 +16,27 @@ function RegionodoWidget({ code }: { code: string }) {
     const container = containerRef.current;
     if (!container || !code.trim()) return;
 
-    container.innerHTML = "";
+    // Set HTML directly so the custom element lands in the real DOM immediately.
+    // Scripts injected via innerHTML are inert — we replace them with live ones below.
+    container.innerHTML = code;
 
-    const template = document.createElement("div");
-    template.innerHTML = code;
-
-    template.childNodes.forEach((node) => {
-      if (node.nodeName !== "SCRIPT") {
-        container.appendChild(node.cloneNode(true));
-      }
-    });
-
-    template.querySelectorAll("script").forEach((oldScript) => {
+    // Re-create every <script> in place so the browser fetches/executes it.
+    Array.from(container.querySelectorAll("script")).forEach((oldScript) => {
       const newScript = document.createElement("script");
-      oldScript.getAttributeNames().forEach((name) => {
-        newScript.setAttribute(name, oldScript.getAttribute(name)!);
-      });
-      newScript.textContent = oldScript.textContent;
-      container.appendChild(newScript);
+      Array.from(oldScript.attributes).forEach((attr) =>
+        newScript.setAttribute(attr.name, attr.value)
+      );
+      // Copy inline content (empty for external scripts, harmless).
+      if (oldScript.textContent) newScript.textContent = oldScript.textContent;
+      oldScript.replaceWith(newScript);
     });
+
+    return () => {
+      container.innerHTML = "";
+    };
   }, [code]);
 
-  return <div ref={containerRef} className="regiondo-widget w-full" />;
+  return <div ref={containerRef} className="regiondo-widget w-full min-h-[200px]" />;
 }
 
 export default function TourDetailPage() {
@@ -72,7 +71,7 @@ export default function TourDetailPage() {
 
   const title = lang === "es" ? (tour.titleEs ?? tour.title) : lang === "pt" ? (tour.titlePt ?? tour.title) : tour.title;
   const overview = lang === "es" ? (tour.overviewEs ?? tour.overview) : lang === "pt" ? (tour.overviewPt ?? tour.overview) : tour.overview;
-  const images = [tour.imageUrl, ...(tour.galleryImages as string[])].filter(Boolean);
+  const images = [tour.imageUrl, ...((tour.galleryImages as string[]) ?? [])].filter(Boolean);
   const itinerary = (tour.itinerary as Array<{ order: number; title: string; description: string; duration?: string }>) || [];
   const avgRating = reviews?.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
   const hasRegionodo = !!(tour.regiondoWidget as string | null | undefined)?.trim();
@@ -96,7 +95,7 @@ export default function TourDetailPage() {
           <div className="flex flex-wrap items-center gap-6 mt-4 text-white/90 text-sm">
             <span className="flex items-center gap-1.5"><Clock size={16} /> {tour.durationHours}h duration</span>
             <span className="flex items-center gap-1.5"><Users size={16} /> Max {tour.groupSizeMax} people</span>
-            <span className="flex items-center gap-1.5"><Globe size={16} /> {(tour.languages as string[]).join(", ")}</span>
+            <span className="flex items-center gap-1.5"><Globe size={16} /> {((tour.languages as string[]) ?? []).join(", ")}</span>
             {reviews && reviews.length > 0 && (
               <span className="flex items-center gap-1.5"><Star size={16} className="fill-primary text-primary" /> {avgRating} ({reviews.length} reviews)</span>
             )}
@@ -123,7 +122,7 @@ export default function TourDetailPage() {
           <section>
             <h2 className="text-2xl font-bold mb-4">Tour Highlights</h2>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {(tour.highlights as string[]).map((h, i) => (
+              {((tour.highlights as string[]) ?? []).map((h, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
                     <Check size={12} className="text-primary" />
@@ -152,7 +151,7 @@ export default function TourDetailPage() {
                 What's Included
               </h3>
               <ul className="space-y-2">
-                {(tour.includedItems as string[]).map((item, i) => (
+                {((tour.includedItems as string[]) ?? []).map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm">
                     <Check size={14} className="mt-0.5 text-green-600 flex-shrink-0" />{item}
                   </li>
@@ -165,7 +164,7 @@ export default function TourDetailPage() {
                 Not Included
               </h3>
               <ul className="space-y-2">
-                {(tour.notIncludedItems as string[]).map((item, i) => (
+                {((tour.notIncludedItems as string[]) ?? []).map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm">
                     <X size={14} className="mt-0.5 text-red-500 flex-shrink-0" />{item}
                   </li>
@@ -304,7 +303,7 @@ export default function TourDetailPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Globe size={16} className="text-muted-foreground" />
-                  <span>{(tour.languages as string[]).join(", ")}</span>
+                  <span>{((tour.languages as string[]) ?? []).join(", ")}</span>
                 </div>
 
                 <Separator />
