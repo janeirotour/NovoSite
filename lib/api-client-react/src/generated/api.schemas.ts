@@ -539,6 +539,32 @@ export interface Reservation {
   updatedAt: string;
 }
 
+export interface TourAvailabilityEntry {
+  id: number;
+  tourId: number;
+  /** YYYY-MM-DD */
+  date: string;
+  availableSpots?: number | null;
+  isBlocked: boolean;
+  notes?: string | null;
+  createdAt?: string;
+}
+
+export interface TourAvailabilityInput {
+  /** YYYY-MM-DD */
+  date: string;
+  availableSpots?: number | null;
+  isBlocked?: boolean;
+  notes?: string | null;
+}
+
+export interface TourAvailabilityUpdate {
+  date?: string;
+  availableSpots?: number | null;
+  isBlocked?: boolean;
+  notes?: string | null;
+}
+
 export type ReservationStatusUpdateBookingStatus = typeof ReservationStatusUpdateBookingStatus[keyof typeof ReservationStatusUpdateBookingStatus];
 
 
@@ -602,6 +628,16 @@ featured?: boolean;
 
 export type ListAllExtrasParams = {
 tourId?: number;
+};
+
+export type ListTourAvailabilityParams = {
+from?: string;
+to?: string;
+};
+
+export type ListAdminTourAvailabilityParams = {
+from?: string;
+to?: string;
 };
 
 export type ListReservationsParams = {

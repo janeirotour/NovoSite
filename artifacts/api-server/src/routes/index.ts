@@ -11,6 +11,7 @@ import uploadRouter from "./upload";
 import stripeRouter from "./stripe";
 import extrasRouter from "./extras";
 import reservationsRouter from "./reservations";
+import availabilityRouter from "./availability";
 
 const router: IRouter = Router();
 
@@ -26,6 +27,7 @@ router.use(uploadRouter);
 router.use(stripeRouter);
 router.use(extrasRouter);
 router.use(reservationsRouter);
+router.use(availabilityRouter);
 
 export default router;
   

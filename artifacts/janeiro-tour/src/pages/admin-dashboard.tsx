@@ -10,6 +10,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useGetSettings, useUpdateSettings,
     useListReservations, useUpdateReservationStatus,
     useListAllExtras, useCreateTourExtra, useUpdateTourExtra, useDeleteTourExtra,
+    useListAdminTourAvailability, useCreateAvailabilityEntry, useUpdateAvailabilityEntry, useDeleteAvailabilityEntry,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
     getGetSettingsQueryKey, getGetAdminStatsQueryKey,
@@ -30,8 +31,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
     Settings, LogOut, Plus, Pencil, Trash2, BarChart3, Globe, Image,
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
-    CheckCircle2, Clock, AlertCircle, DollarSign,
+    CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users,
   } from "lucide-react";
+  import { Calendar } from "@/components/ui/calendar";
+  import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
+  import { format as formatDate, addMonths, startOfMonth, endOfMonth } from "date-fns";
 
   // ─── helpers ───────────────────────────────────────────────────────────────
 
@@ -696,6 +700,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
                 { value: "settings", icon: Settings, label: "Settings & SEO" },
                 { value: "reservations", icon: ClipboardList, label: "Reservations" },
                 { value: "extras", icon: Tag, label: "Tour Extras" },
+                { value: "availability", icon: CalendarDays, label: "Availability" },
               ].map(({ value, icon: Icon, label }) => (
                 <TabsTrigger key={value} value={value} className="gap-1.5 text-sm">
                   <Icon size={14} />{label}
@@ -737,6 +742,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <TabsContent value="settings"><SettingsTab /></TabsContent>
             <TabsContent value="reservations"><ReservationsTab /></TabsContent>
             <TabsContent value="extras"><ExtrasTab /></TabsContent>
+            <TabsContent value="availability"><AvailabilityTab /></TabsContent>
           </Tabs>
         </div>
       </div>
@@ -1842,6 +1848,270 @@ import { useState, useRef, useCallback, useEffect } from "react";
                   <Plus size={15} />{createExtra.isPending ? "Adding…" : "Add Extra"}
                 </Button>
               </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ─── availability tab ──────────────────────────────────────────────────────
+
+  function AvailabilityTab() {
+    const queryClient = useQueryClient();
+    const { data: tours = [] } = useListTours();
+    const [selectedTourId, setSelectedTourId] = useState<number | null>(null);
+    const [month, setMonth] = useState<Date>(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+    const [form, setForm] = useState({ availableSpots: "", isBlocked: false, notes: "" });
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [showForm, setShowForm] = useState(false);
+
+    const from = formatDate(startOfMonth(addMonths(month, -1)), "yyyy-MM-dd");
+    const to = formatDate(endOfMonth(addMonths(month, 1)), "yyyy-MM-dd");
+
+    const { data: entries = [], refetch } = useListAdminTourAvailability(
+      selectedTourId ?? 0,
+      { from, to },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      { query: { enabled: !!selectedTourId } as any }
+    );
+
+    const createEntry = useCreateAvailabilityEntry();
+    const updateEntry = useUpdateAvailabilityEntry();
+    const deleteEntry = useDeleteAvailabilityEntry();
+
+    const parseLocalDate = (s: string) => {
+      const [y, m, d] = s.split("-").map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    };
+
+    const entryByDate = new Map(entries.map((e) => [e.date, e]));
+    const availableDates = entries.filter((e) => !e.isBlocked).map((e) => parseLocalDate(e.date));
+    const blockedDates = entries.filter((e) => e.isBlocked).map((e) => parseLocalDate(e.date));
+
+    const handleDayClick = (day: Date | undefined) => {
+      if (!day || !selectedTourId) return;
+      const dateStr = formatDate(day, "yyyy-MM-dd");
+      const existing = entryByDate.get(dateStr);
+      setSelectedDate(day);
+      if (existing) {
+        setEditingId(existing.id);
+        setForm({
+          availableSpots: existing.availableSpots?.toString() ?? "",
+          isBlocked: existing.isBlocked,
+          notes: existing.notes ?? "",
+        });
+      } else {
+        setEditingId(null);
+        setForm({ availableSpots: "", isBlocked: false, notes: "" });
+      }
+      setShowForm(true);
+    };
+
+    const handleSave = async () => {
+      if (!selectedDate || !selectedTourId) return;
+      const dateStr = formatDate(selectedDate, "yyyy-MM-dd");
+      const data = {
+        date: dateStr,
+        availableSpots: form.availableSpots ? parseInt(form.availableSpots) : null,
+        isBlocked: form.isBlocked,
+        notes: form.notes || null,
+      };
+      if (editingId) {
+        await updateEntry.mutateAsync({ id: editingId, data });
+      } else {
+        await createEntry.mutateAsync({ tourId: selectedTourId, data });
+      }
+      setShowForm(false);
+      setSelectedDate(undefined);
+      queryClient.invalidateQueries();
+      refetch();
+    };
+
+    const handleDelete = async () => {
+      if (!editingId) return;
+      await deleteEntry.mutateAsync({ id: editingId });
+      setShowForm(false);
+      setSelectedDate(undefined);
+      queryClient.invalidateQueries();
+      refetch();
+    };
+
+    const upcomingEntries = [...entries]
+      .filter((e) => new Date(e.date + "T12:00:00") >= new Date())
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-bold flex items-center gap-2"><CalendarDays size={20} className="text-primary" /> Tour Availability</h2>
+          <p className="text-sm text-muted-foreground mt-1">Set available dates and manage capacity per tour. If no dates are configured, all future dates are open.</p>
+        </div>
+
+        <div className="bg-card border rounded-xl p-4">
+          <label className="text-sm font-medium mb-2 block">Select Tour</label>
+          <select
+            className="w-full max-w-xs border rounded-lg px-3 py-2 text-sm bg-background"
+            value={selectedTourId ?? ""}
+            onChange={(e) => {
+              setSelectedTourId(e.target.value ? Number(e.target.value) : null);
+              setShowForm(false);
+              setSelectedDate(undefined);
+            }}
+          >
+            <option value="">— Choose a tour —</option>
+            {(tours as { id: number; title: string; slug: string }[]).map((t) => (
+              <option key={t.id} value={t.id}>{t.title}</option>
+            ))}
+          </select>
+        </div>
+
+        {selectedTourId && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-card border rounded-xl p-4">
+              <div className="flex items-center gap-3 mb-3 text-xs">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-sm bg-green-100 border border-green-300 inline-block" />
+                  Available
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-3 h-3 rounded-sm bg-red-100 border border-red-300 inline-block" />
+                  Blocked
+                </span>
+                <span className="text-muted-foreground ml-auto text-xs">Click any date to add/edit</span>
+              </div>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={handleDayClick}
+                month={month}
+                onMonthChange={setMonth}
+                modifiers={{ available: availableDates, blocked: blockedDates }}
+                modifiersClassNames={{
+                  available: "!bg-green-100 !text-green-800 font-semibold rounded-md",
+                  blocked: "!bg-red-100 !text-red-700 opacity-60 rounded-md",
+                }}
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-4">
+              {showForm && selectedDate ? (
+                <div className="bg-card border rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-sm flex items-center gap-2">
+                      <CalendarDays size={15} className="text-primary" />
+                      {editingId ? "Edit" : "Add"} — {formatDate(selectedDate, "MMMM d, yyyy")}
+                    </h3>
+                    <button
+                      onClick={() => { setShowForm(false); setSelectedDate(undefined); }}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <XIcon size={14} />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={form.isBlocked}
+                      onCheckedChange={(v) => setForm((f) => ({ ...f, isBlocked: v }))}
+                      id="isBlocked"
+                    />
+                    <label htmlFor="isBlocked" className="flex items-center gap-1.5 text-sm cursor-pointer">
+                      <Ban size={13} className={form.isBlocked ? "text-red-500" : "text-muted-foreground"} />
+                      {form.isBlocked ? "Blocked (unavailable)" : "Available"}
+                    </label>
+                  </div>
+
+                  {!form.isBlocked && (
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground block mb-1">
+                        Available spots (leave blank for unlimited)
+                      </label>
+                      <Input
+                        type="number"
+                        min="1"
+                        placeholder="Unlimited"
+                        value={form.availableSpots}
+                        onChange={(e) => setForm((f) => ({ ...f, availableSpots: e.target.value }))}
+                        className="h-8 text-sm"
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground block mb-1">Notes (optional)</label>
+                    <Input
+                      placeholder="e.g. Special event, private group…"
+                      value={form.notes}
+                      onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+                      className="h-8 text-sm"
+                    />
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <Button
+                      size="sm"
+                      className="flex-1 gap-1"
+                      onClick={handleSave}
+                      disabled={createEntry.isPending || updateEntry.isPending}
+                    >
+                      <Save size={13} />{editingId ? "Update" : "Save"}
+                    </Button>
+                    {editingId && (
+                      <Button size="sm" variant="destructive" onClick={handleDelete} disabled={deleteEntry.isPending}>
+                        <Trash2 size={13} />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-muted/30 border rounded-xl p-6 text-center text-sm text-muted-foreground">
+                  <CalendarDays size={28} className="mx-auto mb-2 opacity-30" />
+                  Click a date on the calendar to add or edit availability
+                </div>
+              )}
+
+              <div className="bg-card border rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b flex items-center justify-between">
+                  <h3 className="font-semibold text-sm">Upcoming Entries</h3>
+                  <Badge variant="secondary">{upcomingEntries.length}</Badge>
+                </div>
+                {upcomingEntries.length === 0 ? (
+                  <div className="p-6 text-center text-sm text-muted-foreground">
+                    No availability configured — all future dates are open by default
+                  </div>
+                ) : (
+                  <div className="divide-y max-h-64 overflow-y-auto">
+                    {upcomingEntries.map((entry) => (
+                      <div
+                        key={entry.id}
+                        className="px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-muted/40 transition-colors text-sm"
+                        onClick={() => handleDayClick(parseLocalDate(entry.date))}
+                      >
+                        <div className="flex items-center gap-2">
+                          {entry.isBlocked
+                            ? <Ban size={13} className="text-red-500" />
+                            : <CheckCircle2 size={13} className="text-green-500" />
+                          }
+                          <span className="font-medium">{formatDate(parseLocalDate(entry.date), "EEE, MMM d, yyyy")}</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-muted-foreground text-xs">
+                          {!entry.isBlocked && entry.availableSpots && (
+                            <span className="flex items-center gap-1">
+                              <Users size={11} />{entry.availableSpots} spots
+                            </span>
+                          )}
+                          {entry.isBlocked && (
+                            <Badge variant="destructive" className="text-xs py-0">Blocked</Badge>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

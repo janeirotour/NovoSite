@@ -1,14 +1,17 @@
 import { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
-import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourExtras } from "@workspace/api-client-react";
+import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourExtras, useListTourAvailability } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
-import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart, Minus, Plus, Calendar, Tag } from "lucide-react";
+import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart, Minus, Plus, CalendarDays, Tag, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 const TIME_SLOTS = [
   "07:00", "08:00", "09:00", "10:00", "11:00", "12:00",
@@ -74,12 +77,38 @@ export default function TourDetailPage() {
 
   const [localPax, setLocalPax] = useState(2);
   const [selectedExtraIds, setSelectedExtraIds] = useState<Set<number>>(new Set());
-  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredDateObj, setPreferredDateObj] = useState<Date | undefined>();
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [preferredTime, setPreferredTime] = useState("");
+  const [dateRequired, setDateRequired] = useState(false);
 
   const tourSlugForExtras = tour?.slug ?? (isNumeric ? "" : param);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: tourExtras = [] } = useListTourExtras(tourSlugForExtras, { query: { enabled: !!tourSlugForExtras } as any });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: availabilityEntries = [] } = useListTourAvailability(tourSlugForExtras, undefined, { query: { enabled: !!tourSlugForExtras } as any });
+
+  const preferredDate = preferredDateObj ? format(preferredDateObj, "yyyy-MM-dd") : "";
+
+  // Parse "YYYY-MM-DD" as a local-timezone date (avoids UTC off-by-one)
+  const parseLocalDate = (s: string) => {
+    const [y, m, d] = s.split("-").map(Number);
+    return new Date(y, m - 1, d, 12, 0, 0);
+  };
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  const hasAvailabilityConfig = availabilityEntries.length > 0;
+  const availableDates = availabilityEntries.filter((e) => !e.isBlocked).map((e) => parseLocalDate(e.date));
+  const blockedDates = availabilityEntries.filter((e) => e.isBlocked).map((e) => parseLocalDate(e.date));
+
+  const isDateDisabled = (date: Date) => {
+    if (date < tomorrow) return true;
+    if (!hasAvailabilityConfig) return false;
+    return !availableDates.some((d) => d.toDateString() === date.toDateString());
+  };
 
   const toggleExtra = (id: number) => {
     setSelectedExtraIds((prev) => {
@@ -102,6 +131,16 @@ export default function TourDetailPage() {
     preferredDate: preferredDate || undefined,
     preferredTime: preferredTime || undefined,
   });
+
+  const handleAddToCart = () => {
+    if (!preferredDate) {
+      setDateRequired(true);
+      setDatePickerOpen(true);
+      return;
+    }
+    addItem(buildCartItem());
+    openCart();
+  };
 
   const selectedExtrasTotal = tourExtras
     .filter((e) => selectedExtraIds.has(e.id))
@@ -430,16 +469,54 @@ export default function TourDetailPage() {
                 {/* Preferred Date */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium mb-1.5">
-                    <Calendar size={14} className="text-muted-foreground" />
+                    <CalendarDays size={14} className="text-muted-foreground" />
                     Preferred Date
+                    <span className="text-destructive text-xs ml-auto">*Required</span>
                   </label>
-                  <input
-                    type="date"
-                    value={preferredDate}
-                    min={getTomorrowStr()}
-                    onChange={(e) => setPreferredDate(e.target.value)}
-                    className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
+                  {hasAvailabilityConfig && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2 bg-muted/50 rounded-lg px-2.5 py-1.5">
+                      <AlertCircle size={11} className="text-amber-500 flex-shrink-0" />
+                      Only scheduled dates are available for this tour
+                    </div>
+                  )}
+                  <Popover open={datePickerOpen} onOpenChange={(o) => { setDatePickerOpen(o); if (o) setDateRequired(false); }}>
+                    <PopoverTrigger asChild>
+                      <button
+                        className={`w-full flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-left transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 ${dateRequired && !preferredDate ? "border-destructive ring-destructive/20 ring-2" : "border-input focus:ring-green-500"}`}
+                      >
+                        <CalendarDays size={14} className={preferredDate ? "text-green-600" : "text-muted-foreground"} />
+                        {preferredDate
+                          ? <span className="font-medium text-foreground">{format(preferredDateObj!, "EEEE, MMMM d, yyyy")}</span>
+                          : <span className="text-muted-foreground">Pick a date…</span>
+                        }
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-3" align="start">
+                      {hasAvailabilityConfig && (
+                        <div className="flex gap-3 text-xs mb-3 px-1">
+                          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-green-500 inline-block" />Available</span>
+                          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" />Unavailable</span>
+                        </div>
+                      )}
+                      <Calendar
+                        mode="single"
+                        selected={preferredDateObj}
+                        onSelect={(d) => { setPreferredDateObj(d); if (d) setDatePickerOpen(false); }}
+                        disabled={isDateDisabled}
+                        modifiers={{ available: availableDates, blocked: blockedDates }}
+                        modifiersClassNames={{
+                          available: "!bg-green-100 !text-green-800 font-semibold rounded-md",
+                          blocked: "!bg-red-100 !text-red-700 opacity-50 rounded-md",
+                        }}
+                        autoFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {dateRequired && !preferredDate && (
+                    <p className="text-xs text-destructive mt-1 flex items-center gap-1">
+                      <AlertCircle size={11} /> Please select a date to continue
+                    </p>
+                  )}
                 </div>
 
                 {/* Preferred Time */}
@@ -509,13 +586,10 @@ export default function TourDetailPage() {
                   <div className="space-y-2">
                     <Button
                       className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold gap-2"
-                      onClick={() => {
-                        addItem(buildCartItem());
-                        openCart();
-                      }}
+                      onClick={handleAddToCart}
                     >
                       <ShoppingCart size={16} />
-                      Add to Cart
+                      {preferredDate ? "Add to Cart" : "Select Date & Book"}
                     </Button>
                   </div>
                 )}
@@ -551,13 +625,10 @@ export default function TourDetailPage() {
         </div>
         <Button
           className="flex-1 max-w-xs h-12 text-base font-semibold bg-green-600 hover:bg-green-700 text-white gap-2"
-          onClick={() => {
-            addItem(buildCartItem());
-            openCart();
-          }}
+          onClick={handleAddToCart}
         >
           <ShoppingCart size={18} />
-          Book Now
+          {preferredDate ? "Add to Cart" : "Select Date & Book"}
         </Button>
       </div>
     </MainLayout>

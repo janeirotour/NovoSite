@@ -1020,6 +1020,104 @@ export const DeleteTourExtraParams = zod.object({
 
 
 /**
+ * @summary List availability entries for a tour (public)
+ */
+export const ListTourAvailabilityParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const ListTourAvailabilityQueryParams = zod.object({
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const ListTourAvailabilityResponseItem = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "date": zod.string().describe('YYYY-MM-DD'),
+  "availableSpots": zod.number().nullish(),
+  "isBlocked": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date().optional()
+})
+export const ListTourAvailabilityResponse = zod.array(ListTourAvailabilityResponseItem)
+
+
+/**
+ * @summary List all availability entries for a tour (admin)
+ */
+export const ListAdminTourAvailabilityParams = zod.object({
+  "tourId": zod.coerce.number()
+})
+
+export const ListAdminTourAvailabilityQueryParams = zod.object({
+  "from": zod.coerce.string().optional(),
+  "to": zod.coerce.string().optional()
+})
+
+export const ListAdminTourAvailabilityResponseItem = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "date": zod.string().describe('YYYY-MM-DD'),
+  "availableSpots": zod.number().nullish(),
+  "isBlocked": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date().optional()
+})
+export const ListAdminTourAvailabilityResponse = zod.array(ListAdminTourAvailabilityResponseItem)
+
+
+/**
+ * @summary Add an availability entry for a tour
+ */
+export const CreateAvailabilityEntryParams = zod.object({
+  "tourId": zod.coerce.number()
+})
+
+export const createAvailabilityEntryBodyIsBlockedDefault = false;
+
+export const CreateAvailabilityEntryBody = zod.object({
+  "date": zod.string().describe('YYYY-MM-DD'),
+  "availableSpots": zod.number().nullish(),
+  "isBlocked": zod.boolean().default(createAvailabilityEntryBodyIsBlockedDefault),
+  "notes": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update an availability entry
+ */
+export const UpdateAvailabilityEntryParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateAvailabilityEntryBody = zod.object({
+  "date": zod.string().optional(),
+  "availableSpots": zod.number().nullish(),
+  "isBlocked": zod.boolean().optional(),
+  "notes": zod.string().nullish()
+})
+
+export const UpdateAvailabilityEntryResponse = zod.object({
+  "id": zod.number(),
+  "tourId": zod.number(),
+  "date": zod.string().describe('YYYY-MM-DD'),
+  "availableSpots": zod.number().nullish(),
+  "isBlocked": zod.boolean(),
+  "notes": zod.string().nullish(),
+  "createdAt": zod.coerce.date().optional()
+})
+
+
+/**
+ * @summary Delete an availability entry
+ */
+export const DeleteAvailabilityEntryParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
  * @summary List all reservations (admin)
  */
 export const ListReservationsQueryParams = zod.object({

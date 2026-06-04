@@ -728,6 +728,126 @@ paths:
         "204":
           description: Deleted
 
+  # Availability
+  /tours/{slug}/availability:
+    get:
+      operationId: listTourAvailability
+      tags: [tours]
+      summary: List availability entries for a tour (public)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          schema:
+            type: string
+        - name: to
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of availability entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TourAvailabilityEntry"
+
+  /admin/tours/{tourId}/availability:
+    get:
+      operationId: listAdminTourAvailability
+      tags: [admin]
+      summary: List all availability entries for a tour (admin)
+      parameters:
+        - name: tourId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: from
+          in: query
+          schema:
+            type: string
+        - name: to
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of availability entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TourAvailabilityEntry"
+    post:
+      operationId: createAvailabilityEntry
+      tags: [admin]
+      summary: Add an availability entry for a tour
+      parameters:
+        - name: tourId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourAvailabilityInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TourAvailabilityEntry"
+
+  /admin/availability/{id}:
+    put:
+      operationId: updateAvailabilityEntry
+      tags: [admin]
+      summary: Update an availability entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TourAvailabilityUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TourAvailabilityEntry"
+    delete:
+      operationId: deleteAvailabilityEntry
+      tags: [admin]
+      summary: Delete an availability entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
   # Reservations
   /admin/reservations:
     get:
@@ -1739,6 +1859,60 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    TourAvailabilityEntry:
+      type: object
+      required: [id, tourId, date, isBlocked]
+      properties:
+        id:
+          type: integer
+        tourId:
+          type: integer
+        date:
+          type: string
+          description: YYYY-MM-DD
+        availableSpots:
+          type: integer
+          nullable: true
+        isBlocked:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    TourAvailabilityInput:
+      type: object
+      required: [date]
+      properties:
+        date:
+          type: string
+          description: YYYY-MM-DD
+        availableSpots:
+          type: integer
+          nullable: true
+        isBlocked:
+          type: boolean
+          default: false
+        notes:
+          type: string
+          nullable: true
+
+    TourAvailabilityUpdate:
+      type: object
+      properties:
+        date:
+          type: string
+        availableSpots:
+          type: integer
+          nullable: true
+        isBlocked:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
 
     ReservationStatusUpdate:
       type: object

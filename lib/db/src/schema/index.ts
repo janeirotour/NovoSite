@@ -7,3 +7,4 @@ export * from "./settings";
 export * from "./admins";
 export * from "./extras";
 export * from "./reservations";
+export * from "./availability";

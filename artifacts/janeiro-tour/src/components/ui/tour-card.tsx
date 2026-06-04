@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
 import { Tour } from "@workspace/api-client-react";
-import { Clock, MapPin, Users, Globe2, Star, Crown, ShoppingCart } from "lucide-react";
+import { Clock, MapPin, Users, Globe2, Star, Crown, ShoppingCart, CalendarDays, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 const PREMIUM_BADGE_LABELS: Record<string, string> = {
   "Most Personalized Experience": "Most Personalized",
@@ -42,6 +46,30 @@ export function TourCard({ tour }: { tour: Tour }) {
   const { t, lang } = useLanguage();
   const { addItem } = useCart();
   const premiumBadge = (tour as Tour & { premiumBadge?: string | null }).premiumBadge;
+
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerDate, setPickerDate] = useState<Date | undefined>();
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  const handleConfirmDate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!pickerDate) return;
+    addItem({
+      tourSlug: tour.slug,
+      title: t(tour, "title"),
+      imageUrl: tour.imageUrl || "/images/exp-city.png",
+      priceFrom: Number(tour.priceFrom),
+      currency: tour.currency,
+      pax: 1,
+      preferredDate: format(pickerDate, "yyyy-MM-dd"),
+    });
+    setPickerOpen(false);
+    setPickerDate(undefined);
+  };
 
   return (
     <Link href={`/tours/${tour.slug}`}>
@@ -124,24 +152,60 @@ export function TourCard({ tour }: { tour: Tour }) {
                 <span>5.0</span>
               </div>
             </div>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addItem({
-                  tourSlug: tour.slug,
-                  title: t(tour, "title"),
-                  imageUrl: tour.imageUrl || "/images/exp-city.png",
-                  priceFrom: Number(tour.priceFrom),
-                  currency: tour.currency,
-                  pax: 1,
-                });
-              }}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              {lang === "en" ? "Book Now" : lang === "es" ? "Reservar" : "Reservar"}
-            </button>
+
+            <Popover open={pickerOpen} onOpenChange={setPickerOpen}>
+              <PopoverTrigger asChild>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPickerOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  {lang === "en" ? "Book Now" : lang === "es" ? "Reservar" : "Reservar"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto p-0"
+                align="center"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              >
+                <div className="p-3 space-y-3">
+                  <div className="text-center">
+                    <p className="font-semibold text-sm flex items-center justify-center gap-1.5">
+                      <CalendarDays size={15} className="text-primary" />
+                      {lang === "en" ? "Choose a date" : lang === "es" ? "Elige una fecha" : "Escolha uma data"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t(tour, "title")}</p>
+                  </div>
+                  <Calendar
+                    mode="single"
+                    selected={pickerDate}
+                    onSelect={setPickerDate}
+                    disabled={(date) => date < tomorrow}
+                    autoFocus
+                  />
+                  <div className="pt-1 border-t">
+                    <button
+                      onClick={handleConfirmDate}
+                      disabled={!pickerDate}
+                      className="w-full py-2 rounded-lg bg-green-600 text-white text-sm font-semibold disabled:opacity-40 hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      {pickerDate ? (
+                        <>
+                          <ChevronRight size={14} />
+                          {format(pickerDate, "MMM d, yyyy")} — Add to Cart
+                        </>
+                      ) : (
+                        lang === "en" ? "Select a date first" : lang === "es" ? "Selecciona una fecha" : "Selecione uma data"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
