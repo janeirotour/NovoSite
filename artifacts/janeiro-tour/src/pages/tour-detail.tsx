@@ -157,7 +157,7 @@ export default function TourDetailPage() {
           {/* Overview */}
           <section>
             <h2 className="text-2xl font-bold mb-4">Overview</h2>
-            <p className="text-muted-foreground leading-relaxed">{overview}</p>
+            <div className="text-muted-foreground leading-relaxed whitespace-pre-line">{overview}</div>
           </section>
 
           <Separator />
