@@ -124,9 +124,9 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Ministry of Tourism certification */}
+      {/* Trust badges */}
       <div className="border-t border-white/8">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4 flex justify-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
           <div className="flex items-center gap-2 text-white/40 text-xs">
             <Award className="w-3.5 h-3.5 text-[#FFB600]/60 flex-shrink-0" />
             <span>
@@ -135,6 +135,21 @@ export function Footer() {
               {lang === "pt" && "Certificada pelo Ministério do Turismo do Brasil"}
               {" — "}
               <span className="font-medium text-white/50">n° 20.966.047.0001/11</span>
+            </span>
+          </div>
+          <div className="hidden sm:block w-px h-3 bg-white/15" />
+          <div className="flex items-center gap-2 text-white/40 text-xs">
+            <span className="text-sm leading-none">✊🏿</span>
+            <span className="font-medium text-white/50">
+              {lang === "en" && "Black-owned Business"}
+              {lang === "es" && "Empresa de propietario negro"}
+              {lang === "pt" && "Empresa negra"}
+            </span>
+            <span className="text-white/25">·</span>
+            <span>
+              {lang === "en" && "Afro-Tourism"}
+              {lang === "es" && "Afroturismo"}
+              {lang === "pt" && "Afroturismo"}
             </span>
           </div>
         </div>

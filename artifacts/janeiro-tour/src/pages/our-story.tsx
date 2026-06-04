@@ -61,27 +61,35 @@ export default function OurStoryPage() {
               <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">
                 Our Founder
               </p>
-              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-6 leading-tight">
+              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-3 leading-tight">
                 Meet Dandara
               </h2>
+              <div className="flex flex-wrap gap-2 mb-6">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#3d1c00] text-[#f5c07a]">
+                  ✊🏿 Black-owned Business
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
+                  Afro-Tourism Pioneer
+                </span>
+              </div>
               <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
                 <p>
                   At Janeiro Tour &amp; Travel, our story is built on passion, authenticity and a deep love for Brazil.
                 </p>
                 <p>
-                  Founded by Dandara, a tourism professional dedicated to creating meaningful travel experiences, Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country.
+                  Founded by Dandara — an Afro-Brazilian entrepreneur born and raised in Rio de Janeiro — Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country, including its powerful Afro-Brazilian heritage.
                 </p>
                 <p>
-                  Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began in Rio de Janeiro as a small project driven by passion and dedication has grown into a trusted travel company recognized for its personalized service, cultural immersion and commitment to excellence.
+                  Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began as a small project driven by passion has grown into a trusted travel company that proudly puts Afro-tourism, Black culture and community at the center of everything we do.
                 </p>
                 <p>
-                  Our greatest inspiration has always been Brazil itself — its vibrant culture, breathtaking landscapes, rich history and warm people. Every tour, transfer, itinerary and travel package we create is carefully designed to showcase the country's beauty while respecting local communities, supporting sustainable tourism and delivering exceptional service.
+                  Our Afro team reflects the rich diversity of Brazil — guides, storytellers and culture-bearers who share their heritage with every guest who travels with us.
                 </p>
                 <p>
                   Today, we proudly serve travelers from all over the world. Our multilingual team provides assistance in Portuguese, English, Spanish and French, ensuring that every guest feels welcome, comfortable and supported from the first contact to the final farewell.
                 </p>
                 <p className="font-medium text-gray-800">
-                  Our mission: to help you discover the very best of Brazil through authentic experiences, trusted local expertise and unforgettable moments that stay with you long after your journey ends.
+                  Our mission: to help you discover the very best of Brazil — including the Afro-Brazilian roots that make this country extraordinary — through authentic experiences, trusted local expertise and unforgettable moments.
                 </p>
               </div>
             </div>

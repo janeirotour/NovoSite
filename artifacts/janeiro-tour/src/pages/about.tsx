@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Heart, Globe, Shield, Star, Users, Leaf } from "lucide-react";
+import { Heart, Globe, Shield, Star, Users, Leaf, MapPin } from "lucide-react";
 
 const values = [
   {
@@ -91,15 +91,23 @@ export default function AboutPage() {
             {/* Text */}
             <div>
               <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">Our Founder</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-6 leading-tight">
+              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-3 leading-tight">
                 Meet Dandara
               </h2>
+              <div className="flex flex-wrap gap-2 mb-6">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#3d1c00] text-[#f5c07a]">
+                  ✊🏿 Black-owned Business
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743]">
+                  Afro-Tourism Pioneer
+                </span>
+              </div>
               <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
                 <p>
                   At Janeiro Tour &amp; Travel, our story is built on passion, authenticity and a deep love for Brazil.
                 </p>
                 <p>
-                  Founded by Dandara, a tourism professional dedicated to creating meaningful travel experiences, Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country.
+                  Founded by Dandara — an Afro-Brazilian entrepreneur from Rio de Janeiro — Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country.
                 </p>
                 <p>
                   Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began in Rio de Janeiro as a small project driven by passion and dedication has grown into a trusted travel company recognized for its personalized service, cultural immersion and commitment to excellence.
@@ -134,6 +142,57 @@ export default function AboutPage() {
               Our mission is simple: to help you discover the very best of Brazil through authentic experiences, trusted local expertise and unforgettable moments that stay with you long after your journey ends.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Afro-Tourism & Black-owned section */}
+      <section className="py-24 bg-[#1a0a00] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1598977054078-a4dd2d53c2ef?w=1400&q=60')] bg-cover bg-center" />
+        <div className="relative max-w-6xl mx-auto px-4">
+          <div className="text-center mb-14">
+            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] uppercase tracking-widest mb-5">
+              ✊🏿 Black-owned Business · Afro-Tourism
+            </span>
+            <h2 className="font-bold text-3xl md:text-4xl text-white mb-5 leading-tight">
+              Rooted in Afro-Brazilian Culture
+            </h2>
+            <p className="text-white/65 text-base max-w-2xl mx-auto leading-relaxed">
+              Janeiro Tour &amp; Travel is proudly Black-owned — founded and led by an Afro-Brazilian woman. Our team reflects the rich diversity at the heart of Brazil, and our experiences are designed to celebrate, amplify and connect travelers with the Afro-Brazilian heritage that built this country.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
+            {[
+              {
+                icon: "✊🏿",
+                title: "Black-owned Business",
+                desc: "Founded, led and operated by a Black entrepreneur from Rio de Janeiro. We are proud to represent Black excellence in Brazilian tourism.",
+              },
+              {
+                icon: "👥",
+                title: "Afro Team",
+                desc: "Our team is a direct reflection of Brazil's Afro-Brazilian community — guides, storytellers and culture-bearers who share their heritage with every guest.",
+              },
+              {
+                icon: "🌍",
+                title: "Afro-Tourism",
+                desc: "We specialize in experiences that honor Black culture, history and traditions — from Little Africa in Rio to Afro-Brazilian roots in Salvador, Bahia.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="bg-white/6 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors">
+                <div className="text-3xl mb-5">{item.icon}</div>
+                <h3 className="font-bold text-white text-base mb-3">{item.title}</h3>
+                <p className="text-white/60 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <blockquote className="max-w-2xl mx-auto text-center">
+            <p className="text-white/80 text-lg italic leading-relaxed mb-4">
+              "Brazil's greatest beauty is its people — and Afro-Brazilian culture is the beating heart of everything that makes this country extraordinary. We share it with pride."
+            </p>
+            <cite className="text-[#f5c07a] text-sm font-semibold not-italic">— Dandara, Founder of Janeiro Tour &amp; Travel</cite>
+          </blockquote>
         </div>
       </section>
 
