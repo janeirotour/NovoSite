@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, MessageCircle, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const WHATSAPP_URL = "https://wa.me/5521965297618";
@@ -86,6 +86,15 @@ export default function ContactPage() {
                 Open WhatsApp Chat
               </Button>
             </a>
+          </div>
+
+          {/* Ministry of Tourism badge */}
+          <div className="flex items-start gap-3 p-4 bg-[#009743]/6 border border-[#009743]/20 rounded-xl">
+            <Award className="w-5 h-5 text-[#009743] flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-[#009743]">Certified by the Brazilian Ministry of Tourism</p>
+              <p className="text-xs text-[#009743]/70 mt-0.5">Registration n° 20.966.047.0001/11</p>
+            </div>
           </div>
         </div>
 

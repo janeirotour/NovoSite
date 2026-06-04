@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
-import { Facebook, Instagram, Youtube, MessageCircle, Mail, MapPin } from "lucide-react";
+import { Facebook, Instagram, Youtube, MessageCircle, Mail, MapPin, Award } from "lucide-react";
 
 const WHATSAPP = "https://wa.me/5521965297618";
 const EMAIL = "contato@janeirotour.com";
@@ -120,6 +120,22 @@ export function Footer() {
                 <span>Rio de Janeiro, Brasil</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Ministry of Tourism certification */}
+      <div className="border-t border-white/8">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4 flex justify-center">
+          <div className="flex items-center gap-2 text-white/40 text-xs">
+            <Award className="w-3.5 h-3.5 text-[#FFB600]/60 flex-shrink-0" />
+            <span>
+              {lang === "en" && "Certified by the Brazilian Ministry of Tourism"}
+              {lang === "es" && "Certificada por el Ministerio de Turismo de Brasil"}
+              {lang === "pt" && "Certificada pelo Ministério do Turismo do Brasil"}
+              {" — "}
+              <span className="font-medium text-white/50">n° 20.966.047.0001/11</span>
+            </span>
           </div>
         </div>
       </div>

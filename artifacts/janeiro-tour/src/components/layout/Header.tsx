@@ -27,6 +27,7 @@ const aboutItems = [
   { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" },
   { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós" },
   { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações" },
+  { href: "/faq", en: "FAQ", es: "Preguntas Frecuentes", pt: "Perguntas Frequentes" },
 ];
 
 const LANGS: [Lang, string, string][] = [
