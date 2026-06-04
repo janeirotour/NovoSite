@@ -54,7 +54,10 @@ function NavDropdown({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Only close-on-outside-click on desktop — on mobile this nav is hidden (CSS)
+    // and the global mousedown listener can interfere with touch-tap synthesis.
     const handler = (e: MouseEvent) => {
+      if (window.innerWidth < 1024) return;
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener("mousedown", handler);
@@ -116,9 +119,38 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // iOS Safari-safe scroll lock: `overflow: hidden` alone doesn't work on iOS.
+  // We use `position: fixed` + saved scroll offset so the page doesn't jump.
+  // Scroll restoration is deferred via rAF so it doesn't cancel touch-based navigation.
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (mobileOpen) {
+      const scrollY = window.scrollY;
+      document.body.dataset.scrollY = String(scrollY);
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+    } else {
+      const savedY = parseInt(document.body.dataset.scrollY ?? "0", 10);
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+      delete document.body.dataset.scrollY;
+      // Defer scroll restoration so it doesn't interfere with link navigation
+      requestAnimationFrame(() => {
+        window.scrollTo(0, savedY);
+      });
+    }
+    return () => {
+      const savedY = parseInt(document.body.dataset.scrollY ?? "0", 10);
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
+      delete document.body.dataset.scrollY;
+      if (savedY) window.scrollTo(0, savedY);
+    };
   }, [mobileOpen]);
 
   const isHero = location === "/" && !isScrolled && !mobileOpen;
@@ -262,10 +294,24 @@ export function Header() {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/20" onClick={() => setMobileOpen(false)} />
-          <div className="absolute top-16 left-0 right-0 bottom-0 bg-white overflow-y-auto">
+          {/* Backdrop — tap outside to close */}
+          <div
+            className="absolute inset-0 bg-black/30"
+            onTouchEnd={(e) => { e.preventDefault(); setMobileOpen(false); }}
+            onClick={() => setMobileOpen(false)}
+          />
+          {/* Drawer panel */}
+          <div className="absolute top-16 left-0 right-0 bottom-0 bg-white overflow-y-auto overscroll-contain">
             <nav className="flex flex-col divide-y divide-gray-100">
-              <Link href="/" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.home}</Link>
+              {/* touch-action: manipulation eliminates the 300ms tap delay on iOS */}
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
+                style={{ touchAction: "manipulation" }}
+              >
+                {t.home}
+              </Link>
 
               {[
                 { key: "about", label: t.about, items: aboutItems },
@@ -274,7 +320,8 @@ export function Header() {
               ].map(({ key, label, items }) => (
                 <div key={key}>
                   <button
-                    className="flex items-center justify-between w-full px-6 py-4 text-sm text-gray-700 hover:bg-gray-50"
+                    className="flex items-center justify-between w-full px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
+                    style={{ touchAction: "manipulation" }}
                     onClick={() => setMobileExpanded(mobileExpanded === key ? null : key)}
                   >
                     {label}
@@ -283,8 +330,13 @@ export function Header() {
                   {mobileExpanded === key && (
                     <div className="bg-gray-50 border-t border-gray-100">
                       {items.map((item) => (
-                        <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-                          className="block px-8 py-3 text-sm text-gray-600 hover:bg-gray-100">
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="block px-8 py-3 text-sm text-gray-600 active:bg-gray-100"
+                          style={{ touchAction: "manipulation" }}
+                        >
                           {item[l]}
                         </Link>
                       ))}
@@ -293,27 +345,58 @@ export function Header() {
                 </div>
               ))}
 
-              <Link href="/packages" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.pkgs}</Link>
-              <Link href="/blog" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.guide}</Link>
-              <Link href="/contact" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.contact}</Link>
+              <Link
+                href="/packages"
+                onClick={() => setMobileOpen(false)}
+                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
+                style={{ touchAction: "manipulation" }}
+              >
+                {t.pkgs}
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
+                style={{ touchAction: "manipulation" }}
+              >
+                {t.guide}
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
+                style={{ touchAction: "manipulation" }}
+              >
+                {t.contact}
+              </Link>
 
               <div className="px-6 py-5 flex flex-col gap-3">
                 <div className="flex gap-2">
                   {LANGS.map(([code]) => (
-                    <button key={code} onClick={() => setLang(code)}
-                      className={cn("flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center transition-colors",
-                        l === code ? "bg-gray-900 text-white border-gray-900" : "text-gray-600 border-gray-200 hover:border-gray-400"
-                      )}>
+                    <button
+                      key={code}
+                      onClick={() => setLang(code)}
+                      style={{ touchAction: "manipulation" }}
+                      className={cn(
+                        "flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center transition-colors",
+                        l === code ? "bg-gray-900 text-white border-gray-900" : "text-gray-600 border-gray-200"
+                      )}
+                    >
                       {code.toUpperCase()}
                     </button>
                   ))}
                 </div>
-                <a href="https://wa.me/5521965297618" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-3 rounded-xl border border-green-200 text-green-700 text-sm font-medium hover:bg-green-50 transition-colors">
+                <a
+                  href="https://wa.me/5521965297618"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ touchAction: "manipulation" }}
+                  className="flex items-center justify-center gap-2 py-3 rounded-xl border border-green-200 text-green-700 text-sm font-medium active:bg-green-50"
+                >
                   <MessageCircle className="w-4 h-4" />WhatsApp
                 </a>
-                <Link href="/tours" onClick={() => setMobileOpen(false)}>
-                  <span className="flex items-center justify-center py-3 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 transition-colors cursor-pointer">
+                <Link href="/tours" onClick={() => setMobileOpen(false)} style={{ touchAction: "manipulation" }}>
+                  <span className="flex items-center justify-center py-3 rounded-xl bg-gray-900 text-white text-sm font-semibold active:bg-gray-700">
                     {t.book}
                   </span>
                 </Link>
