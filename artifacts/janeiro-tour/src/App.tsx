@@ -14,6 +14,8 @@ import BlogDetailPage from "@/pages/blog-detail";
 import FaqPage from "@/pages/faq";
 import ContactPage from "@/pages/contact";
 import AboutPage from "@/pages/about";
+import OurStoryPage from "@/pages/our-story";
+import ReviewsPage from "@/pages/reviews";
 import TransfersPage from "@/pages/transfers";
 import PrivateToursPage from "@/pages/private-tours";
 import PackagesPage from "@/pages/packages";
@@ -66,6 +68,12 @@ function Router() {
       </Route>
       <Route path="/about">
         <MainLayout><AboutPage /></MainLayout>
+      </Route>
+      <Route path="/our-story">
+        <MainLayout><OurStoryPage /></MainLayout>
+      </Route>
+      <Route path="/reviews">
+        <MainLayout><ReviewsPage /></MainLayout>
       </Route>
       <Route path="/transfers">
         <MainLayout><TransfersPage /></MainLayout>

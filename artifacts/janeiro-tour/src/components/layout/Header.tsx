@@ -23,9 +23,9 @@ const experiences = [
 ];
 
 const aboutItems = [
-  { href: "/about", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" },
-  { href: "/about#why-us", en: "Why Travel With Us", es: "¿Por qué Viajar con Nosotros?", pt: "Por que Viajar Conosco?" },
-  { href: "/about#reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações" },
+  { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" },
+  { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós" },
+  { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações" },
 ];
 
 const LANGS: [Lang, string, string][] = [
