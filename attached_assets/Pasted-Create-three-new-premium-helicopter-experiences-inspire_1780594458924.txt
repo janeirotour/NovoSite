@@ -1,0 +1,207 @@
+Create three new premium helicopter experiences inspired by a local helicopter operator's offerings.
+
+Do not copy text, images, branding or content directly from any third-party website.
+
+Create original Janeiro Tour & Travel product pages using the existing website structure, design, admin system and visual identity.
+
+Do not redesign the website.
+
+Category:
+Experiences → Adventure Experiences → Helicopter Experiences
+
+Destination:
+Rio de Janeiro
+
+Tour Type:
+Shared Experience
+
+Use premium aerial photography placeholders that can later be replaced from the admin dashboard.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT 1
+
+Title:
+Rio Helicopter Experience – Essential Flight
+
+Duration:
+15–20 Minutes
+
+Description:
+
+Discover Rio de Janeiro from an entirely new perspective on a scenic helicopter experience above one of the world's most iconic coastlines. Enjoy breathtaking aerial views of Rio's beaches, mountains and urban landscapes while experiencing the excitement of helicopter flight.
+
+Highlights:
+
+* Scenic helicopter flight
+* Panoramic coastal views
+* Copacabana Beach
+* Ipanema Beach
+* Leblon
+* São Conrado
+* Professional operation
+* Shared flight experience
+
+Pricing:
+
+1–2 Passengers:
+USD 195 per person
+
+3+ Passengers:
+USD 156 per person
+
+Badge:
+Most Popular
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT 2
+
+Title:
+Rio Helicopter Experience – Premium Flight
+
+Duration:
+25–30 Minutes
+
+Description:
+
+Experience Rio de Janeiro's most famous landmarks from the sky. Fly above the city's breathtaking coastline, mountains and iconic attractions while enjoying one of Brazil's most unforgettable experiences.
+
+Highlights:
+
+* Christ the Redeemer
+* Sugarloaf Mountain
+* Copacabana
+* Ipanema
+* Tijuca Forest
+* Rio skyline
+* Premium aerial views
+
+Pricing:
+
+1–2 Passengers:
+USD 235 per person
+
+3+ Passengers:
+USD 179 per person
+
+Badge:
+Best Seller
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT 3
+
+Title:
+Rio Helicopter Doors-Off Experience
+
+Duration:
+25–30 Minutes
+
+Description:
+
+Experience the thrill of a doors-off helicopter flight over Rio de Janeiro. Perfect for photography enthusiasts and adventure seekers looking for unmatched panoramic views and an unforgettable aerial experience.
+
+Highlights:
+
+* Doors-off helicopter flight
+* Christ the Redeemer aerial views
+* Sugarloaf Mountain
+* Rio coastline
+* Premium photography opportunity
+* Adventure experience
+
+Pricing:
+
+USD 399 per person
+
+Badge:
+Luxury Experience
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+OPTIONAL TRANSPORTATION ADD-ON
+
+Create an optional transportation upgrade for all helicopter experiences.
+
+This transportation must not be included in the base experience price.
+
+Display as:
+
+"Optional Round-Trip Transportation from Rio de Janeiro"
+
+Description:
+
+Comfortable round-trip private transportation between your hotel and the helicopter departure location.
+
+Pricing by group size (per vehicle, round-trip):
+
+1–2 passengers
+Private Car
+USD 156
+
+3–11 passengers
+Private Minivan
+USD 390
+
+12–16 passengers
+Private Minibus
+USD 650
+
+17–42 passengers
+Large Group Minibus
+USD 910
+
+Display transportation as an optional upgrade during booking.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+PRODUCT PAGE STRUCTURE
+
+Use the same structure already used for other Janeiro Tour & Travel experiences:
+
+* Hero Banner
+* Experience Overview
+* Gallery
+* Highlights
+* What To Expect
+* Flight Information
+* Transportation Options
+* FAQ
+* Booking Section
+* Related Experiences
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+ADMIN DASHBOARD REQUIREMENTS
+
+Allow editing:
+
+* Title
+* Description
+* Pricing
+* Transportation pricing
+* Images
+* Featured image
+* Gallery images
+* Duration
+* Highlights
+* FAQs
+* SEO title
+* SEO description
+* Badges
+* Published status
+
+Allow image uploads directly from the computer.
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+IMPORTANT
+
+Do not change the existing website structure.
+
+Do not redesign the website.
+
+Do not modify the Janeiro Tour & Travel branding.
+
+Add these products using the same design language, card layouts, filters, categories and admin management system already used throughout the website.

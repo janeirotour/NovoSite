@@ -254,9 +254,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <select className="w-full border rounded-md px-3 py-2 text-sm bg-background" value={form.premiumBadge as string} onChange={e => set("premiumBadge", e.target.value)}>
               <option value="">— No badge —</option>
               <option value="Most Popular">Most Popular</option>
+              <option value="Best Seller">Best Seller</option>
               <option value="Most Personalized Experience">Most Personalized Experience</option>
               <option value="Best for Families">Best for Families</option>
               <option value="Luxury Option">Luxury Option</option>
+              <option value="Luxury Experience">Luxury Experience</option>
               <option value="Recommended">Recommended</option>
               <option value="Local Expert Guide">Local Expert Guide</option>
               <option value="Fully Customizable">Fully Customizable</option>

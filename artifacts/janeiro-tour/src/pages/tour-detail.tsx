@@ -112,7 +112,7 @@ export default function TourDetailPage() {
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">{title}</h1>
           <div className="flex flex-wrap items-center gap-6 mt-4 text-white/90 text-sm">
-            <span className="flex items-center gap-1.5"><Clock size={16} /> {tour.durationHours}h duration</span>
+            <span className="flex items-center gap-1.5"><Clock size={16} /> {tour.durationHours < 1 ? `${Math.round(tour.durationHours * 60)} min` : `${tour.durationHours}h`} duration</span>
             <span className="flex items-center gap-1.5"><Users size={16} /> Max {tour.groupSizeMax} people</span>
             <span className="flex items-center gap-1.5"><Globe size={16} /> {((tour.languages as string[]) ?? []).join(", ")}</span>
             {reviews && reviews.length > 0 && (
@@ -342,7 +342,7 @@ export default function TourDetailPage() {
                 {/* Quick Info */}
                 <div className="flex items-center gap-3 text-sm">
                   <Clock size={16} className="text-muted-foreground" />
-                  <span>{tour.durationHours} hours duration</span>
+                  <span>{tour.durationHours < 1 ? `${Math.round(tour.durationHours * 60)} min` : `${tour.durationHours}h`} duration</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Users size={16} className="text-muted-foreground" />

@@ -8,11 +8,18 @@ const PREMIUM_BADGE_LABELS: Record<string, string> = {
   "Most Personalized Experience": "Most Personalized",
   "Best for Families": "Best for Families",
   "Luxury Option": "Luxury",
+  "Luxury Experience": "Luxury Experience",
   "Most Popular": "Most Popular",
+  "Best Seller": "Best Seller",
   "Recommended": "Recommended",
   "Local Expert Guide": "Local Expert",
   "Fully Customizable": "Fully Customizable",
 };
+
+function formatDuration(hours: number, lang: string): string {
+  if (hours < 1) return `${Math.round(hours * 60)} min`;
+  return `${hours} ${lang === "en" ? "hours" : "horas"}`;
+}
 
 function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
   const isPrivate = tourType === "private";
@@ -82,7 +89,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           <div className="flex flex-wrap gap-y-2 gap-x-4 text-sm text-muted-foreground mb-4">
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              <span>{tour.durationHours} {lang === "en" ? "hours" : "horas"}</span>
+              <span>{formatDuration(tour.durationHours, lang)}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4" />
