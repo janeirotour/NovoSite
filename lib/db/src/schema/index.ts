@@ -1,4 +1,5 @@
 export * from "./tours";
+export * from "./packages";
 export * from "./destinations";
 export * from "./blog";
 export * from "./faqs";

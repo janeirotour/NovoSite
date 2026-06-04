@@ -1,0 +1,25 @@
+import { pgTable, serial, text, integer, numeric, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+
+export const packagesTable = pgTable("packages", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  subtitle: text("subtitle"),
+  description: text("description").notNull(),
+  badge: text("badge"),
+  badgeColor: text("badge_color").default("green"),
+  priceFrom: numeric("price_from", { precision: 10, scale: 2 }).notNull(),
+  currency: text("currency").notNull().default("USD"),
+  originalPrice: numeric("original_price", { precision: 10, scale: 2 }),
+  savingsPercent: integer("savings_percent"),
+  imageUrl: text("image_url").notNull(),
+  durationLabel: text("duration_label"),
+  groupSizeLabel: text("group_size_label"),
+  highlights: jsonb("highlights").notNull().default([]),
+  includedItems: jsonb("included_items").notNull().default([]),
+  toursIncluded: jsonb("tours_included").notNull().default([]),
+  published: boolean("published").notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(10),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});

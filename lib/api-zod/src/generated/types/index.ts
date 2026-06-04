@@ -31,6 +31,8 @@ export * from './listReviewsParams';
 export * from './listTourAvailabilityParams';
 export * from './listToursParams';
 export * from './listToursType';
+export * from './package';
+export * from './packageToursIncludedItem';
 export * from './pricingTier';
 export * from './reservation';
 export * from './reservationStatusUpdate';

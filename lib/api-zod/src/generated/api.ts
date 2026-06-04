@@ -786,6 +786,67 @@ export const DeleteBlogPostParams = zod.object({
 
 
 /**
+ * @summary List published packages
+ */
+export const ListPackagesResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "description": zod.string(),
+  "badge": zod.string().nullish(),
+  "badgeColor": zod.string().nullish(),
+  "priceFrom": zod.number(),
+  "currency": zod.string(),
+  "originalPrice": zod.number().nullish(),
+  "savingsPercent": zod.number().nullish(),
+  "imageUrl": zod.string(),
+  "durationLabel": zod.string().nullish(),
+  "groupSizeLabel": zod.string().nullish(),
+  "highlights": zod.array(zod.string()),
+  "includedItems": zod.array(zod.string()),
+  "toursIncluded": zod.array(zod.object({
+
+}).passthrough()),
+  "published": zod.boolean(),
+  "sortOrder": zod.number()
+})
+export const ListPackagesResponse = zod.array(ListPackagesResponseItem)
+
+
+/**
+ * @summary Get package by slug
+ */
+export const GetPackageParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetPackageResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "description": zod.string(),
+  "badge": zod.string().nullish(),
+  "badgeColor": zod.string().nullish(),
+  "priceFrom": zod.number(),
+  "currency": zod.string(),
+  "originalPrice": zod.number().nullish(),
+  "savingsPercent": zod.number().nullish(),
+  "imageUrl": zod.string(),
+  "durationLabel": zod.string().nullish(),
+  "groupSizeLabel": zod.string().nullish(),
+  "highlights": zod.array(zod.string()),
+  "includedItems": zod.array(zod.string()),
+  "toursIncluded": zod.array(zod.object({
+
+}).passthrough()),
+  "published": zod.boolean(),
+  "sortOrder": zod.number()
+})
+
+
+/**
  * @summary List FAQs
  */
 export const ListFaqsQueryParams = zod.object({

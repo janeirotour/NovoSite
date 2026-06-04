@@ -12,6 +12,7 @@ import stripeRouter from "./stripe";
 import extrasRouter from "./extras";
 import reservationsRouter from "./reservations";
 import availabilityRouter from "./availability";
+import packagesRouter from "./packages";
 
 const router: IRouter = Router();
 
@@ -28,6 +29,7 @@ router.use(stripeRouter);
 router.use(extrasRouter);
 router.use(reservationsRouter);
 router.use(availabilityRouter);
+router.use(packagesRouter);
 
 export default router;
   

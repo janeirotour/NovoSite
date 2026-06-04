@@ -377,6 +377,42 @@ paths:
           description: Deleted
 
   # FAQs
+  /packages:
+    get:
+      operationId: listPackages
+      tags: [packages]
+      summary: List published packages
+      responses:
+        "200":
+          description: List of packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Package"
+
+  /packages/{slug}:
+    get:
+      operationId: getPackage
+      tags: [packages]
+      summary: Get package by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Package detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Package"
+        "404":
+          description: Not found
+
   /faqs:
     get:
       operationId: listFaqs
@@ -917,6 +953,55 @@ paths:
 
 components:
   schemas:
+    Package:
+      type: object
+      required: [id, slug, title, description, priceFrom, currency, imageUrl, highlights, includedItems, toursIncluded, published, sortOrder]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: ["string", "null"]
+        description:
+          type: string
+        badge:
+          type: ["string", "null"]
+        badgeColor:
+          type: ["string", "null"]
+        priceFrom:
+          type: number
+        currency:
+          type: string
+        originalPrice:
+          type: ["number", "null"]
+        savingsPercent:
+          type: ["integer", "null"]
+        imageUrl:
+          type: string
+        durationLabel:
+          type: ["string", "null"]
+        groupSizeLabel:
+          type: ["string", "null"]
+        highlights:
+          type: array
+          items:
+            type: string
+        includedItems:
+          type: array
+          items:
+            type: string
+        toursIncluded:
+          type: array
+          items:
+            type: object
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+
     HealthStatus:
       type: object
       properties:

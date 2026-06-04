@@ -5,6 +5,37 @@
  * Janeiro Tour API - Premium Brazil Travel Platform
  * OpenAPI spec version: 0.1.0
  */
+export type PackageToursIncludedItem = { [key: string]: unknown };
+
+export interface Package {
+  id: number;
+  slug: string;
+  title: string;
+  /** @nullable */
+  subtitle?: string | null;
+  description: string;
+  /** @nullable */
+  badge?: string | null;
+  /** @nullable */
+  badgeColor?: string | null;
+  priceFrom: number;
+  currency: string;
+  /** @nullable */
+  originalPrice?: number | null;
+  /** @nullable */
+  savingsPercent?: number | null;
+  imageUrl: string;
+  /** @nullable */
+  durationLabel?: string | null;
+  /** @nullable */
+  groupSizeLabel?: string | null;
+  highlights: string[];
+  includedItems: string[];
+  toursIncluded: PackageToursIncludedItem[];
+  published: boolean;
+  sortOrder: number;
+}
+
 export interface HealthStatus {
   status: string;
 }
