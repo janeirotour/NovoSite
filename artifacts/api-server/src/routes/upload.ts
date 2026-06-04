@@ -6,7 +6,7 @@ import { Router } from "express";
 
   const router = Router();
 
-  const WORKSPACE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
+  const WORKSPACE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
   const UPLOADS_DIR = join(WORKSPACE_ROOT, "artifacts", "janeiro-tour", "public", "uploads");
 
   router.post("/upload/image", async (req, res): Promise<void> => {
