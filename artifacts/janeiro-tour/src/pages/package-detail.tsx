@@ -49,14 +49,18 @@ function getTourUnitPrice(tour: TourEntry, pax: number): number {
   return tour.priceFrom;
 }
 
+const TRANSFER_PRICE_PER_PERSON = 60; // airport-transfer-rio — $60/person/trip
+
 function calcPackageTotal(tours: TourEntry[], pax: number) {
   const vt = getVehicleTier(pax);
-  const toursTotal = tours.reduce((s, t) => s + getTourTotal(t, pax), 0);
-  const transport2x  = vt.price * 2;   // 2 activity days (Day 2 + Day 3)
-  const airportTotal = vt.price * 2;   // arrival + departure transfers
+  const toursTotal    = tours.reduce((s, t) => s + getTourTotal(t, pax), 0);
+  const transport2x   = vt.price * 2;                    // 2 activity days round-trip (vehicle)
+  const transferIn    = TRANSFER_PRICE_PER_PERSON * pax; // arrival airport transfer
+  const transferOut   = TRANSFER_PRICE_PER_PERSON * pax; // departure airport transfer
+  const airportTotal  = transferIn + transferOut;
   const subtotal = toursTotal + transport2x + airportTotal;
   const discount = subtotal * 0.05;
-  return { subtotal, discount, grandTotal: subtotal - discount, toursTotal, vt };
+  return { subtotal, discount, grandTotal: subtotal - discount, toursTotal, transport2x, transferIn, transferOut, airportTotal, vt };
 }
 
 const BADGE_STYLES: Record<string, string> = {
@@ -73,7 +77,7 @@ export default function PackageDetailPage() {
   const tours     = useMemo(() => (pkg?.toursIncluded ?? []) as TourEntry[], [pkg]);
   const highlights = useMemo(() => (pkg?.highlights ?? []) as string[], [pkg]);
 
-  const { grandTotal, discount, toursTotal, vt } = useMemo(() => calcPackageTotal(tours, pax), [tours, pax]);
+  const { grandTotal, discount, toursTotal, transferIn, transferOut, vt } = useMemo(() => calcPackageTotal(tours, pax), [tours, pax]);
   const perPerson = pax > 0 ? grandTotal / pax : grandTotal;
 
   // Itinerary: Day 2 = tours[0], Day 3 = tours[1] + tours[2]
@@ -158,7 +162,9 @@ export default function PackageDetailPage() {
                     scheduled today.
                   </p>
                   <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border w-fit">
-                    <Car size={11} className="text-green-600" /> Airport arrival transfer included
+                    <Car size={11} className="text-green-600" />
+                    Airport arrival transfer — <span className="font-semibold text-foreground">${transferIn}</span>
+                    <span className="text-muted-foreground/60">(${TRANSFER_PRICE_PER_PERSON}/person × {pax})</span>
                   </div>
                 </div>
 
@@ -205,7 +211,9 @@ export default function PackageDetailPage() {
                         <Car size={10} className="text-green-600" /> Round-trip transport included
                       </span>
                       <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-1.5 border">
-                        <Plane size={10} className="text-green-600" /> Airport departure transfer included
+                        <Plane size={10} className="text-green-600" />
+                        Departure transfer (GIG) — <span className="font-semibold text-foreground ml-0.5">${transferOut}</span>
+                        <span className="text-muted-foreground/60">(${TRANSFER_PRICE_PER_PERSON}/person × {pax})</span>
                       </span>
                     </div>
                   </div>
@@ -290,9 +298,32 @@ export default function PackageDetailPage() {
                       <span className="font-medium flex-shrink-0">${getTourTotal(t, pax).toFixed(0)}</span>
                     </div>
                   ))}
-                  <div className="flex justify-between text-xs text-muted-foreground/70 pt-1">
-                    <span>Transport + transfers ({vt.vehicle})</span>
-                    <span>bundled</span>
+                </div>
+
+                <Separator />
+
+                {/* Transfers breakdown */}
+                <div className="space-y-1.5">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                    Transfers
+                  </p>
+                  <div className="flex justify-between text-xs gap-2">
+                    <span className="text-muted-foreground">
+                      Arrival transfer (GIG)
+                      <span className="text-muted-foreground/60 ml-1">(${TRANSFER_PRICE_PER_PERSON}/pax × {pax})</span>
+                    </span>
+                    <span className="font-medium flex-shrink-0">${transferIn}</span>
+                  </div>
+                  <div className="flex justify-between text-xs gap-2">
+                    <span className="text-muted-foreground">
+                      Departure transfer (GIG)
+                      <span className="text-muted-foreground/60 ml-1">(${TRANSFER_PRICE_PER_PERSON}/pax × {pax})</span>
+                    </span>
+                    <span className="font-medium flex-shrink-0">${transferOut}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground/60">
+                    <span>Round-trip transport × 2 days ({vt.vehicle})</span>
+                    <span>${vt.price * 2}</span>
                   </div>
                 </div>
 
