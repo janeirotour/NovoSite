@@ -80,7 +80,6 @@ import { useState, useEffect } from "react";
                 {login.isPending ? "Signing in..." : "Sign In"}
               </Button>
             </form>
-            <p className="text-white/30 text-xs text-center mt-6">Default credentials: admin / admin123</p>
           </div>
         </div>
       </div>
