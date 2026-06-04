@@ -36,7 +36,7 @@ const whyUs = [
 const journey = [
   { year: "2014", text: "Dandara began her career promoting local excursions for Brazilians — learning the country from the inside out, building knowledge that no guidebook can teach." },
   { year: "2016", text: "The doors opened to international travelers. The Little Africa Walking Tour launched, along with tours to other Brazilian states — a turning point that defined our identity." },
-  { year: "2020", text: "Janeiro Tour & Travel expanded into fully customized travel experiences and began serving B2B demands from international agencies — bringing our personalized approach to a global scale." },
+  { year: "2020", text: "We launched fully customized packages for international travelers exploring Bahia, Foz do Iguaçu, Recife and São Paulo — covering events, leisure and business travel — while also expanding into B2B partnerships with international agencies." },
   { year: "Today", text: "A trusted partner for thousands of travelers from around the world, serving five iconic Brazilian destinations with the same passion and dedication we started with." },
 ];
 
