@@ -146,7 +146,7 @@ export default function AboutPage() {
       </section>
 
       {/* Afro-Tourism & Black-owned section */}
-      <section className="py-24 bg-[#1a0a00] relative overflow-hidden">
+      <section className="py-24 bg-[#141210] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1598977054078-a4dd2d53c2ef?w=1400&q=60')] bg-cover bg-center" />
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
@@ -193,6 +193,63 @@ export default function AboutPage() {
             </p>
             <cite className="text-[#f5c07a] text-sm font-semibold not-italic">— Dandara, Founder of Janeiro Tour &amp; Travel</cite>
           </blockquote>
+        </div>
+      </section>
+
+      {/* Official Recognition — Moção da Câmara Municipal */}
+      <section className="py-24 bg-[#fafaf8]">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Certificate image */}
+            <div className="relative flex justify-center">
+              <div className="relative max-w-sm w-full">
+                <div className="absolute -inset-3 rounded-3xl bg-[#FFB600]/15 blur-xl" />
+                <img
+                  src="/images/mocao-camara-rio.jpeg"
+                  alt="Moção de Reconhecimento — Câmara Municipal do Rio de Janeiro"
+                  className="relative rounded-2xl shadow-2xl w-full border border-gray-200"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-[#009743] text-white px-5 py-3 rounded-xl shadow-lg text-xs font-bold leading-snug hidden md:block">
+                  <p>03 maio 2022</p>
+                  <p className="font-normal opacity-80">Câmara Municipal RJ</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div>
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] uppercase tracking-widest mb-5">
+                🏅 Reconhecimento Oficial
+              </span>
+              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-5 leading-tight">
+                Moção de Reconhecimento e Louvor
+              </h2>
+              <p className="text-[#FFB600] font-semibold text-sm mb-6">
+                Câmara Municipal do Rio de Janeiro · 2022
+              </p>
+              <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed mb-8">
+                <p>
+                  Em 3 de maio de 2022, a Câmara Municipal do Rio de Janeiro concedeu a <strong className="text-gray-800">Dandara de Souza Siqueira</strong> uma Moção de Reconhecimento e Louvor pela sua relevância no turismo da cidade do Rio de Janeiro.
+                </p>
+                <p>
+                  O documento destaca sua atuação como fundadora da Janeiro Tour &amp; Travel, sua participação no projeto <em>"Rio para Cariocas e Fluminenses"</em> e sua contribuição ao <strong className="text-gray-800">AfroTrip</strong> — iniciativa que proporciona a viajantes negros de todo o mundo a chance de conhecer o Brasil sob uma perspectiva afrocêntrica.
+                </p>
+                <p>
+                  A moção foi assinada pela Vereadora <strong className="text-gray-800">Tainá de Paula</strong> no Plenário Teotônio Villela.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                  🏛️ Câmara Municipal do Rio de Janeiro
+                </span>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] border border-[#009743]/20">
+                  ✅ Reconhecimento oficial em turismo
+                </span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
