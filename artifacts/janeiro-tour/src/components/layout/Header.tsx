@@ -22,10 +22,16 @@ const experiences = [
   { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto" },
 ];
 
-const about = [
+const aboutItems = [
   { href: "/about", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" },
   { href: "/about#why-us", en: "Why Travel With Us", es: "¿Por qué Viajar con Nosotros?", pt: "Por que Viajar Conosco?" },
   { href: "/about#reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações" },
+];
+
+const LANGS: [Lang, string, string][] = [
+  ["en", "🇺🇸", "English"],
+  ["es", "🇪🇸", "Español"],
+  ["pt", "🇧🇷", "Português"],
 ];
 
 function NavDropdown({
@@ -45,11 +51,9 @@ function NavDropdown({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
@@ -60,9 +64,7 @@ function NavDropdown({
         onClick={() => setOpen(!open)}
         className={cn(
           "flex items-center gap-1 px-3 py-2 text-sm transition-colors",
-          isHero
-            ? "text-white/90 hover:text-white"
-            : "text-gray-600 hover:text-gray-900"
+          isHero ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900"
         )}
       >
         {label}
@@ -103,11 +105,9 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    function handler(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
-        setLangOpen(false);
-      }
-    }
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
@@ -125,28 +125,28 @@ export function Header() {
   );
 
   const t = {
-    en: { home: "Home", guide: "Travel Guide", contact: "Contact", book: "Book Now", dest: "Destinations", exp: "Experiences", about: "About Us" },
-    es: { home: "Inicio", guide: "Guía de Viaje", contact: "Contacto", book: "Reservar", dest: "Destinos", exp: "Experiencias", about: "Nosotros" },
-    pt: { home: "Início", guide: "Guia de Viagem", contact: "Contato", book: "Reservar", dest: "Destinos", exp: "Experiências", about: "Sobre Nós" },
+    en: { home: "Home", about: "About Us", dest: "Destinations", exp: "Experiences", guide: "Travel Guide", contact: "Contact", book: "Book Now" },
+    es: { home: "Inicio", about: "Nosotros", dest: "Destinos", exp: "Experiencias", guide: "Guía de Viaje", contact: "Contacto", book: "Reservar" },
+    pt: { home: "Início", about: "Sobre Nós", dest: "Destinos", exp: "Experiências", guide: "Guia de Viagem", contact: "Contato", book: "Reservar" },
   }[l];
+
+  const currentLang = LANGS.find(([code]) => code === l)!;
 
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isHero
-            ? "bg-transparent"
-            : "bg-white border-b border-gray-200"
+          isHero ? "bg-transparent" : "bg-white border-b border-gray-200"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center" onClick={() => setMobileOpen(false)}>
             <img
               src="/janeiro-logo.png"
-              alt="Janeiro Tour"
+              alt="Janeiro Tour & Travel"
               className={cn("h-8 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
@@ -154,48 +154,25 @@ export function Header() {
                 if (next) next.style.display = "flex";
               }}
             />
-            <span className="hidden text-lg font-bold" style={{ display: "none" }}>
-              Janeiro Tour
-            </span>
+            <span className="hidden text-lg font-bold" style={{ display: "none" }}>Janeiro Tour &amp; Travel</span>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop nav — About Us is RIGHT after Home */}
           <nav className="hidden lg:flex flex-1 items-center gap-0">
-            <Link href="/">
-              <span className={cn(navLink, location === "/" && !isHero ? "text-gray-900 font-medium" : "")}>{t.home}</span>
-            </Link>
-            <NavDropdown
-              label={t.dest}
-              items={destinations}
-              lang={l}
-              isHero={isHero}
-              onNavigate={() => setMobileOpen(false)}
-            />
-            <NavDropdown
-              label={t.exp}
-              items={experiences}
-              lang={l}
-              isHero={isHero}
-              onNavigate={() => setMobileOpen(false)}
-            />
-            <NavDropdown
-              label={t.about}
-              items={about}
-              lang={l}
-              isHero={isHero}
-              onNavigate={() => setMobileOpen(false)}
-            />
-            <Link href="/blog">
-              <span className={cn(navLink, location === "/blog" ? "text-gray-900 font-medium" : "")}>{t.guide}</span>
-            </Link>
-            <Link href="/contact">
-              <span className={cn(navLink, location === "/contact" ? "text-gray-900 font-medium" : "")}>{t.contact}</span>
-            </Link>
+            <Link href="/"><span className={cn(navLink, location === "/" && !isHero ? "text-gray-900 font-medium" : "")}>{t.home}</span></Link>
+
+            <NavDropdown label={t.about} items={aboutItems} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
+
+            <NavDropdown label={t.dest} items={destinations} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
+            <NavDropdown label={t.exp} items={experiences} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
+
+            <Link href="/blog"><span className={cn(navLink, location === "/blog" ? "text-gray-900 font-medium" : "")}>{t.guide}</span></Link>
+            <Link href="/contact"><span className={cn(navLink, location === "/contact" ? "text-gray-900 font-medium" : "")}>{t.contact}</span></Link>
           </nav>
 
           {/* Right side */}
-          <div className="hidden lg:flex items-center gap-2 ml-auto">
-            {/* Language */}
+          <div className="hidden lg:flex items-center gap-2 ml-auto flex-shrink-0">
+            {/* Language with flags */}
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
@@ -204,21 +181,22 @@ export function Header() {
                   isHero ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 )}
               >
-                <Globe className="w-3.5 h-3.5" />
-                <span>{l.toUpperCase()}</span>
+                <span className="text-base leading-none">{currentLang[1]}</span>
+                <span className="font-medium">{currentLang[0].toUpperCase()}</span>
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                  {([["en","🇬🇧 English"],["es","🇪🇸 Español"],["pt","🇧🇷 Português"]] as [Lang,string][]).map(([code, label]) => (
+                <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                  {LANGS.map(([code, flag, label]) => (
                     <button
                       key={code}
                       onClick={() => { setLang(code); setLangOpen(false); }}
                       className={cn(
-                        "flex w-full items-center px-4 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors",
+                        "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors",
                         l === code ? "font-semibold text-gray-900" : "text-gray-600"
                       )}
                     >
+                      <span className="text-base">{flag}</span>
                       {label}
                     </button>
                   ))}
@@ -226,18 +204,14 @@ export function Header() {
               )}
             </div>
 
-            {/* Separator */}
             <div className={cn("w-px h-4", isHero ? "bg-white/20" : "bg-gray-200")} />
 
             {/* WhatsApp */}
             <a
-              href="https://wa.me/5521972633333"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
-                isHero ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-              )}
+              href="https://wa.me/5521965297618"
+              target="_blank" rel="noopener noreferrer"
+              className={cn("w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+                isHero ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50")}
               title="WhatsApp"
             >
               <MessageCircle className="w-4 h-4" />
@@ -272,13 +246,12 @@ export function Header() {
           <div className="absolute inset-0 bg-black/20" onClick={() => setMobileOpen(false)} />
           <div className="absolute top-16 left-0 right-0 bottom-0 bg-white overflow-y-auto">
             <nav className="flex flex-col divide-y divide-gray-100">
-              <Link href="/" onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.home}</Link>
+              <Link href="/" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.home}</Link>
 
               {[
+                { key: "about", label: t.about, items: aboutItems },
                 { key: "dest", label: t.dest, items: destinations },
                 { key: "exp", label: t.exp, items: experiences },
-                { key: "about", label: t.about, items: about },
               ].map(({ key, label, items }) => (
                 <div key={key}>
                   <button
@@ -291,8 +264,7 @@ export function Header() {
                   {mobileExpanded === key && (
                     <div className="bg-gray-50 border-t border-gray-100">
                       {items.map((item) => (
-                        <Link key={item.href} href={item.href}
-                          onClick={() => setMobileOpen(false)}
+                        <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
                           className="block px-8 py-3 text-sm text-gray-600 hover:bg-gray-100">
                           {item[l]}
                         </Link>
@@ -302,23 +274,21 @@ export function Header() {
                 </div>
               ))}
 
-              <Link href="/blog" onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.guide}</Link>
-              <Link href="/contact" onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.contact}</Link>
+              <Link href="/blog" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.guide}</Link>
+              <Link href="/contact" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 hover:bg-gray-50">{t.contact}</Link>
 
               <div className="px-6 py-5 flex flex-col gap-3">
                 <div className="flex gap-2">
-                  {(["en","es","pt"] as Lang[]).map((code) => (
+                  {LANGS.map(([code, flag]) => (
                     <button key={code} onClick={() => setLang(code)}
-                      className={cn("flex-1 py-2 rounded-lg text-sm font-medium border transition-colors",
+                      className={cn("flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center gap-1 transition-colors",
                         l === code ? "bg-gray-900 text-white border-gray-900" : "text-gray-600 border-gray-200 hover:border-gray-400"
                       )}>
-                      {code.toUpperCase()}
+                      <span>{flag}</span> {code.toUpperCase()}
                     </button>
                   ))}
                 </div>
-                <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer"
+                <a href="https://wa.me/5521965297618" target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 py-3 rounded-xl border border-green-200 text-green-700 text-sm font-medium hover:bg-green-50 transition-colors">
                   <MessageCircle className="w-4 h-4" />WhatsApp
                 </a>

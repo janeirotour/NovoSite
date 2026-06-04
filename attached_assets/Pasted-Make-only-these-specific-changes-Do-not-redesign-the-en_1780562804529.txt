@@ -1,0 +1,132 @@
+Make only these specific changes. Do not redesign the entire website and do not change the original structure.
+
+1. Navigation Menu
+
+* Place "About Us" immediately next to "Home".
+* Ensure "Home" links directly to the homepage.
+* Keep the navigation clean, premium and minimal.
+
+2. About Us / Our Story
+
+Create an "Our Story" page that feels premium, emotional and professional while preserving the current website structure, colors, branding and visual identity.
+
+Use the following content:
+
+At Janeiro Tour & Travel, our story is built on passion, authenticity and a deep love for Brazil.
+
+Founded by Dandara, a tourism professional dedicated to creating meaningful travel experiences, Janeiro Tour & Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country.
+
+Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began in Rio de Janeiro as a small project driven by passion and dedication has grown into a trusted travel company recognized for its personalized service, cultural immersion and commitment to excellence.
+
+Our greatest inspiration has always been Brazil itself — its vibrant culture, breathtaking landscapes, rich history and warm people. Every tour, transfer, itinerary and travel package we create is carefully designed to showcase the country's beauty while respecting local communities, supporting sustainable tourism and delivering exceptional service.
+
+Over the years, we have built strong partnerships with some of Brazil's most talented guides, drivers and tourism professionals, allowing us to offer authentic experiences with the highest standards of quality and safety.
+
+Today, we proudly serve travelers from all over the world. Our multilingual team provides assistance in Portuguese, English, Spanish and French, ensuring that every guest feels welcome, comfortable and supported from the first contact to the final farewell.
+
+More than a travel company, Janeiro Tour & Travel is a team of people who genuinely care about creating happiness through travel. Every reservation we receive is treated with dedication, responsibility and attention to detail because we understand that every trip represents a dream, a celebration or a once-in-a-lifetime experience.
+
+Our mission is simple: to help you discover the very best of Brazil through authentic experiences, trusted local expertise and unforgettable moments that stay with you long after your journey ends.
+
+Welcome to Brazil. Welcome to Janeiro Tour & Travel.
+
+3. Our Story Layout
+
+Do not redesign the website.
+
+Enhance only the Our Story page with:
+
+* Premium hero banner
+* Elegant page title
+* Founder section
+* Dedicated photo area for Dandara
+* Editable founder image from admin dashboard
+* Emotional storytelling layout
+* Premium typography
+* Clean spacing
+* Mobile responsiveness
+
+Suggested sections:
+
+* Hero Banner
+* Founder Story
+* Our Journey
+* Our Values
+* Why Travel With Us
+* Final Inspirational Call To Action
+
+Example CTA headline:
+
+"Discover Brazil Through the Eyes of Those Who Love It"
+
+4. Reviews
+
+* Create a dedicated Reviews page or section.
+* Add an area prepared for TripAdvisor integration.
+* Do not create fake reviews.
+* Use a placeholder:
+
+"TripAdvisor reviews widget will be displayed here."
+
+5. Language Selector
+
+Replace text-only language options with flags:
+
+🇺🇸 English
+🇪🇸 Español
+🇧🇷 Português
+
+6. Contact Information
+
+Update all website contact information:
+
+Email:
+[contato@janeirotour.com](mailto:contato@janeirotour.com)
+
+Phone / WhatsApp:
++55 21 96529-7618
+
+7. Company Name Consistency
+
+Replace every occurrence of:
+
+* Janeiro Tour
+* Janeiro Travel
+* Janeiro Tours
+
+with:
+
+Janerio Tour & Travel
+
+Apply throughout:
+
+* Header
+* Footer
+* Homepage
+* About Us
+* Reviews
+* Contact
+* Blog
+* Tour Pages
+* Destination Pages
+* Meta Titles
+* Meta Descriptions
+* Admin Dashboard
+* Email Templates
+* CTA Sections
+* Copyright Area
+
+8. Footer
+
+* Remove duplicate footer sections.
+* Keep only one footer.
+* Preserve the current visual identity.
+* Keep the footer clean, premium and consistent with the website.
+
+Important:
+
+* Do not redesign the website.
+* Do not modify colors, layout, branding or functionality.
+* Preserve the current structure.
+* Apply only the modifications listed above.
+* Keep the website consistent with the existing Janeiro Tour & Travel brand.

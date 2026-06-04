@@ -1,107 +1,266 @@
-import { MainLayout } from "@/components/layout/MainLayout";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Check, Globe, Shield, Heart, Star, Users } from "lucide-react";
+import { Heart, Globe, Shield, Star, Users, Leaf } from "lucide-react";
+
+const values = [
+  {
+    icon: Heart,
+    title: "Authenticity",
+    desc: "We share the Brazil we know and love — not a curated postcard version, but the real, breathing, vibrant country.",
+  },
+  {
+    icon: Globe,
+    title: "Cultural Immersion",
+    desc: "Every experience is designed to connect you with local people, stories, and traditions that rarely make it into guidebooks.",
+  },
+  {
+    icon: Leaf,
+    title: "Sustainable Tourism",
+    desc: "We support local communities, respect natural environments, and believe travel should leave places better than we found them.",
+  },
+  {
+    icon: Star,
+    title: "Excellence in Service",
+    desc: "From the first message to the final farewell, we hold ourselves to the highest standards of quality, care, and attention.",
+  },
+];
 
 const whyUs = [
-  { icon: Globe, title: "Local Brazil Experts", desc: "Born and raised in Brazil, our guides bring authentic local knowledge and deep passion for their homeland." },
-  { icon: Star, title: "Premium Experiences", desc: "We curate only the finest tours, transfers, and private experiences across every Brazilian destination." },
-  { icon: Users, title: "Multilingual Team", desc: "Our team speaks English, Spanish, Portuguese, and more — so you always feel at home." },
-  { icon: Shield, title: "Trusted & Secure", desc: "Fully licensed travel operator. Thousands of international travelers trust us every year." },
-  { icon: Heart, title: "Personalized Service", desc: "From airport arrival to final departure, we are your dedicated travel partner throughout Brazil." },
-  { icon: Check, title: "Flexible Booking", desc: "Free cancellation on most tours, flexible rescheduling, and transparent pricing — no hidden fees." },
+  { icon: Globe, title: "Local Expertise Since 2014", desc: "Over a decade guiding travelers from around the world through Brazil's most iconic and hidden destinations." },
+  { icon: Star, title: "Carefully Curated Experiences", desc: "Every tour, transfer, and itinerary is thoughtfully designed to showcase Brazil's beauty and culture." },
+  { icon: Users, title: "Multilingual Team", desc: "Our team assists guests in Portuguese, English, Spanish and French — so you always feel at home." },
+  { icon: Shield, title: "Trusted & Licensed", desc: "Fully certified travel operator. Thousands of international travelers have placed their trust in us." },
+  { icon: Heart, title: "Dedicated Personal Service", desc: "Every reservation is treated with dedication and responsibility — because every trip represents a dream." },
+  { icon: Leaf, title: "Community & Sustainability", desc: "We partner with local guides, support communities, and practice responsible tourism at every step." },
+];
+
+const journey = [
+  { year: "2014", text: "Founded in Rio de Janeiro by Dandara, a tourism professional dedicated to meaningful travel." },
+  { year: "2016", text: "Expanded our team and began offering multilingual tours to travelers from the US, Canada and Europe." },
+  { year: "2019", text: "Launched the Little Africa Walking Tour — one of our most celebrated cultural experiences." },
+  { year: "2022", text: "Extended our reach to São Paulo, Bahia, Foz do Iguaçu and Recife." },
+  { year: "Today", text: "A trusted travel partner for thousands of travelers from around the world, serving all five destinations with the same passion we started with." },
 ];
 
 export default function AboutPage() {
   return (
-    <MainLayout>
+    <div className="w-full">
+
       {/* Hero */}
-      <section className="relative h-[60vh] min-h-[420px] bg-neutral-900">
+      <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&q=80"
-          alt="Rio de Janeiro"
-          className="w-full h-full object-cover opacity-60"
+          alt="Rio de Janeiro — Janeiro Tour & Travel"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-black/55" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-4">Our Story</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 max-w-3xl">
-            Brazil's Premier International Travel Experts
+          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-5">
+            Janeiro Tour &amp; Travel
+          </p>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 max-w-3xl leading-tight">
+            A Story Built on Passion for Brazil
           </h1>
-          <p className="text-white/80 text-xl max-w-2xl">
-            Born in Rio. Built for the world.
+          <p className="text-white/75 text-lg md:text-xl max-w-2xl leading-relaxed">
+            Born in Rio. Dedicated to showing the world the Brazil we love.
           </p>
         </div>
       </section>
 
-      {/* Mission */}
-      <section className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-3xl font-bold mb-6">Who We Are</h2>
-        <p className="text-xl text-muted-foreground leading-relaxed mb-6">
-          Janeiro Tour is a premium Brazil travel company founded by local experts who believe that every traveler deserves an authentic, safe, and unforgettable Brazilian experience. From Rio de Janeiro's iconic landmarks to the depths of the Amazon Rainforest, we connect international travelers with the heart of Brazil.
-        </p>
-        <p className="text-lg text-muted-foreground leading-relaxed">
-          We specialize in private tours, group experiences, airport transfers, and multi-day packages — all designed for English, Spanish, and Portuguese-speaking travelers from the US, Canada, Europe, and Latin America.
-        </p>
+      {/* Founder Story */}
+      <section id="our-story" className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Founder image */}
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100">
+                <img
+                  src="/images/team-carnival.jpg"
+                  alt="Dandara — Founder of Janeiro Tour & Travel"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=80";
+                  }}
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-[#FFB600] text-black px-6 py-4 rounded-2xl shadow-lg hidden md:block">
+                <p className="font-bold text-2xl leading-none">10+</p>
+                <p className="text-xs font-semibold mt-1 leading-tight">Years of<br />Excellence</p>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div>
+              <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">Our Founder</p>
+              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-6 leading-tight">
+                Meet Dandara
+              </h2>
+              <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
+                <p>
+                  At Janeiro Tour &amp; Travel, our story is built on passion, authenticity and a deep love for Brazil.
+                </p>
+                <p>
+                  Founded by Dandara, a tourism professional dedicated to creating meaningful travel experiences, Janeiro Tour &amp; Travel was born from a simple belief: visitors deserve to experience Brazil beyond the postcards. They deserve genuine connections, local insights and unforgettable moments that reveal the true soul of the country.
+                </p>
+                <p>
+                  Since 2014, we have been welcoming travelers from around the world and transforming ordinary trips into extraordinary memories. What began in Rio de Janeiro as a small project driven by passion and dedication has grown into a trusted travel company recognized for its personalized service, cultural immersion and commitment to excellence.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="bg-muted/30 py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose Janeiro Tour</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We are not a generic travel operator. We are your dedicated Brazil specialists.
+      {/* Full story */}
+      <section className="py-20 bg-[#fafaf8]">
+        <div className="max-w-3xl mx-auto px-4">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">The Full Story</p>
+          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-10 text-center leading-tight">
+            Why We Do What We Do
+          </h2>
+          <div className="space-y-5 text-gray-600 text-[15px] leading-relaxed">
+            <p>
+              Our greatest inspiration has always been Brazil itself — its vibrant culture, breathtaking landscapes, rich history and warm people. Every tour, transfer, itinerary and travel package we create is carefully designed to showcase the country's beauty while respecting local communities, supporting sustainable tourism and delivering exceptional service.
+            </p>
+            <p>
+              Over the years, we have built strong partnerships with some of Brazil's most talented guides, drivers and tourism professionals, allowing us to offer authentic experiences with the highest standards of quality and safety.
+            </p>
+            <p>
+              Today, we proudly serve travelers from all over the world. Our multilingual team provides assistance in Portuguese, English, Spanish and French, ensuring that every guest feels welcome, comfortable and supported from the first contact to the final farewell.
+            </p>
+            <p>
+              More than a travel company, Janeiro Tour &amp; Travel is a team of people who genuinely care about creating happiness through travel. Every reservation we receive is treated with dedication, responsibility and attention to detail — because we understand that every trip represents a dream, a celebration or a once-in-a-lifetime experience.
+            </p>
+            <p className="font-medium text-gray-800">
+              Our mission is simple: to help you discover the very best of Brazil through authentic experiences, trusted local expertise and unforgettable moments that stay with you long after your journey ends.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {whyUs.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-card p-8 rounded-2xl border hover:shadow-lg transition-shadow">
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-5">
-                  <Icon className="text-primary" size={22} />
+        </div>
+      </section>
+
+      {/* Our Journey */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">Timeline</p>
+          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-14 text-center">Our Journey</h2>
+          <div className="relative">
+            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2" />
+            <div className="space-y-10">
+              {journey.map((item, i) => (
+                <div key={item.year} className={`relative flex gap-6 md:gap-0 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
+                  <div className={`hidden md:block w-1/2 ${i % 2 === 0 ? "pr-12 text-right" : "pl-12 text-left"}`}>
+                    <span className="font-bold text-2xl text-[#FFB600]">{item.year}</span>
+                    <p className="text-gray-600 text-sm leading-relaxed mt-1">{item.text}</p>
+                  </div>
+                  <div className="relative z-10 flex-shrink-0 w-4 h-4 rounded-full bg-[#FFB600] border-4 border-white shadow-sm self-start md:self-auto mt-1 md:mt-0 ml-6 md:ml-0 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-2" />
+                  <div className="md:hidden flex-1 pl-4">
+                    <span className="font-bold text-xl text-[#FFB600]">{item.year}</span>
+                    <p className="text-gray-600 text-sm leading-relaxed mt-1">{item.text}</p>
+                  </div>
+                  <div className="hidden md:block w-1/2" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">{title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-20 bg-[#fafaf8]">
+        <div className="max-w-6xl mx-auto px-4">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">What We Stand For</p>
+          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-12 text-center">Our Values</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white rounded-2xl p-7 border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="w-11 h-11 rounded-xl bg-[#FFB600]/10 flex items-center justify-center mb-5">
+                  <Icon className="w-5 h-5 text-[#FFB600]" />
+                </div>
+                <h3 className="font-bold text-base text-gray-900 mb-2">{title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Destinations We Cover */}
-      <section className="max-w-7xl mx-auto px-4 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Destinations We Cover</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {["Rio de Janeiro","São Paulo","Iguazu Falls","Amazon Rainforest","Salvador, Bahia","Paraty","Florianópolis","Pantanal"].map((dest) => (
-            <div key={dest} className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-center">
-              <p className="font-semibold text-sm">{dest}</p>
-            </div>
-          ))}
+      {/* Why Travel With Us */}
+      <section id="why-us" className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">The Difference</p>
+          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-4 text-center">Why Travel With Us</h2>
+          <p className="text-gray-500 text-base max-w-xl mx-auto text-center mb-12">
+            We are not a generic travel operator. We are your dedicated Brazil specialists — committed to your journey from first contact to final farewell.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {whyUs.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex gap-4 p-6 rounded-2xl border border-gray-100 hover:shadow-md transition-shadow bg-white">
+                <div className="w-10 h-10 rounded-xl bg-[#FFB600]/10 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-4.5 h-4.5 text-[#FFB600]" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-gray-900 mb-1">{title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-neutral-900 py-24 text-center">
-        <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-4">Start Your Journey</p>
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Discover Brazil?</h2>
-        <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">
-          Browse our tours or contact our team to plan your perfect Brazilian adventure
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/tours">
-            <Button size="lg" className="h-14 px-10 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground">
-              Explore Tours
-            </Button>
-          </Link>
-          <Link href="/contact">
-            <Button size="lg" variant="outline" className="h-14 px-10 text-lg border-white/30 text-white hover:bg-white/10">
-              Contact Us
-            </Button>
-          </Link>
+      {/* Reviews placeholder */}
+      <section id="reviews" className="py-20 bg-[#fafaf8]">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">What Travelers Say</p>
+          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-4">Tripadvisor Reviews</h2>
+          <p className="text-gray-500 text-base mb-10">
+            We're proud of every review — they reflect years of dedication, care and passion for what we do.
+          </p>
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 flex flex-col items-center justify-center gap-4 min-h-[220px]">
+            <svg viewBox="0 0 24 24" className="w-10 h-10 fill-[#00af87]" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+            </svg>
+            <p className="text-gray-400 text-sm font-medium">Tripadvisor reviews widget will be displayed here.</p>
+            <a
+              href="https://www.tripadvisor.com/Attraction_Review-g303488-d14760440-Reviews-Janeiro_Tour_Travel-State_of_Rio_de_Janeiro.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#00af87] text-sm font-semibold hover:underline"
+            >
+              View all reviews on Tripadvisor ↗
+            </a>
+          </div>
         </div>
       </section>
-    </MainLayout>
+
+      {/* Final CTA */}
+      <section className="py-28 bg-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('/images/banner-janeiro.jpg')] bg-cover bg-center" />
+        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-5">
+            Welcome to Brasil
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5 leading-tight">
+            Discover Brazil Through the Eyes of Those Who Love It
+          </h2>
+          <p className="text-white/70 text-lg mb-10 max-w-2xl mx-auto">
+            Welcome to Brazil. Welcome to Janeiro Tour &amp; Travel.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/tours">
+              <span className="inline-flex items-center justify-center px-8 py-4 rounded-full text-base font-semibold bg-[#FFB600] hover:bg-[#e6a400] text-black transition-colors cursor-pointer">
+                Explore Experiences
+              </span>
+            </Link>
+            <Link href="/contact">
+              <span className="inline-flex items-center justify-center px-8 py-4 rounded-full text-base font-semibold border border-white/40 text-white hover:bg-white/10 transition-colors cursor-pointer">
+                Talk to Us
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+    </div>
   );
 }

@@ -1,42 +1,31 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
-import { useGetSettings } from "@workspace/api-client-react";
 import { Facebook, Instagram, Youtube, MessageCircle, Mail, MapPin } from "lucide-react";
+
+const WHATSAPP = "https://wa.me/5521965297618";
+const EMAIL = "contato@janeirotour.com";
+const PHONE = "+55 21 96529-7618";
 
 export function Footer() {
   const { lang } = useLanguage();
-  const { data: settings } = useGetSettings();
 
   const destinations = [
     { href: "/destinations/1", label: "Rio de Janeiro" },
     { href: "/destinations/2", label: "São Paulo" },
     { href: "/destinations/5", label: "Bahia" },
     { href: "/destinations/3", label: "Foz do Iguaçu" },
-    { href: "/destinations/4", label: "Recife" },
+    { href: "/destinations/9", label: "Recife" },
   ];
 
   const experiences = [
-    {
-      href: "/tours?category=private",
-      label: lang === "en" ? "Private Tours" : lang === "es" ? "Tours Privados" : "Tours Privativos"
-    },
-    {
-      href: "/tours?category=culture",
-      label: lang === "en" ? "Cultural Experiences" : lang === "es" ? "Experiencias Culturales" : "Experiências Culturais"
-    },
-    {
-      href: "/tours?category=transfer",
-      label: lang === "en" ? "Airport Transfers" : lang === "es" ? "Traslados Aeropuerto" : "Traslados Aeroporto"
-    },
-    {
-      href: "/tours?category=nature",
-      label: lang === "en" ? "Adventure Experiences" : lang === "es" ? "Experiencias de Aventura" : "Experiências de Aventura"
-    },
+    { href: "/tours?category=private", label: lang === "en" ? "Private Tours" : lang === "es" ? "Tours Privados" : "Tours Privativos" },
+    { href: "/tours?category=culture", label: lang === "en" ? "Cultural Experiences" : lang === "es" ? "Experiencias Culturales" : "Experiências Culturais" },
+    { href: "/tours?category=transfer", label: lang === "en" ? "Airport Transfers" : lang === "es" ? "Traslados Aeropuerto" : "Traslados Aeroporto" },
+    { href: "/tours?category=nature", label: lang === "en" ? "Adventure Experiences" : lang === "es" ? "Experiencias de Aventura" : "Experiências de Aventura" },
   ];
 
   return (
     <footer className="bg-[#141414] text-white/70">
-      {/* Main footer grid */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 pt-16 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
 
@@ -54,7 +43,7 @@ export function Footer() {
                 }}
               />
               <span className="hidden font-bold text-xl text-white tracking-tight">
-                <span className="text-[#FFB600]">Janeiro</span> Tour
+                <span className="text-[#FFB600]">Janeiro</span> Tour &amp; Travel
               </span>
             </Link>
 
@@ -65,30 +54,15 @@ export function Footer() {
             </p>
 
             <div className="flex gap-3">
-              <a
-                href={settings?.facebookUrl || "https://www.facebook.com/janeirotour"}
-                target="_blank" rel="noreferrer"
+              <a href="https://www.facebook.com/janeirotour" target="_blank" rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-white/8 hover:bg-[#FFB600] hover:text-black flex items-center justify-center text-white/60 transition-all duration-200"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href={settings?.instagramUrl || "http://instagram.com/janeirotour"}
-                target="_blank" rel="noreferrer"
+                aria-label="Facebook"><Facebook className="w-4 h-4" /></a>
+              <a href="http://instagram.com/janeirotour" target="_blank" rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-white/8 hover:bg-[#FFB600] hover:text-black flex items-center justify-center text-white/60 transition-all duration-200"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.youtube.com/@janeirotourtravel"
-                target="_blank" rel="noreferrer"
+                aria-label="Instagram"><Instagram className="w-4 h-4" /></a>
+              <a href="https://www.youtube.com/@janeirotourtravel" target="_blank" rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-white/8 hover:bg-[#FFB600] hover:text-black flex items-center justify-center text-white/60 transition-all duration-200"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
+                aria-label="YouTube"><Youtube className="w-4 h-4" /></a>
             </div>
           </div>
 
@@ -100,9 +74,7 @@ export function Footer() {
             <ul className="flex flex-col gap-2.5">
               {destinations.map((d) => (
                 <li key={d.href}>
-                  <Link href={d.href} className="text-sm hover:text-[#FFB600] transition-colors">
-                    {d.label}
-                  </Link>
+                  <Link href={d.href} className="text-sm hover:text-[#FFB600] transition-colors">{d.label}</Link>
                 </li>
               ))}
             </ul>
@@ -116,9 +88,7 @@ export function Footer() {
             <ul className="flex flex-col gap-2.5">
               {experiences.map((e) => (
                 <li key={e.href}>
-                  <Link href={e.href} className="text-sm hover:text-[#FFB600] transition-colors">
-                    {e.label}
-                  </Link>
+                  <Link href={e.href} className="text-sm hover:text-[#FFB600] transition-colors">{e.label}</Link>
                 </li>
               ))}
             </ul>
@@ -130,52 +100,24 @@ export function Footer() {
               {lang === "en" ? "Contact" : lang === "es" ? "Contacto" : "Contato"}
             </h3>
             <ul className="flex flex-col gap-3.5">
-              {(settings?.contactWhatsapp || true) && (
-                <li>
-                  <a
-                    href={settings?.contactWhatsapp || "https://wa.me/5521972633333"}
-                    target="_blank" rel="noreferrer"
-                    className="flex items-center gap-2.5 text-sm hover:text-[#FFB600] transition-colors group"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#25D366] group-hover:text-[#FFB600] shrink-0 transition-colors" />
-                    WhatsApp
-                  </a>
-                </li>
-              )}
-              {settings?.contactEmail && (
-                <li>
-                  <a
-                    href={`mailto:${settings.contactEmail}`}
-                    className="flex items-center gap-2.5 text-sm hover:text-[#FFB600] transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-white/40 shrink-0" />
-                    {settings.contactEmail}
-                  </a>
-                </li>
-              )}
-              {!settings?.contactEmail && (
-                <li>
-                  <a
-                    href="mailto:janeirotour@gmail.com"
-                    className="flex items-center gap-2.5 text-sm hover:text-[#FFB600] transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-white/40 shrink-0" />
-                    janeirotour@gmail.com
-                  </a>
-                </li>
-              )}
-              {settings?.address && (
-                <li className="flex items-start gap-2.5 text-sm">
-                  <MapPin className="w-4 h-4 text-white/40 shrink-0 mt-0.5" />
-                  <span>{settings.address}</span>
-                </li>
-              )}
-              {!settings?.address && (
-                <li className="flex items-start gap-2.5 text-sm">
-                  <MapPin className="w-4 h-4 text-white/40 shrink-0 mt-0.5" />
-                  <span>Rio de Janeiro, Brasil</span>
-                </li>
-              )}
+              <li>
+                <a href={WHATSAPP} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-2.5 text-sm hover:text-[#FFB600] transition-colors group">
+                  <MessageCircle className="w-4 h-4 text-[#25D366] group-hover:text-[#FFB600] shrink-0 transition-colors" />
+                  {PHONE}
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${EMAIL}`}
+                  className="flex items-center gap-2.5 text-sm hover:text-[#FFB600] transition-colors">
+                  <Mail className="w-4 h-4 text-white/40 shrink-0" />
+                  {EMAIL}
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5 text-sm">
+                <MapPin className="w-4 h-4 text-white/40 shrink-0 mt-0.5" />
+                <span>Rio de Janeiro, Brasil</span>
+              </li>
             </ul>
           </div>
         </div>
