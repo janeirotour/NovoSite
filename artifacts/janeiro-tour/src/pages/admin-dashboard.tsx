@@ -31,7 +31,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
     Settings, LogOut, Plus, Pencil, Trash2, BarChart3, Globe, Image,
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
-    CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users,
+    CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
   } from "lucide-react";
   import { Calendar } from "@/components/ui/calendar";
   import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
@@ -719,7 +719,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
       "/blog": "Travel Guide — manage blog posts from the Blog tab above.",
       "/transfers": "Airport Transfers — these are a subset of tours. Manage them from the Tours tab, filtering by category 'transfer'.",
       "/private-tours": "Private Tours — managed from the Tours tab, filtering by type 'private'.",
-      "/packages": "Packages — managed from the Tours tab, filtering by category 'package'.",
+      "/packages": "Packages — manage from the Packages tab above.",
     };
     return (
       <div className="space-y-4">
@@ -788,6 +788,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
                 { value: "homepage", icon: Image, label: "Homepage" },
                 { value: "settings", icon: Settings, label: "Settings & SEO" },
                 { value: "reservations", icon: ClipboardList, label: "Reservations" },
+                { value: "packages", icon: Boxes, label: "Packages" },
                 { value: "extras", icon: Tag, label: "Tour Extras" },
                 { value: "availability", icon: CalendarDays, label: "Availability" },
               ].map(({ value, icon: Icon, label }) => (
@@ -830,9 +831,255 @@ import { useState, useRef, useCallback, useEffect } from "react";
             <TabsContent value="homepage"><HomepageTab /></TabsContent>
             <TabsContent value="settings"><SettingsTab /></TabsContent>
             <TabsContent value="reservations"><ReservationsTab /></TabsContent>
+            <TabsContent value="packages"><PackagesTab /></TabsContent>
             <TabsContent value="extras"><ExtrasTab /></TabsContent>
             <TabsContent value="availability"><AvailabilityTab /></TabsContent>
           </Tabs>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── packages tab ────────────────────────────────────────────────────────
+
+  type AdminPackage = {
+    id: number; slug: string; title: string; subtitle?: string | null;
+    description: string; badge?: string | null; badgeColor?: string | null;
+    priceFrom: string; originalPrice?: string | null; savingsPercent?: number | null;
+    imageUrl: string; durationLabel?: string | null; groupSizeLabel?: string | null;
+    highlights: string[]; includedItems: string[]; toursIncluded: unknown[];
+    published: boolean; sortOrder: number;
+  };
+
+  const emptyPkg: Omit<AdminPackage, "id"> = {
+    slug: "", title: "", subtitle: "", description: "",
+    badge: "", badgeColor: "green", priceFrom: "", originalPrice: "",
+    savingsPercent: undefined as unknown as null, imageUrl: "", durationLabel: "",
+    groupSizeLabel: "", highlights: [], includedItems: [], toursIncluded: [],
+    published: true, sortOrder: 10,
+  };
+
+  function PackageForm({ pkg, onSave, onClose }: {
+    pkg?: AdminPackage; onSave: (data: Omit<AdminPackage, "id">) => void; onClose: () => void;
+  }) {
+    const [form, setForm] = useState<Omit<AdminPackage, "id">>(pkg ? {
+      slug: pkg.slug, title: pkg.title, subtitle: pkg.subtitle ?? "",
+      description: pkg.description, badge: pkg.badge ?? "", badgeColor: pkg.badgeColor ?? "green",
+      priceFrom: pkg.priceFrom, originalPrice: pkg.originalPrice ?? "",
+      savingsPercent: pkg.savingsPercent ?? (undefined as unknown as null),
+      imageUrl: pkg.imageUrl, durationLabel: pkg.durationLabel ?? "",
+      groupSizeLabel: pkg.groupSizeLabel ?? "",
+      highlights: pkg.highlights ?? [], includedItems: pkg.includedItems ?? [],
+      toursIncluded: pkg.toursIncluded ?? [],
+      published: pkg.published, sortOrder: pkg.sortOrder,
+    } : emptyPkg);
+
+    const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+    const listToArray = (s: string) => s.split("\n").map(l => l.trim()).filter(Boolean);
+    const arrayToList = (a: unknown[]) => (a as string[]).join("\n");
+
+    return (
+      <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <Label>Slug *</Label>
+            <Input value={form.slug} onChange={e => set("slug", e.target.value)} placeholder="afro-rio-soul" />
+          </div>
+          <div className="space-y-1">
+            <Label>Sort Order</Label>
+            <Input type="number" value={form.sortOrder} onChange={e => set("sortOrder", Number(e.target.value))} />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label>Title *</Label>
+          <Input value={form.title} onChange={e => set("title", e.target.value)} placeholder="Afro Rio Soul" />
+        </div>
+        <div className="space-y-1">
+          <Label>Subtitle</Label>
+          <Input value={form.subtitle ?? ""} onChange={e => set("subtitle", e.target.value)} placeholder="Cultural Immersion — Rio's African Heart" />
+        </div>
+        <div className="space-y-1">
+          <Label>Description *</Label>
+          <Textarea rows={3} value={form.description} onChange={e => set("description", e.target.value)} />
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-1">
+            <Label>Price From (USD) *</Label>
+            <Input value={form.priceFrom} onChange={e => set("priceFrom", e.target.value)} placeholder="289" />
+          </div>
+          <div className="space-y-1">
+            <Label>Original Price</Label>
+            <Input value={form.originalPrice ?? ""} onChange={e => set("originalPrice", e.target.value)} placeholder="395" />
+          </div>
+          <div className="space-y-1">
+            <Label>Savings %</Label>
+            <Input type="number" value={form.savingsPercent ?? ""} onChange={e => set("savingsPercent", e.target.value ? Number(e.target.value) : null)} placeholder="27" />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label>Image URL *</Label>
+          <Input value={form.imageUrl} onChange={e => set("imageUrl", e.target.value)} placeholder="https://..." />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <Label>Duration Label</Label>
+            <Input value={form.durationLabel ?? ""} onChange={e => set("durationLabel", e.target.value)} placeholder="2–3 days" />
+          </div>
+          <div className="space-y-1">
+            <Label>Group Size Label</Label>
+            <Input value={form.groupSizeLabel ?? ""} onChange={e => set("groupSizeLabel", e.target.value)} placeholder="Up to 45 people" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <Label>Badge</Label>
+            <Input value={form.badge ?? ""} onChange={e => set("badge", e.target.value)} placeholder="Best Seller" />
+          </div>
+          <div className="space-y-1">
+            <Label>Badge Color</Label>
+            <select className="w-full border rounded-md px-3 py-2 text-sm" value={form.badgeColor ?? "green"} onChange={e => set("badgeColor", e.target.value)}>
+              <option value="green">Green</option>
+              <option value="yellow">Yellow</option>
+              <option value="orange">Orange</option>
+              <option value="blue">Blue</option>
+              <option value="purple">Purple</option>
+              <option value="red">Red</option>
+            </select>
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label>Highlights (one per line)</Label>
+          <Textarea rows={4} value={arrayToList(form.highlights)} onChange={e => set("highlights", listToArray(e.target.value))} placeholder={"Afro-Brazilian History & Immersion Walking Tour (4h)\nFavela Tour with a community-born guide (3h)"} />
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch checked={form.published} onCheckedChange={v => set("published", v)} />
+          <Label>Published</Label>
+        </div>
+        <div className="flex gap-3 justify-end pt-2 border-t">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={() => onSave(form)} className="gap-1.5"><Save size={14} /> Save Package</Button>
+        </div>
+      </div>
+    );
+  }
+
+  function PackagesTab() {
+    const queryClient = useQueryClient();
+    const [packages, setPackages] = useState<AdminPackage[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [editPkg, setEditPkg] = useState<AdminPackage | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
+    const [saving, setSaving] = useState(false);
+
+    async function load() {
+      setLoading(true);
+      const r = await fetch("/api/admin/packages", { credentials: "include" });
+      if (r.ok) setPackages(await r.json());
+      setLoading(false);
+    }
+
+    useEffect(() => { load(); }, []);
+
+    async function handleSave(data: Omit<AdminPackage, "id">, id?: number) {
+      setSaving(true);
+      const url = id ? `/api/admin/packages/${id}` : "/api/admin/packages";
+      const method = id ? "PUT" : "POST";
+      await fetch(url, { method, credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      setSaving(false);
+      setEditPkg(null);
+      setCreateOpen(false);
+      load();
+      queryClient.invalidateQueries({ queryKey: ["packages"] });
+    }
+
+    async function handleDelete(id: number) {
+      await fetch(`/api/admin/packages/${id}`, { method: "DELETE", credentials: "include" });
+      load();
+      queryClient.invalidateQueries({ queryKey: ["packages"] });
+    }
+
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-bold">Packages ({packages?.length ?? 0})</h2>
+            <p className="text-sm text-muted-foreground mt-1">Multi-day bundled packages with pricing, badge, highlights and itinerary</p>
+          </div>
+          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-1"><Plus size={15} /> Add Package</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader><DialogTitle>Add New Package</DialogTitle></DialogHeader>
+              <PackageForm onSave={data => handleSave(data)} onClose={() => setCreateOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div className="bg-card border rounded-xl overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Package</TableHead>
+                <TableHead>Price/pax</TableHead>
+                <TableHead>Badge</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Order</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                [...Array(3)].map((_, i) => (
+                  <TableRow key={i}><TableCell colSpan={6}><Skeleton className="h-8 w-full" /></TableCell></TableRow>
+                ))
+              ) : packages?.map(pkg => (
+                <TableRow key={pkg.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      {pkg.imageUrl && <img src={pkg.imageUrl} alt="" className="w-12 h-9 rounded object-cover flex-shrink-0" />}
+                      <div>
+                        <p className="font-medium text-sm">{pkg.title}</p>
+                        {pkg.subtitle && <p className="text-xs text-muted-foreground">{pkg.subtitle}</p>}
+                        <p className="text-xs text-muted-foreground font-mono">{pkg.slug}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-sm font-semibold text-green-600">${Number(pkg.priceFrom).toFixed(0)}</TableCell>
+                  <TableCell>
+                    {pkg.badge
+                      ? <Badge className="text-xs bg-green-100 text-green-700 border-green-200">{pkg.badge}</Badge>
+                      : <span className="text-muted-foreground text-xs">—</span>}
+                  </TableCell>
+                  <TableCell>
+                    {pkg.published
+                      ? <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Published</Badge>
+                      : <Badge variant="outline" className="text-muted-foreground text-xs">Draft</Badge>}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{pkg.sortOrder}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Dialog open={editPkg?.id === pkg.id} onOpenChange={open => !open && setEditPkg(null)}>
+                        <DialogTrigger asChild>
+                          <Button variant="ghost" size="sm" onClick={() => setEditPkg(pkg)}><Pencil size={15} /></Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl">
+                          <DialogHeader><DialogTitle>Edit Package: {pkg.title}</DialogTitle></DialogHeader>
+                          {editPkg && (
+                            <PackageForm
+                              pkg={editPkg}
+                              onSave={data => handleSave(data, pkg.id)}
+                              onClose={() => setEditPkg(null)}
+                            />
+                          )}
+                        </DialogContent>
+                      </Dialog>
+                      <ConfirmDelete label="package" onConfirm={() => handleDelete(pkg.id)} />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
     );
