@@ -101,16 +101,6 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-black/55 z-10" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70 z-10" />
 
-        {/* Destination label */}
-        {current > 0 && (
-          <div
-            className="absolute top-6 right-6 z-20 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase text-white border border-white/30 bg-black/30 backdrop-blur-sm transition-opacity duration-500"
-            style={{ opacity: fading ? 0 : 1 }}
-          >
-            {slides[current].label}
-          </div>
-        )}
-
         {/* Content */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end pb-28 md:pb-32 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto left-0 right-0">
           <div className="max-w-3xl">
