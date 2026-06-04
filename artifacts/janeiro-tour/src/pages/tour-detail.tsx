@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useParams, Link } from "wouter";
-import { useGetTour, useListReviews, useListFaqs } from "@workspace/api-client-react";
+import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs } from "@workspace/api-client-react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle } from "lucide-react";
@@ -41,12 +41,23 @@ function RegionodoWidget({ code }: { code: string }) {
 
 export default function TourDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const tourId = parseInt(id ?? "0", 10);
+  const param = id ?? "";
+  const isNumeric = /^\d+$/.test(param);
+  const tourId = isNumeric ? parseInt(param, 10) : 0;
   const { lang } = useLanguage();
 
-  const { data: tour, isLoading } = useGetTour(tourId);
-  const { data: reviews } = useListReviews({ tourId });
-  const { data: faqs } = useListFaqs({ tourId });
+  // Enable only the relevant hook — both must be called unconditionally (React rules).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: tourById, isLoading: loadingById } = useGetTour(tourId, { query: { enabled: isNumeric } as any });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: tourBySlug, isLoading: loadingBySlug } = useGetTourBySlug(param, { query: { enabled: !isNumeric && param.length > 0 } as any });
+
+  const tour = isNumeric ? tourById : tourBySlug;
+  const isLoading = isNumeric ? loadingById : loadingBySlug;
+
+  const resolvedId = (tour as { id?: number } | undefined)?.id ?? tourId;
+  const { data: reviews } = useListReviews({ tourId: resolvedId });
+  const { data: faqs } = useListFaqs({ tourId: resolvedId });
 
   if (isLoading) {
     return (

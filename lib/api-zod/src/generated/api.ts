@@ -297,7 +297,6 @@ export const DeleteTourParams = zod.object({
  * @summary Get a tour by slug
  */
 export const GetTourBySlugParams = zod.object({
-  "id": zod.coerce.number(),
   "slug": zod.coerce.string()
 })
 

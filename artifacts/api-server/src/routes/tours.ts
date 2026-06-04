@@ -59,10 +59,9 @@ router.get("/tours/featured", async (_req, res): Promise<void> => {
   res.json(ListFeaturedToursResponse.parse(tours.map(mapTour)));
 });
 
-router.get("/tours/:id/slug/:slug", async (req, res): Promise<void> => {
-  const rawId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-  const id = parseInt(rawId, 10);
-  const [tour] = await db.select().from(toursTable).where(eq(toursTable.id, id));
+router.get("/tours/slug/:slug", async (req, res): Promise<void> => {
+  const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug;
+  const [tour] = await db.select().from(toursTable).where(eq(toursTable.slug, slug));
   if (!tour) { res.status(404).json({ error: "Tour not found" }); return; }
   res.json(GetTourBySlugResponse.parse(mapTour(tour)));
 });

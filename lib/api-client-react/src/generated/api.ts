@@ -590,22 +590,20 @@ export const useDeleteTour = <TError = ErrorType<unknown>,
       return useMutation(getDeleteTourMutationOptions(options));
     }
 
-export const getGetTourBySlugUrl = (id: number,
-    slug: string,) => {
+export const getGetTourBySlugUrl = (slug: string,) => {
 
 
 
 
-  return `/api/tours/${id}/slug/${slug}`
+  return `/api/tours/slug/${slug}`
 }
 
 /**
  * @summary Get a tour by slug
  */
-export const getTourBySlug = async (id: number,
-    slug: string, options?: RequestInit): Promise<Tour> => {
+export const getTourBySlug = async (slug: string, options?: RequestInit): Promise<Tour> => {
 
-  return customFetch<Tour>(getGetTourBySlugUrl(id,slug),
+  return customFetch<Tour>(getGetTourBySlugUrl(slug),
   {
     ...options,
     method: 'GET'
@@ -618,31 +616,29 @@ export const getTourBySlug = async (id: number,
 
 
 
-export const getGetTourBySlugQueryKey = (id: number,
-    slug: string,) => {
+export const getGetTourBySlugQueryKey = (slug: string,) => {
     return [
-    `/api/tours/${id}/slug/${slug}`
+    `/api/tours/slug/${slug}`
     ] as const;
     }
 
 
-export const getGetTourBySlugQueryOptions = <TData = Awaited<ReturnType<typeof getTourBySlug>>, TError = ErrorType<unknown>>(id: number,
-    slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetTourBySlugQueryOptions = <TData = Awaited<ReturnType<typeof getTourBySlug>>, TError = ErrorType<unknown>>(slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetTourBySlugQueryKey(id,slug);
+  const queryKey =  queryOptions?.queryKey ?? getGetTourBySlugQueryKey(slug);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTourBySlug>>> = ({ signal }) => getTourBySlug(id,slug, { signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTourBySlug>>> = ({ signal }) => getTourBySlug(slug, { signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, enabled: !!(id && slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData> & { queryKey: QueryKey }
 }
 
 export type GetTourBySlugQueryResult = NonNullable<Awaited<ReturnType<typeof getTourBySlug>>>
@@ -654,12 +650,11 @@ export type GetTourBySlugQueryError = ErrorType<unknown>
  */
 
 export function useGetTourBySlug<TData = Awaited<ReturnType<typeof getTourBySlug>>, TError = ErrorType<unknown>>(
- id: number,
-    slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTourBySlug>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetTourBySlugQueryOptions(id,slug,options)
+  const queryOptions = getGetTourBySlugQueryOptions(slug,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -167,17 +167,12 @@ paths:
         "204":
           description: Deleted
 
-  /tours/{id}/slug/{slug}:
+  /tours/slug/{slug}:
     get:
       operationId: getTourBySlug
       tags: [tours]
       summary: Get a tour by slug
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
         - name: slug
           in: path
           required: true
