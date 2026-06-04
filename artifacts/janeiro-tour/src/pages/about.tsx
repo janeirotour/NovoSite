@@ -220,31 +220,31 @@ export default function AboutPage() {
             {/* Text */}
             <div>
               <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] uppercase tracking-widest mb-5">
-                🏅 Reconhecimento Oficial
+                🏅 Official Recognition
               </span>
               <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-5 leading-tight">
-                Moção de Reconhecimento e Louvor
+                Motion of Recognition and Praise
               </h2>
               <p className="text-[#FFB600] font-semibold text-sm mb-6">
-                Câmara Municipal do Rio de Janeiro · 2022
+                Rio de Janeiro City Council · 2022
               </p>
               <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed mb-8">
                 <p>
-                  Em 3 de maio de 2022, a Câmara Municipal do Rio de Janeiro concedeu a <strong className="text-gray-800">Dandara de Souza Siqueira</strong> uma Moção de Reconhecimento e Louvor pela sua relevância no turismo da cidade do Rio de Janeiro.
+                  On May 3, 2022, the Rio de Janeiro City Council awarded <strong className="text-gray-800">Dandara de Souza Siqueira</strong> an official Motion of Recognition and Praise for her outstanding contribution to tourism in the city of Rio de Janeiro.
                 </p>
                 <p>
-                  O documento destaca sua atuação como fundadora da Janeiro Tour &amp; Travel, sua participação no projeto <em>"Rio para Cariocas e Fluminenses"</em> e sua contribuição ao <strong className="text-gray-800">AfroTrip</strong> — iniciativa que proporciona a viajantes negros de todo o mundo a chance de conhecer o Brasil sob uma perspectiva afrocêntrica.
+                  The document highlights her role as the founder of Janeiro Tour &amp; Travel, her work on the <em>"Rio para Cariocas e Fluminenses"</em> project, and her contribution to <strong className="text-gray-800">AfroTrip</strong> — an initiative that gives Black travelers from around the world the opportunity to experience Brazil through an Afrocentric lens.
                 </p>
                 <p>
-                  A moção foi assinada pela Vereadora <strong className="text-gray-800">Tainá de Paula</strong> no Plenário Teotônio Villela.
+                  The motion was signed by City Councilwoman <strong className="text-gray-800">Tainá de Paula</strong> at the Teotônio Villela Assembly Chamber.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-                  🏛️ Câmara Municipal do Rio de Janeiro
+                  🏛️ Rio de Janeiro City Council
                 </span>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] border border-[#009743]/20">
-                  ✅ Reconhecimento oficial em turismo
+                  ✅ Official recognition in tourism
                 </span>
               </div>
             </div>
