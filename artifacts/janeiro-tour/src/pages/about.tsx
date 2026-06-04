@@ -34,11 +34,10 @@ const whyUs = [
 ];
 
 const journey = [
-  { year: "2014", text: "Founded in Rio de Janeiro by Dandara, a tourism professional dedicated to meaningful travel." },
-  { year: "2016", text: "Expanded our team and began offering multilingual tours to travelers from the US, Canada and Europe." },
-  { year: "2019", text: "Launched the Little Africa Walking Tour — one of our most celebrated cultural experiences." },
-  { year: "2022", text: "Extended our reach to São Paulo, Bahia, Foz do Iguaçu and Recife." },
-  { year: "Today", text: "A trusted travel partner for thousands of travelers from around the world, serving all five destinations with the same passion we started with." },
+  { year: "2014", text: "Dandara began her career promoting local excursions for Brazilians — learning the country from the inside out, building knowledge that no guidebook can teach." },
+  { year: "2016", text: "The doors opened to international travelers. The Little Africa Walking Tour launched, along with tours to other Brazilian states — a turning point that defined our identity." },
+  { year: "2020", text: "Janeiro Tour & Travel expanded into fully customized travel experiences and began serving B2B demands from international agencies — bringing our personalized approach to a global scale." },
+  { year: "Today", text: "A trusted partner for thousands of travelers from around the world, serving five iconic Brazilian destinations with the same passion and dedication we started with." },
 ];
 
 export default function AboutPage() {
