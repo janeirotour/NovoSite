@@ -48,11 +48,12 @@ export function SearchWidget() {
             className="w-full px-4 py-3 rounded-xl border border-input focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all bg-white appearance-none"
           >
             <option value="">{lang === "en" ? "All Experiences" : lang === "es" ? "Todas las experiencias" : "Todas as experiências"}</option>
-            <option value="City Tour">City Tour</option>
-            <option value="Nature">Nature</option>
-            <option value="Culture">Culture</option>
-            <option value="Transfer">Transfer</option>
-            <option value="Package">Package</option>
+            <option value="sightseeing">{lang === "en" ? "Sightseeing" : lang === "es" ? "City Tour" : "City Tour"}</option>
+            <option value="culture">{lang === "en" ? "Cultural Experiences" : lang === "es" ? "Experiencias Culturales" : "Experiências Culturais"}</option>
+            <option value="nature">{lang === "en" ? "Adventure Experiences" : lang === "es" ? "Experiencias de Aventura" : "Experiências de Aventura"}</option>
+            <option value="aerial">{lang === "en" ? "Aerial Experiences" : lang === "es" ? "Experiencias Aéreas" : "Experiências Aéreas"}</option>
+            <option value="transfer">{lang === "en" ? "Airport Transfers" : lang === "es" ? "Traslados Aeropuerto" : "Traslados Aeroporto"}</option>
+            <option value="package">{lang === "en" ? "Multi-Day Experiences" : lang === "es" ? "Experiencias de Varios Días" : "Experiências de Vários Dias"}</option>
           </select>
         </div>
         

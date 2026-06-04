@@ -21,6 +21,7 @@ export function Footer() {
   const experiences = [
     { href: "/tours?category=private", label: lang === "en" ? "Private Tours" : lang === "es" ? "Tours Privados" : "Tours Privativos" },
     { href: "/tours?category=culture", label: lang === "en" ? "Cultural Experiences" : lang === "es" ? "Experiencias Culturales" : "Experiências Culturais" },
+    { href: "/tours?category=aerial", label: lang === "en" ? "Aerial Experiences" : lang === "es" ? "Experiencias Aéreas" : "Experiências Aéreas" },
     { href: "/tours?category=transfer", label: lang === "en" ? "Airport Transfers" : lang === "es" ? "Traslados Aeropuerto" : "Traslados Aeroporto" },
     { href: "/tours?category=nature", label: lang === "en" ? "Adventure Experiences" : lang === "es" ? "Experiencias de Aventura" : "Experiências de Aventura" },
   ];

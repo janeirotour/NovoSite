@@ -59,7 +59,13 @@ export function TourCard({ tour }: { tour: Tour }) {
               </Badge>
             )}
             <Badge className="bg-white/90 text-foreground font-semibold border-none backdrop-blur-sm px-3 py-1">
-              {tour.category}
+              {tour.category === "aerial" ? "Aerial"
+                : tour.category === "nature" ? "Adventure"
+                : tour.category === "culture" ? "Culture"
+                : tour.category === "sightseeing" ? "Sightseeing"
+                : tour.category === "transfer" ? "Transfer"
+                : tour.category === "food" ? "Food"
+                : tour.category}
             </Badge>
           </div>
 

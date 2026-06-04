@@ -13,6 +13,7 @@ const CATEGORIES_EN = [
   { value: "", label: "All Categories" },
   { value: "culture", label: "Cultural Experiences" },
   { value: "nature", label: "Adventure Experiences" },
+  { value: "aerial", label: "Aerial Experiences" },
   { value: "food", label: "Food Experiences" },
   { value: "transfer", label: "Airport Transfers" },
   { value: "package", label: "Multi-Day Experiences" },
