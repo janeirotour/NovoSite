@@ -12,13 +12,22 @@ export interface BlogPostUpdate {
   titleEs?: string;
   titlePt?: string;
   excerpt?: string;
+  excerptEs?: string;
+  excerptPt?: string;
   content?: string;
+  contentEs?: string;
+  contentPt?: string;
   imageUrl?: string;
+  galleryImages?: string[];
   author?: string;
   category?: string;
   readTimeMinutes?: number;
   seoTitle?: string;
+  seoTitleEs?: string;
+  seoTitlePt?: string;
   seoDescription?: string;
+  seoDescriptionEs?: string;
+  seoDescriptionPt?: string;
   featured?: boolean;
   published?: boolean;
 }

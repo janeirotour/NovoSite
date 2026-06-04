@@ -8,6 +8,8 @@
 
 export interface SiteSettings {
   id: number;
+  /** @nullable */
+  siteName?: string | null;
   heroHeadline: string;
   /** @nullable */
   heroHeadlineEs?: string | null;
@@ -20,6 +22,8 @@ export interface SiteSettings {
   heroSubheadlinePt?: string | null;
   heroPrimaryCtaText: string;
   heroSecondaryCtaText: string;
+  /** @nullable */
+  heroImageUrl?: string | null;
   contactEmail: string;
   contactPhone: string;
   contactWhatsapp: string;
@@ -32,4 +36,10 @@ export interface SiteSettings {
   tripadvisorUrl?: string | null;
   /** @nullable */
   googleReviewsUrl?: string | null;
+  /** @nullable */
+  seoTitle?: string | null;
+  /** @nullable */
+  seoDescription?: string | null;
+  /** @nullable */
+  ogImageUrl?: string | null;
 }

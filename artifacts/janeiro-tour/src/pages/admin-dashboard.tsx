@@ -786,29 +786,89 @@ import { useState, useRef, useCallback, useEffect } from "react";
     type Dest = NonNullable<typeof destinations>[number];
     const [editDest, setEditDest] = useState<Dest | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
-    const [form, setForm] = useState({ slug: "", name: "", country: "Brazil", imageUrl: "", description: "", featured: true });
+
+    const emptyDest = { slug: "", name: "", nameEs: "", namePt: "", country: "Brazil", imageUrl: "", heroImageUrl: "", description: "", descriptionEs: "", descriptionPt: "", seoTitle: "", seoDescription: "", featured: true, sortOrder: 10 };
+    const [form, setForm] = useState(emptyDest);
+
+    function DestForm({ values, set, onSave, onCancel }: {
+      values: typeof emptyDest; set: (k: string, v: unknown) => void; onSave: () => void; onCancel: () => void;
+    }) {
+      const [lang, setLang] = useState<"en" | "es" | "pt">("en");
+      return (
+        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1"><Label>Slug *</Label><Input value={values.slug} onChange={e => set("slug", e.target.value)} placeholder="rio-de-janeiro" /></div>
+            <div className="space-y-1"><Label>Country</Label><Input value={values.country} onChange={e => set("country", e.target.value)} /></div>
+          </div>
+          <div className="border rounded-xl overflow-hidden">
+            <div className="flex border-b bg-muted/30">
+              {(["en", "es", "pt"] as const).map((code, i) => (
+                <button key={code} onClick={() => setLang(code)}
+                  className={`flex-1 py-2 text-xs font-medium transition-colors ${lang === code ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}>
+                  {["🇬🇧 English", "🇪🇸 Español", "🇧🇷 Português"][i]}
+                </button>
+              ))}
+            </div>
+            <div className="p-3 space-y-2">
+              {lang === "en" && (
+                <>
+                  <div className="space-y-1"><Label>Name — English *</Label><Input value={values.name} onChange={e => set("name", e.target.value)} placeholder="Rio de Janeiro" /></div>
+                  <div className="space-y-1"><Label>Description — English *</Label><Textarea rows={3} value={values.description} onChange={e => set("description", e.target.value)} /></div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between"><Label>SEO Title</Label><span className="text-xs text-muted-foreground">{(values.seoTitle ?? "").length}/60</span></div>
+                    <Input value={values.seoTitle ?? ""} onChange={e => set("seoTitle", e.target.value)} maxLength={60} />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between"><Label>SEO Description</Label><span className="text-xs text-muted-foreground">{(values.seoDescription ?? "").length}/160</span></div>
+                    <Textarea rows={2} value={values.seoDescription ?? ""} onChange={e => set("seoDescription", e.target.value)} maxLength={160} />
+                  </div>
+                </>
+              )}
+              {lang === "es" && (
+                <>
+                  <div className="space-y-1"><Label>Nombre — Español</Label><Input value={values.nameEs ?? ""} onChange={e => set("nameEs", e.target.value)} /></div>
+                  <div className="space-y-1"><Label>Descripción — Español</Label><Textarea rows={4} value={values.descriptionEs ?? ""} onChange={e => set("descriptionEs", e.target.value)} /></div>
+                </>
+              )}
+              {lang === "pt" && (
+                <>
+                  <div className="space-y-1"><Label>Nome — Português</Label><Input value={values.namePt ?? ""} onChange={e => set("namePt", e.target.value)} /></div>
+                  <div className="space-y-1"><Label>Descrição — Português</Label><Textarea rows={4} value={values.descriptionPt ?? ""} onChange={e => set("descriptionPt", e.target.value)} /></div>
+                </>
+              )}
+            </div>
+          </div>
+          <ImageUploader value={values.imageUrl} onChange={v => set("imageUrl", v)} label="Card Image *" />
+          <ImageUploader value={values.heroImageUrl ?? ""} onChange={v => set("heroImageUrl", v)} label="Hero / Banner Image" />
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2"><Switch checked={!!values.featured} onCheckedChange={v => set("featured", v)} /><Label>Featured</Label></div>
+            <div className="space-y-1"><Label className="text-xs">Sort Order</Label><Input type="number" value={values.sortOrder ?? 10} onChange={e => set("sortOrder", parseInt(e.target.value))} className="w-24" /></div>
+          </div>
+          <div className="flex gap-3 justify-end pt-2 border-t">
+            <Button variant="outline" onClick={onCancel}>Cancel</Button>
+            <Button onClick={onSave}>Save Destination</Button>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Destinations ({destinations?.length ?? 0})</h2>
+          <div>
+            <h2 className="text-2xl font-bold">Destinations ({destinations?.length ?? 0})</h2>
+            <p className="text-sm text-muted-foreground mt-1">Multilingual names, descriptions, hero images and SEO per destination</p>
+          </div>
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild><Button className="gap-1"><Plus size={15} /> Add Destination</Button></DialogTrigger>
             <DialogContent className="max-w-lg">
               <DialogHeader><DialogTitle>Add Destination</DialogTitle></DialogHeader>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1"><Label>Name</Label><Input value={form.name} onChange={e => setForm(f => ({...f, name:e.target.value}))} placeholder="Rio de Janeiro" /></div>
-                  <div className="space-y-1"><Label>Slug</Label><Input value={form.slug} onChange={e => setForm(f => ({...f, slug:e.target.value}))} placeholder="rio-de-janeiro" /></div>
-                </div>
-                <ImageUploader value={form.imageUrl} onChange={v => setForm(f => ({...f, imageUrl:v}))} label="Destination Image" />
-                <div className="space-y-1"><Label>Description</Label><Textarea rows={3} value={form.description} onChange={e => setForm(f => ({...f, description:e.target.value}))} /></div>
-                <div className="flex items-center gap-2"><Switch checked={form.featured} onCheckedChange={v => setForm(f => ({...f,featured:v}))} /><Label>Featured</Label></div>
-                <div className="flex gap-3 justify-end">
-                  <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-                  <Button onClick={() => { createDest.mutate({ data: form }); setCreateOpen(false); }}>Save</Button>
-                </div>
-              </div>
+              <DestForm
+                values={form}
+                set={(k, v) => setForm(f => ({ ...f, [k]: v } as typeof emptyDest))}
+                onSave={() => { createDest.mutate({ data: form }); setCreateOpen(false); setForm(emptyDest); }}
+                onCancel={() => setCreateOpen(false)}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -816,11 +876,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Destination</TableHead><TableHead>Country</TableHead><TableHead>Featured</TableHead><TableHead className="text-right">Actions</TableHead>
+                <TableHead>Destination</TableHead><TableHead>Country</TableHead><TableHead>Languages</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? [...Array(4)].map((_,i) => <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
+              {isLoading ? [...Array(4)].map((_, i) => <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
                 : destinations?.map(dest => (
                   <TableRow key={dest.id}>
                     <TableCell>
@@ -830,6 +890,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">{dest.country}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Badge variant="outline" className="text-xs">EN</Badge>
+                        {dest.nameEs && <Badge variant="outline" className="text-xs">ES</Badge>}
+                        {dest.namePt && <Badge variant="outline" className="text-xs">PT</Badge>}
+                      </div>
+                    </TableCell>
                     <TableCell>{dest.featured && <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Featured</Badge>}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -846,22 +913,109 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Dialog open={!!editDest} onOpenChange={() => setEditDest(null)}>
             <DialogContent className="max-w-lg">
               <DialogHeader><DialogTitle>Edit: {editDest.name}</DialogTitle></DialogHeader>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1"><Label>Name</Label><Input defaultValue={editDest.name} onChange={e => setEditDest(d => d ? {...d, name:e.target.value} : null)} /></div>
-                  <div className="space-y-1"><Label>Slug</Label><Input defaultValue={editDest.slug} onChange={e => setEditDest(d => d ? {...d, slug:e.target.value} : null)} /></div>
-                </div>
-                <ImageUploader value={editDest.imageUrl ?? ""} onChange={v => setEditDest(d => d ? {...d, imageUrl:v} : null)} label="Destination Image" />
-                <div className="space-y-1"><Label>Description</Label><Textarea rows={3} defaultValue={editDest.description ?? ""} onChange={e => setEditDest(d => d ? {...d, description:e.target.value} : null)} /></div>
-                <div className="flex items-center gap-2"><Switch checked={!!editDest.featured} onCheckedChange={v => setEditDest(d => d ? {...d, featured:v} : null)} /><Label>Featured</Label></div>
-                <div className="flex gap-3 justify-end">
-                  <Button variant="outline" onClick={() => setEditDest(null)}>Cancel</Button>
-                  <Button onClick={() => { updateDest.mutate({ id: editDest.id, data: editDest as Parameters<typeof updateDest.mutate>[0]["data"] }); setEditDest(null); }}>Save</Button>
-                </div>
-              </div>
+              <DestForm
+                values={editDest as unknown as typeof emptyDest}
+                set={(k, v) => setEditDest(d => d ? { ...d, [k]: v } as Dest : null)}
+                onSave={() => { updateDest.mutate({ id: editDest.id, data: editDest as Parameters<typeof updateDest.mutate>[0]["data"] }); setEditDest(null); }}
+                onCancel={() => setEditDest(null)}
+              />
             </DialogContent>
           </Dialog>
         )}
+      </div>
+    );
+  }
+
+  function BlogForm({ values, onChange }: { values: Record<string, unknown>; onChange: (k: string, v: unknown) => void }) {
+    const [lang, setLang] = useState<"en" | "es" | "pt">("en");
+    const str = (k: string) => (values[k] ?? "") as string;
+    const imgs = () => (values.galleryImages ?? []) as string[];
+
+    return (
+      <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-1"><Label>Slug *</Label><Input value={str("slug")} onChange={e => onChange("slug", e.target.value)} placeholder="article-url-slug" /></div>
+          <div className="space-y-1"><Label>Author</Label><Input value={str("author")} onChange={e => onChange("author", e.target.value)} /></div>
+          <div className="space-y-1"><Label>Category</Label><Input value={str("category")} onChange={e => onChange("category", e.target.value)} /></div>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="space-y-1 w-28"><Label>Read Time (min)</Label><Input type="number" value={values.readTimeMinutes as number ?? 5} onChange={e => onChange("readTimeMinutes", parseInt(e.target.value))} /></div>
+          <div className="flex items-center gap-2 mt-5"><Switch checked={!!values.published} onCheckedChange={v => onChange("published", v)} /><Label>Published</Label></div>
+          <div className="flex items-center gap-2 mt-5"><Switch checked={!!values.featured} onCheckedChange={v => onChange("featured", v)} /><Label>Featured</Label></div>
+        </div>
+        <div className="border rounded-xl overflow-hidden">
+          <div className="flex border-b bg-muted/30">
+            {(["en", "es", "pt"] as const).map((code, i) => (
+              <button key={code} onClick={() => setLang(code)}
+                className={`flex-1 py-2.5 text-sm font-medium transition-colors ${lang === code ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}>
+                {["🇬🇧 English", "🇪🇸 Español", "🇧🇷 Português"][i]}
+              </button>
+            ))}
+          </div>
+          <div className="p-4 space-y-3">
+            {lang === "en" && (<>
+              <div className="space-y-1"><Label>Title — English *</Label><Input value={str("title")} onChange={e => onChange("title", e.target.value)} placeholder="Article title" /></div>
+              <div className="space-y-1"><Label>Excerpt — English *</Label><Textarea rows={2} value={str("excerpt")} onChange={e => onChange("excerpt", e.target.value)} placeholder="Short description for blog listing" /></div>
+              <div className="space-y-1"><Label>Content — English *</Label><Textarea rows={10} value={str("content")} onChange={e => onChange("content", e.target.value)} placeholder="Full article content..." /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Title — EN</Label><span className="text-xs text-muted-foreground">{str("seoTitle").length}/60</span></div>
+                  <Input value={str("seoTitle")} onChange={e => onChange("seoTitle", e.target.value)} maxLength={60} />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Description — EN</Label><span className="text-xs text-muted-foreground">{str("seoDescription").length}/160</span></div>
+                  <Textarea rows={2} value={str("seoDescription")} onChange={e => onChange("seoDescription", e.target.value)} maxLength={160} />
+                </div>
+              </div>
+            </>)}
+            {lang === "es" && (<>
+              <div className="space-y-1"><Label>Título — Español</Label><Input value={str("titleEs")} onChange={e => onChange("titleEs", e.target.value)} placeholder="Título del artículo" /></div>
+              <div className="space-y-1"><Label>Extracto — Español</Label><Textarea rows={2} value={str("excerptEs")} onChange={e => onChange("excerptEs", e.target.value)} placeholder="Descripción corta" /></div>
+              <div className="space-y-1"><Label>Contenido — Español</Label><Textarea rows={10} value={str("contentEs")} onChange={e => onChange("contentEs", e.target.value)} placeholder="Contenido completo del artículo..." /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Título — ES</Label><span className="text-xs text-muted-foreground">{str("seoTitleEs").length}/60</span></div>
+                  <Input value={str("seoTitleEs")} onChange={e => onChange("seoTitleEs", e.target.value)} maxLength={60} />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Descripción — ES</Label><span className="text-xs text-muted-foreground">{str("seoDescriptionEs").length}/160</span></div>
+                  <Textarea rows={2} value={str("seoDescriptionEs")} onChange={e => onChange("seoDescriptionEs", e.target.value)} maxLength={160} />
+                </div>
+              </div>
+            </>)}
+            {lang === "pt" && (<>
+              <div className="space-y-1"><Label>Título — Português</Label><Input value={str("titlePt")} onChange={e => onChange("titlePt", e.target.value)} placeholder="Título do artigo" /></div>
+              <div className="space-y-1"><Label>Excerto — Português</Label><Textarea rows={2} value={str("excerptPt")} onChange={e => onChange("excerptPt", e.target.value)} placeholder="Descrição curta" /></div>
+              <div className="space-y-1"><Label>Conteúdo — Português</Label><Textarea rows={10} value={str("contentPt")} onChange={e => onChange("contentPt", e.target.value)} placeholder="Conteúdo completo do artigo..." /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Título — PT</Label><span className="text-xs text-muted-foreground">{str("seoTitlePt").length}/60</span></div>
+                  <Input value={str("seoTitlePt")} onChange={e => onChange("seoTitlePt", e.target.value)} maxLength={60} />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex justify-between"><Label>SEO Descrição — PT</Label><span className="text-xs text-muted-foreground">{str("seoDescriptionPt").length}/160</span></div>
+                  <Textarea rows={2} value={str("seoDescriptionPt")} onChange={e => onChange("seoDescriptionPt", e.target.value)} maxLength={160} />
+                </div>
+              </div>
+            </>)}
+          </div>
+        </div>
+        <SectionLabel>Images</SectionLabel>
+        <ImageUploader value={str("imageUrl")} onChange={v => onChange("imageUrl", v)} label="Featured Image *" />
+        <div className="space-y-2">
+          <Label>Gallery Images</Label>
+          <p className="text-xs text-muted-foreground">Additional images displayed within the article</p>
+          {imgs().map((img, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <Input value={img} onChange={e => { const a = [...imgs()]; a[i] = e.target.value; onChange("galleryImages", a); }} placeholder="https://..." className="flex-1" />
+              {img && <img src={img} alt="" className="w-10 h-8 rounded object-cover border flex-shrink-0" onError={e => (e.target as HTMLImageElement).style.display = "none"} />}
+              <Button type="button" variant="ghost" size="sm" onClick={() => onChange("galleryImages", imgs().filter((_, idx) => idx !== i))}><Trash2 size={13} /></Button>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => onChange("galleryImages", [...imgs(), ""])}>
+            <Plus size={13} />Add Gallery Image
+          </Button>
+        </div>
       </div>
     );
   }
@@ -876,43 +1030,47 @@ import { useState, useRef, useCallback, useEffect } from "react";
     const [editPost, setEditPost] = useState<Post | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
 
-    const emptyForm = { slug: "", title: "", excerpt: "", content: "", imageUrl: "", author: "Janeiro Tour Editorial", category: "Travel Guide", readTimeMinutes: 5, featured: false, published: true };
-    const [form, setForm] = useState(emptyForm);
-    const setF = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
+    const emptyForm: Record<string, unknown> = {
+      slug: "", title: "", titleEs: "", titlePt: "",
+      excerpt: "", excerptEs: "", excerptPt: "",
+      content: "", contentEs: "", contentPt: "",
+      imageUrl: "", galleryImages: [],
+      author: "Janeiro Tour Editorial", category: "Travel Guide", readTimeMinutes: 5,
+      seoTitle: "", seoTitleEs: "", seoTitlePt: "",
+      seoDescription: "", seoDescriptionEs: "", seoDescriptionPt: "",
+      featured: false, published: true,
+    };
+    const [form, setForm] = useState<Record<string, unknown>>(emptyForm);
+    const onChange = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
 
-    const BlogFormFields = ({ values, onChange }: { values: Record<string, unknown>; onChange: (k: string, v: unknown) => void }) => (
-      <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1"><Label>Title *</Label><Input value={values.title as string} onChange={e => onChange("title", e.target.value)} /></div>
-          <div className="space-y-1"><Label>Slug</Label><Input value={values.slug as string} onChange={e => onChange("slug", e.target.value)} /></div>
-        </div>
-        <ImageUploader value={values.imageUrl as string} onChange={v => onChange("imageUrl", v)} label="Featured Image" />
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1"><Label>Author</Label><Input value={values.author as string} onChange={e => onChange("author", e.target.value)} /></div>
-          <div className="space-y-1"><Label>Category</Label><Input value={values.category as string} onChange={e => onChange("category", e.target.value)} /></div>
-        </div>
-        <div className="space-y-1"><Label>Excerpt</Label><Textarea rows={2} value={values.excerpt as string} onChange={e => onChange("excerpt", e.target.value)} /></div>
-        <div className="space-y-1"><Label>Content</Label><Textarea rows={8} value={values.content as string} onChange={e => onChange("content", e.target.value)} /></div>
-        <div className="space-y-1"><Label>Read Time (min)</Label><Input type="number" value={values.readTimeMinutes as number} onChange={e => onChange("readTimeMinutes", parseInt(e.target.value))} className="w-32" /></div>
-        <div className="flex gap-6">
-          <div className="flex items-center gap-2"><Switch checked={values.published as boolean} onCheckedChange={v => onChange("published",v)} /><Label>Published</Label></div>
-          <div className="flex items-center gap-2"><Switch checked={values.featured as boolean} onCheckedChange={v => onChange("featured",v)} /><Label>Featured</Label></div>
-        </div>
-      </div>
-    );
+    const duplicatePost = (post: Post) => {
+      const { id: _id, createdAt: _ca, ...rest } = post as Post & { id: number; createdAt: string };
+      createPost.mutate({
+        data: {
+          ...rest,
+          slug: `${post.slug}-copy-${Date.now().toString(36)}`,
+          title: `${post.title} (Copy)`,
+          published: false,
+          galleryImages: (post.galleryImages ?? []) as string[],
+        } as Parameters<typeof createPost.mutate>[0]["data"],
+      });
+    };
 
     return (
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Travel Guide Posts ({posts?.length ?? 0})</h2>
-          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+          <div>
+            <h2 className="text-2xl font-bold">Travel Guide Posts ({posts?.length ?? 0})</h2>
+            <p className="text-sm text-muted-foreground mt-1">Full multilingual editing — English, Español, Português — with gallery images and SEO</p>
+          </div>
+          <Dialog open={createOpen} onOpenChange={o => { setCreateOpen(o); if (!o) setForm(emptyForm); }}>
             <DialogTrigger asChild><Button className="gap-1"><Plus size={15} /> Add Post</Button></DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader><DialogTitle>Add Travel Guide Post</DialogTitle></DialogHeader>
-              <BlogFormFields values={form} onChange={setF} />
+              <BlogForm values={form} onChange={onChange} />
               <div className="flex gap-3 justify-end pt-3 border-t">
-                <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-                <Button onClick={() => { createPost.mutate({ data: form }); setCreateOpen(false); setForm(emptyForm); }}>Save Post</Button>
+                <Button variant="outline" onClick={() => { setCreateOpen(false); setForm(emptyForm); }}>Cancel</Button>
+                <Button onClick={() => { createPost.mutate({ data: form as unknown as Parameters<typeof createPost.mutate>[0]["data"] }); setCreateOpen(false); setForm(emptyForm); }}>Save Post</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -920,23 +1078,42 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="bg-card border rounded-xl overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow><TableHead>Title</TableHead><TableHead>Category</TableHead><TableHead>Author</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead></TableRow>
+              <TableRow>
+                <TableHead>Title</TableHead><TableHead>Category</TableHead><TableHead>Languages</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Actions</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? [...Array(4)].map((_,i) => <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
+              {isLoading ? [...Array(4)].map((_, i) => <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
                 : posts?.map(post => (
                   <TableRow key={post.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         {post.imageUrl && <img src={post.imageUrl} alt="" className="w-10 h-8 rounded object-cover flex-shrink-0" />}
-                        <span className="font-medium max-w-[180px] truncate">{post.title}</span>
+                        <div>
+                          <span className="font-medium max-w-[180px] truncate block">{post.title}</span>
+                          <span className="text-xs text-muted-foreground">{post.author}</span>
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">{post.category}</TableCell>
-                    <TableCell className="text-muted-foreground text-sm">{post.author}</TableCell>
-                    <TableCell>{post.published && <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Published</Badge>}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Badge variant="outline" className="text-xs">EN</Badge>
+                        {post.titleEs && <Badge variant="outline" className="text-xs">ES</Badge>}
+                        {post.titlePt && <Badge variant="outline" className="text-xs">PT</Badge>}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1 flex-wrap">
+                        {post.published ? <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Published</Badge> : <Badge variant="outline" className="text-muted-foreground text-xs">Draft</Badge>}
+                        {post.featured && <Badge className="bg-primary/80 text-xs text-primary-foreground">Featured</Badge>}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
+                        <Button variant="ghost" size="sm" title="Duplicate post" onClick={() => duplicatePost(post)}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        </Button>
                         <Button variant="ghost" size="sm" onClick={() => setEditPost(post)}><Pencil size={15} /></Button>
                         <ConfirmDelete label="post" onConfirm={() => deletePost.mutate({ id: post.id })} />
                       </div>
@@ -950,9 +1127,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Dialog open={!!editPost} onOpenChange={() => setEditPost(null)}>
             <DialogContent className="max-w-2xl">
               <DialogHeader><DialogTitle>Edit: {editPost.title}</DialogTitle></DialogHeader>
-              <BlogFormFields
+              <BlogForm
                 values={editPost as unknown as Record<string, unknown>}
-                onChange={(k, v) => setEditPost(p => p ? {...p, [k]: v} as Post : null)}
+                onChange={(k, v) => setEditPost(p => p ? { ...p, [k]: v } as Post : null)}
               />
               <div className="flex gap-3 justify-end pt-3 border-t">
                 <Button variant="outline" onClick={() => setEditPost(null)}>Cancel</Button>

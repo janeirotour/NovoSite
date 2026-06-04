@@ -15,15 +15,32 @@ export interface BlogPost {
   /** @nullable */
   titlePt?: string | null;
   excerpt: string;
+  /** @nullable */
+  excerptEs?: string | null;
+  /** @nullable */
+  excerptPt?: string | null;
   content: string;
+  /** @nullable */
+  contentEs?: string | null;
+  /** @nullable */
+  contentPt?: string | null;
   imageUrl: string;
+  galleryImages?: string[];
   author: string;
   category: string;
   readTimeMinutes: number;
   /** @nullable */
   seoTitle?: string | null;
   /** @nullable */
+  seoTitleEs?: string | null;
+  /** @nullable */
+  seoTitlePt?: string | null;
+  /** @nullable */
   seoDescription?: string | null;
+  /** @nullable */
+  seoDescriptionEs?: string | null;
+  /** @nullable */
+  seoDescriptionPt?: string | null;
   featured: boolean;
   published: boolean;
   createdAt: string;

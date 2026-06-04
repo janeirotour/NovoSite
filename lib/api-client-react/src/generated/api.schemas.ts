@@ -208,15 +208,32 @@ export interface BlogPost {
   /** @nullable */
   titlePt?: string | null;
   excerpt: string;
+  /** @nullable */
+  excerptEs?: string | null;
+  /** @nullable */
+  excerptPt?: string | null;
   content: string;
+  /** @nullable */
+  contentEs?: string | null;
+  /** @nullable */
+  contentPt?: string | null;
   imageUrl: string;
+  galleryImages?: string[];
   author: string;
   category: string;
   readTimeMinutes: number;
   /** @nullable */
   seoTitle?: string | null;
   /** @nullable */
+  seoTitleEs?: string | null;
+  /** @nullable */
+  seoTitlePt?: string | null;
+  /** @nullable */
   seoDescription?: string | null;
+  /** @nullable */
+  seoDescriptionEs?: string | null;
+  /** @nullable */
+  seoDescriptionPt?: string | null;
   featured: boolean;
   published: boolean;
   createdAt: string;
@@ -228,13 +245,22 @@ export interface BlogPostInput {
   titleEs?: string;
   titlePt?: string;
   excerpt: string;
+  excerptEs?: string;
+  excerptPt?: string;
   content: string;
+  contentEs?: string;
+  contentPt?: string;
   imageUrl: string;
+  galleryImages?: string[];
   author: string;
   category: string;
   readTimeMinutes: number;
   seoTitle?: string;
+  seoTitleEs?: string;
+  seoTitlePt?: string;
   seoDescription?: string;
+  seoDescriptionEs?: string;
+  seoDescriptionPt?: string;
   featured?: boolean;
   published?: boolean;
 }
@@ -245,13 +271,22 @@ export interface BlogPostUpdate {
   titleEs?: string;
   titlePt?: string;
   excerpt?: string;
+  excerptEs?: string;
+  excerptPt?: string;
   content?: string;
+  contentEs?: string;
+  contentPt?: string;
   imageUrl?: string;
+  galleryImages?: string[];
   author?: string;
   category?: string;
   readTimeMinutes?: number;
   seoTitle?: string;
+  seoTitleEs?: string;
+  seoTitlePt?: string;
   seoDescription?: string;
+  seoDescriptionEs?: string;
+  seoDescriptionPt?: string;
   featured?: boolean;
   published?: boolean;
 }
@@ -337,6 +372,8 @@ export interface ReviewUpdate {
 
 export interface SiteSettings {
   id: number;
+  /** @nullable */
+  siteName?: string | null;
   heroHeadline: string;
   /** @nullable */
   heroHeadlineEs?: string | null;
@@ -349,6 +386,8 @@ export interface SiteSettings {
   heroSubheadlinePt?: string | null;
   heroPrimaryCtaText: string;
   heroSecondaryCtaText: string;
+  /** @nullable */
+  heroImageUrl?: string | null;
   contactEmail: string;
   contactPhone: string;
   contactWhatsapp: string;
@@ -361,9 +400,16 @@ export interface SiteSettings {
   tripadvisorUrl?: string | null;
   /** @nullable */
   googleReviewsUrl?: string | null;
+  /** @nullable */
+  seoTitle?: string | null;
+  /** @nullable */
+  seoDescription?: string | null;
+  /** @nullable */
+  ogImageUrl?: string | null;
 }
 
 export interface SiteSettingsUpdate {
+  siteName?: string;
   heroHeadline?: string;
   heroHeadlineEs?: string;
   heroHeadlinePt?: string;
@@ -372,6 +418,7 @@ export interface SiteSettingsUpdate {
   heroSubheadlinePt?: string;
   heroPrimaryCtaText?: string;
   heroSecondaryCtaText?: string;
+  heroImageUrl?: string;
   contactEmail?: string;
   contactPhone?: string;
   contactWhatsapp?: string;
@@ -380,6 +427,9 @@ export interface SiteSettingsUpdate {
   instagramUrl?: string;
   tripadvisorUrl?: string;
   googleReviewsUrl?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImageUrl?: string;
 }
 
 export interface AdminLoginInput {

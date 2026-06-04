@@ -3,171 +3,20 @@ import { useLanguage } from "@/hooks/use-language";
 import { ChevronDown, MessageCircle, Award } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useListFaqs } from "@workspace/api-client-react";
 
 const WHATSAPP = "https://wa.me/5521965297618";
 
-type FAQ = {
+type FaqDisplay = {
   id: number;
   en: { q: string; a: string };
   es: { q: string; a: string };
   pt: { q: string; a: string };
 };
 
-const FAQS: FAQ[] = [
-  {
-    id: 1,
-    en: {
-      q: "How do I book a tour with Janeiro Tour & Travel?",
-      a: "You can book directly through our website or contact us via WhatsApp at +55 21 96529-7618. Just tell us your travel dates, group size, and interests — we'll confirm availability and send you all the details within a few hours.",
-    },
-    es: {
-      q: "¿Cómo reservo un tour con Janeiro Tour & Travel?",
-      a: "Puedes reservar directamente en nuestro sitio web o contactarnos por WhatsApp al +55 21 96529-7618. Cuéntanos tus fechas de viaje, tamaño del grupo e intereses — confirmaremos disponibilidad y te enviaremos todos los detalles en pocas horas.",
-    },
-    pt: {
-      q: "Como faço para reservar um tour com a Janeiro Tour & Travel?",
-      a: "Você pode reservar diretamente pelo nosso site ou nos contatar pelo WhatsApp no +55 21 96529-7618. Basta nos informar suas datas de viagem, tamanho do grupo e interesses — confirmaremos a disponibilidade e enviaremos todos os detalhes em poucas horas.",
-    },
-  },
-  {
-    id: 2,
-    en: {
-      q: "What payment methods do you accept?",
-      a: "We accept bank transfers, PayPal, and major credit cards. For some day tours, payment can also be made in cash on the day (USD or BRL). Contact us to arrange the best payment option for your booking.",
-    },
-    es: {
-      q: "¿Qué métodos de pago aceptan?",
-      a: "Aceptamos transferencias bancarias, PayPal y las principales tarjetas de crédito. Para algunos tours de día, el pago también puede realizarse en efectivo el mismo día (USD o BRL). Contáctenos para acordar la mejor opción de pago para su reserva.",
-    },
-    pt: {
-      q: "Quais formas de pagamento vocês aceitam?",
-      a: "Aceitamos transferências bancárias, PayPal e os principais cartões de crédito. Para alguns tours de dia, o pagamento também pode ser feito em dinheiro no dia (USD ou BRL). Entre em contato para combinarmos a melhor opção para sua reserva.",
-    },
-  },
-  {
-    id: 3,
-    en: {
-      q: "What is your cancellation policy?",
-      a: "Most tours offer free cancellation up to 24 hours before the scheduled time. Our 4-day Rio Essentials Package requires at least 7 days' notice for a full refund. If a tour is cancelled due to severe weather or unforeseen circumstances, we always offer a full refund or an alternative date.",
-    },
-    es: {
-      q: "¿Cuál es su política de cancelación?",
-      a: "La mayoría de los tours ofrecen cancelación gratuita hasta 24 horas antes del horario programado. Nuestro Paquete Rio Essentials de 4 días requiere al menos 7 días de aviso para reembolso completo. Si un tour se cancela por mal clima o circunstancias imprevistas, siempre ofrecemos reembolso completo o una fecha alternativa.",
-    },
-    pt: {
-      q: "Qual é a política de cancelamento?",
-      a: "A maioria dos tours oferece cancelamento gratuito até 24 horas antes do horário programado. O Pacote Rio Essenciais de 4 dias requer pelo menos 7 dias de aviso para reembolso integral. Se um tour for cancelado por mau tempo ou circunstâncias imprevistas, sempre oferecemos reembolso completo ou uma data alternativa.",
-    },
-  },
-  {
-    id: 4,
-    en: {
-      q: "Do your guides speak English and Spanish?",
-      a: "Yes! All our guides are fluent in English, Spanish, and Portuguese. We are a multicultural team with extensive experience guiding travelers from North America, Europe, and Latin America.",
-    },
-    es: {
-      q: "¿Sus guías hablan inglés y español?",
-      a: "¡Sí! Todos nuestros guías hablan inglés, español y portugués con fluidez. Somos un equipo multicultural con amplia experiencia guiando viajeros de América del Norte, Europa y América Latina.",
-    },
-    pt: {
-      q: "Os guias falam inglês e espanhol?",
-      a: "Sim! Todos os nossos guias falam inglês, espanhol e português com fluência. Somos uma equipe multicultural com vasta experiência conduzindo viajantes da América do Norte, Europa e América Latina.",
-    },
-  },
-  {
-    id: 5,
-    en: {
-      q: "Can the tours be arranged as private experiences?",
-      a: "Absolutely. Every tour we offer can be arranged as a fully private experience for individuals, couples, families, or groups. Private tours allow for flexible timing, customized itineraries, and a more personal connection with your guide.",
-    },
-    es: {
-      q: "¿Los tours pueden organizarse como experiencias privadas?",
-      a: "Por supuesto. Cada tour que ofrecemos puede organizarse como una experiencia completamente privada para individuos, parejas, familias o grupos. Los tours privados permiten horarios flexibles, itinerarios personalizados y una conexión más personal con su guía.",
-    },
-    pt: {
-      q: "Os tours podem ser organizados como experiências privadas?",
-      a: "Com certeza. Cada tour que oferecemos pode ser organizado como uma experiência totalmente privada para indivíduos, casais, famílias ou grupos. Os tours privativos permitem horários flexíveis, itinerários personalizados e uma conexão mais pessoal com seu guia.",
-    },
-  },
-  {
-    id: 6,
-    en: {
-      q: "Is Rio de Janeiro safe for tourists?",
-      a: "Rio de Janeiro is a vibrant city enjoyed by millions of visitors every year. Our guides are locals who know the city deeply and lead all groups through safe, well-known routes. We monitor conditions daily and your safety is always our first priority. We'll share practical tips after booking to help you enjoy Rio with confidence.",
-    },
-    es: {
-      q: "¿Es Río de Janeiro seguro para los turistas?",
-      a: "Río de Janeiro es una ciudad vibrante que disfrutan millones de visitantes cada año. Nuestros guías son locales que conocen la ciudad profundamente y llevan a todos los grupos por rutas seguras y conocidas. Monitoreamos las condiciones diariamente y su seguridad siempre es nuestra primera prioridad. Compartiremos consejos prácticos después de la reserva para que disfrute Río con confianza.",
-    },
-    pt: {
-      q: "O Rio de Janeiro é seguro para turistas?",
-      a: "O Rio de Janeiro é uma cidade vibrante desfrutada por milhões de visitantes todos os anos. Nossos guias são locais que conhecem a cidade profundamente e levam todos os grupos por rotas seguras e conhecidas. Monitoramos as condições diariamente e sua segurança é sempre nossa primeira prioridade. Compartilharemos dicas práticas após a reserva para que você aproveite o Rio com confiança.",
-    },
-  },
-  {
-    id: 7,
-    en: {
-      q: "What should I wear and bring on a tour?",
-      a: "Comfortable walking shoes are a must. We also recommend sunscreen, a hat, a refillable water bottle, and a small bag for personal items. For outdoor adventures like hang gliding or Amazon tours, specific gear recommendations will be shared after booking. Light, breathable clothing works best in Rio's tropical climate.",
-    },
-    es: {
-      q: "¿Qué debo usar y llevar a un tour?",
-      a: "Los zapatos cómodos para caminar son imprescindibles. También recomendamos protector solar, sombrero, botella de agua reutilizable y una pequeña bolsa para artículos personales. Para aventuras al aire libre como parapente o tours por el Amazonas, se compartirán recomendaciones específicas de equipo después de la reserva. La ropa ligera y transpirable funciona mejor en el clima tropical de Río.",
-    },
-    pt: {
-      q: "O que devo usar e levar em um tour?",
-      a: "Calçados confortáveis para caminhada são essenciais. Também recomendamos protetor solar, chapéu, garrafa de água reutilizável e uma mochila pequena para itens pessoais. Para aventuras ao ar livre como asa delta ou tours pela Amazônia, recomendações específicas de equipamentos serão compartilhadas após a reserva. Roupas leves e respiráveis funcionam melhor no clima tropical do Rio.",
-    },
-  },
-  {
-    id: 8,
-    en: {
-      q: "How far in advance should I book?",
-      a: "We recommend booking at least 2–3 days in advance, especially during peak season (December–February and July). For our 4-day Rio Essentials Package or any custom itinerary, we suggest booking at least 1 week ahead to secure availability and make all necessary arrangements.",
-    },
-    es: {
-      q: "¿Con cuánta anticipación debo reservar?",
-      a: "Recomendamos reservar con al menos 2 a 3 días de anticipación, especialmente durante la temporada alta (diciembre-febrero y julio). Para nuestro Paquete Rio Essentials de 4 días o cualquier itinerario personalizado, sugerimos reservar con al menos 1 semana de anticipación para asegurar disponibilidad y hacer todos los arreglos necesarios.",
-    },
-    pt: {
-      q: "Com quanto tempo de antecedência devo reservar?",
-      a: "Recomendamos reservar com pelo menos 2 a 3 dias de antecedência, especialmente durante a alta temporada (dezembro-fevereiro e julho). Para o Pacote Rio Essenciais de 4 dias ou qualquer itinerário personalizado, sugerimos reservar com pelo menos 1 semana de antecedência para garantir disponibilidade e fazer todos os arranjos necessários.",
-    },
-  },
-  {
-    id: 9,
-    en: {
-      q: "Is Janeiro Tour & Travel a licensed operator?",
-      a: "Yes. Janeiro Tour & Travel is certified by the Brazilian Ministry of Tourism under registration n° 20.966.047.0001/11, in full compliance with Brazilian tourism regulations. You can book with complete confidence.",
-    },
-    es: {
-      q: "¿Janeiro Tour & Travel es un operador con licencia?",
-      a: "Sí. Janeiro Tour & Travel está certificada por el Ministerio de Turismo de Brasil bajo el registro n° 20.966.047.0001/11, en plena conformidad con las regulaciones turísticas brasileñas. Puede reservar con total confianza.",
-    },
-    pt: {
-      q: "A Janeiro Tour & Travel é uma operadora licenciada?",
-      a: "Sim. A Janeiro Tour & Travel é certificada pelo Ministério do Turismo do Brasil sob o registro n° 20.966.047.0001/11, em plena conformidade com as regulamentações turísticas brasileiras. Você pode reservar com total confiança.",
-    },
-  },
-  {
-    id: 10,
-    en: {
-      q: "What makes Janeiro Tour & Travel different?",
-      a: "We are a small, local team — born and raised in Rio de Janeiro. We offer authentic, human, and personalized experiences rather than mass tourism. Our guides are passionate storytellers who genuinely love sharing Brazil with the world. Every tour is an opportunity to connect with the real soul of this extraordinary country.",
-    },
-    es: {
-      q: "¿Qué hace diferente a Janeiro Tour & Travel?",
-      a: "Somos un equipo local pequeño — nacidos y criados en Río de Janeiro. Ofrecemos experiencias auténticas, humanas y personalizadas en lugar de turismo masivo. Nuestros guías son narradores apasionados que genuinamente aman compartir Brasil con el mundo. Cada tour es una oportunidad para conectarse con el verdadero alma de este extraordinario país.",
-    },
-    pt: {
-      q: "O que diferencia a Janeiro Tour & Travel?",
-      a: "Somos uma equipe local pequena — nascidos e criados no Rio de Janeiro. Oferecemos experiências autênticas, humanas e personalizadas em vez de turismo em massa. Nossos guias são narradores apaixonados que genuinamente amam compartilhar o Brasil com o mundo. Cada tour é uma oportunidade de se conectar com a verdadeira alma deste país extraordinário.",
-    },
-  },
-];
-
-function FaqItem({ faq, lang, open, onToggle }: { faq: FAQ; lang: string; open: boolean; onToggle: () => void }) {
+function FaqItem({ faq, lang, open, onToggle }: { faq: FaqDisplay; lang: string; open: boolean; onToggle: () => void }) {
   const content = lang === "es" ? faq.es : lang === "pt" ? faq.pt : faq.en;
   return (
     <div className={cn("border rounded-xl overflow-hidden transition-colors", open ? "border-[#FFB600]/40 bg-[#FFB600]/5" : "border-gray-200 bg-white")}>
@@ -189,7 +38,15 @@ function FaqItem({ faq, lang, open, onToggle }: { faq: FAQ; lang: string; open: 
 
 export default function FaqPage() {
   const { lang } = useLanguage();
-  const [openId, setOpenId] = useState<number | null>(1);
+  const [openId, setOpenId] = useState<number | null>(null);
+  const { data: rawFaqs, isLoading } = useListFaqs();
+
+  const faqs: FaqDisplay[] = (rawFaqs ?? []).map(f => ({
+    id: f.id,
+    en: { q: f.question, a: f.answer },
+    es: { q: f.questionEs ?? f.question, a: f.answerEs ?? f.answer },
+    pt: { q: f.questionPt ?? f.question, a: f.answerPt ?? f.answer },
+  }));
 
   const t = {
     en: {
@@ -261,17 +118,23 @@ export default function FaqPage() {
 
       {/* FAQ list */}
       <section className="max-w-3xl mx-auto px-4 py-16">
-        <div className="space-y-3">
-          {FAQS.map((faq) => (
-            <FaqItem
-              key={faq.id}
-              faq={faq}
-              lang={lang}
-              open={openId === faq.id}
-              onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="space-y-3">
+            {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {faqs.map((faq) => (
+              <FaqItem
+                key={faq.id}
+                faq={faq}
+                lang={lang}
+                open={openId === faq.id}
+                onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
+              />
+            ))}
+          </div>
+        )}
 
         {/* CTA */}
         <div className="mt-16 text-center p-10 bg-gray-50 rounded-2xl border border-gray-200">

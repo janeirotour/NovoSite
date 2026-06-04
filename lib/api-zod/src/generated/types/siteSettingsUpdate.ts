@@ -7,6 +7,7 @@
  */
 
 export interface SiteSettingsUpdate {
+  siteName?: string;
   heroHeadline?: string;
   heroHeadlineEs?: string;
   heroHeadlinePt?: string;
@@ -15,6 +16,7 @@ export interface SiteSettingsUpdate {
   heroSubheadlinePt?: string;
   heroPrimaryCtaText?: string;
   heroSecondaryCtaText?: string;
+  heroImageUrl?: string;
   contactEmail?: string;
   contactPhone?: string;
   contactWhatsapp?: string;
@@ -23,4 +25,7 @@ export interface SiteSettingsUpdate {
   instagramUrl?: string;
   tripadvisorUrl?: string;
   googleReviewsUrl?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImageUrl?: string;
 }

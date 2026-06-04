@@ -1,0 +1,217 @@
+Admin Dashboard Improvements Required
+
+The current visual editor is not providing full editing capabilities.
+
+Please improve the Admin Dashboard and Visual Editor with the following requirements:
+
+1. Full Content Control
+
+I need complete control over all website content.
+
+Requirements:
+
+* Every text on the website must be editable.
+* Every title must be editable.
+* Every subtitle must be editable.
+* Every button text must be editable.
+* Every CTA must be editable.
+* Every description must be editable.
+* Every section must be editable.
+* Every menu item must be editable.
+* Every footer element must be editable.
+* Every travel guide section must be editable.
+* Every destination section must be editable.
+* Every experience section must be editable.
+
+No content should be hardcoded.
+
+2. Full Image Management
+
+I need full control over images.
+
+Requirements:
+
+* Upload images directly from my computer.
+* Replace any image on the website.
+* Delete existing images.
+* Add new images anywhere on the website.
+* Edit homepage images.
+* Edit destination images.
+* Edit experience images.
+* Edit blog images.
+* Edit About Us images.
+* Edit Our Story images.
+* Edit footer images.
+* Edit hero banner images.
+* Edit CTA images.
+* Edit gallery images.
+
+No image should require code changes.
+
+3. Visual Page Editor Improvements
+
+Improve the Elementor-style editor.
+
+Requirements:
+
+* Click and edit text directly.
+* Click and replace images directly.
+* Drag and drop image uploads.
+* Visual preview before publishing.
+* Save, Preview and Publish buttons.
+* User-friendly interface.
+* No coding required.
+* Live editing experience.
+* Responsive editing preview.
+
+4. Blog / Travel Guide Improvements
+
+Requirements:
+
+* Add new articles.
+* Edit existing articles.
+* Duplicate articles.
+* Delete articles.
+* Publish or unpublish articles.
+* Upload featured images.
+* Upload multiple images inside articles.
+* Insert images between content sections.
+* Add image galleries.
+* Edit SEO title.
+* Edit meta description.
+* Edit categories.
+* Edit destinations.
+* Create custom article layouts.
+
+5. Blog Image Standardization
+
+All blog images must automatically follow a consistent format.
+
+Requirements:
+
+* Same aspect ratio across all blog cards.
+* Same image dimensions.
+* Same image style.
+* Proper cropping and positioning.
+* Responsive on desktop and mobile.
+* Professional travel magazine appearance.
+* Automatic image optimization.
+
+6. Placeholder Content & Flexible Content Creation
+
+Requirements:
+
+* Add premium Brazil travel placeholder images.
+* Make all placeholder images replaceable from the admin dashboard.
+* Allow creation of new blog posts.
+* Allow creation of new destination pages.
+* Allow creation of new experience pages.
+* Allow creation of custom landing pages.
+* Allow duplication of existing pages as templates.
+* Allow publishing or unpublishing content.
+
+7. Original Travel Guide Content
+
+Replace generic placeholder content with original content written specifically for Janeiro Tour & Travel.
+
+Requirements:
+
+* Original content only.
+* SEO-friendly writing.
+* No plagiarism.
+* No copied travel articles.
+* Unique wording.
+* Written specifically for Janeiro Tour & Travel.
+* Expandable and editable later.
+
+Create starter content for:
+
+* Best Places to Visit in Brazil
+* How to Visit Christ the Redeemer
+* Rio de Janeiro Travel Guide
+* Iguazu Falls Travel Guide
+* Brazil Travel Tips for Americans
+* Bahia Travel Guide
+* Recife Travel Guide
+* São Paulo Travel Guide
+* Amazon Rainforest Travel Guide
+
+8. Full Multilingual Content Management
+
+Apply all editing capabilities across all supported languages.
+
+Languages:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Requirements:
+
+* Every page editable independently in each language.
+* Every blog post editable independently in each language.
+* Every destination page editable independently in each language.
+* Every experience page editable independently in each language.
+* Every menu item editable independently in each language.
+* Every CTA editable independently in each language.
+* Every SEO title editable independently in each language.
+* Every meta description editable independently in each language.
+* Every image caption editable independently in each language.
+* Every footer section editable independently in each language.
+
+9. Translation Management System
+
+Requirements:
+
+* Do not use automatic machine translation on the frontend.
+* Store dedicated content for each language.
+* Allow manual editing of all translations.
+* Allow publishing content in one language without affecting others.
+* Allow creating language-specific pages and posts.
+* Allow duplicating content from one language and translating manually.
+* Allow different SEO metadata for each language.
+
+10. Multilingual URLs
+
+Requirements:
+
+English:
+/en/travel-guide/rio-de-janeiro-guide
+
+Spanish:
+/es/guia-de-viaje/rio-de-janeiro
+
+Portuguese:
+/pt-br/guia-de-viagem/rio-de-janeiro
+
+11. Regiondo Management
+
+For every experience:
+
+* Allow adding Regiondo widget embed code.
+* Allow editing Regiondo widget embed code.
+* Allow enabling/disabling Regiondo widgets.
+* Automatically display the widget on the correct experience page.
+
+12. Important
+
+Do not redesign the website.
+
+Preserve:
+
+* Existing branding
+* Existing colors
+* Existing visual identity
+* Existing layout structure
+
+Only improve:
+
+* Content management
+* Image management
+* Visual editor flexibility
+* Blog management
+* Experience management
+* Translation management
+* Regiondo integration
+
+The final goal is to make the entire website fully editable without touching code while preserving the Janeiro Tour & Travel brand experience.

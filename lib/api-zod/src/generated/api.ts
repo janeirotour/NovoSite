@@ -480,13 +480,22 @@ export const ListBlogPostsResponseItem = zod.object({
   "titleEs": zod.string().nullish(),
   "titlePt": zod.string().nullish(),
   "excerpt": zod.string(),
+  "excerptEs": zod.string().nullish(),
+  "excerptPt": zod.string().nullish(),
   "content": zod.string(),
+  "contentEs": zod.string().nullish(),
+  "contentPt": zod.string().nullish(),
   "imageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
   "author": zod.string(),
   "category": zod.string(),
   "readTimeMinutes": zod.number(),
   "seoTitle": zod.string().nullish(),
+  "seoTitleEs": zod.string().nullish(),
+  "seoTitlePt": zod.string().nullish(),
   "seoDescription": zod.string().nullish(),
+  "seoDescriptionEs": zod.string().nullish(),
+  "seoDescriptionPt": zod.string().nullish(),
   "featured": zod.boolean(),
   "published": zod.boolean(),
   "createdAt": zod.string()
@@ -503,13 +512,22 @@ export const CreateBlogPostBody = zod.object({
   "titleEs": zod.string().optional(),
   "titlePt": zod.string().optional(),
   "excerpt": zod.string(),
+  "excerptEs": zod.string().optional(),
+  "excerptPt": zod.string().optional(),
   "content": zod.string(),
+  "contentEs": zod.string().optional(),
+  "contentPt": zod.string().optional(),
   "imageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
   "author": zod.string(),
   "category": zod.string(),
   "readTimeMinutes": zod.number(),
   "seoTitle": zod.string().optional(),
+  "seoTitleEs": zod.string().optional(),
+  "seoTitlePt": zod.string().optional(),
   "seoDescription": zod.string().optional(),
+  "seoDescriptionEs": zod.string().optional(),
+  "seoDescriptionPt": zod.string().optional(),
   "featured": zod.boolean().optional(),
   "published": zod.boolean().optional()
 })
@@ -529,13 +547,22 @@ export const GetBlogPostResponse = zod.object({
   "titleEs": zod.string().nullish(),
   "titlePt": zod.string().nullish(),
   "excerpt": zod.string(),
+  "excerptEs": zod.string().nullish(),
+  "excerptPt": zod.string().nullish(),
   "content": zod.string(),
+  "contentEs": zod.string().nullish(),
+  "contentPt": zod.string().nullish(),
   "imageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
   "author": zod.string(),
   "category": zod.string(),
   "readTimeMinutes": zod.number(),
   "seoTitle": zod.string().nullish(),
+  "seoTitleEs": zod.string().nullish(),
+  "seoTitlePt": zod.string().nullish(),
   "seoDescription": zod.string().nullish(),
+  "seoDescriptionEs": zod.string().nullish(),
+  "seoDescriptionPt": zod.string().nullish(),
   "featured": zod.boolean(),
   "published": zod.boolean(),
   "createdAt": zod.string()
@@ -555,13 +582,22 @@ export const UpdateBlogPostBody = zod.object({
   "titleEs": zod.string().optional(),
   "titlePt": zod.string().optional(),
   "excerpt": zod.string().optional(),
+  "excerptEs": zod.string().optional(),
+  "excerptPt": zod.string().optional(),
   "content": zod.string().optional(),
+  "contentEs": zod.string().optional(),
+  "contentPt": zod.string().optional(),
   "imageUrl": zod.string().optional(),
+  "galleryImages": zod.array(zod.string()).optional(),
   "author": zod.string().optional(),
   "category": zod.string().optional(),
   "readTimeMinutes": zod.number().optional(),
   "seoTitle": zod.string().optional(),
+  "seoTitleEs": zod.string().optional(),
+  "seoTitlePt": zod.string().optional(),
   "seoDescription": zod.string().optional(),
+  "seoDescriptionEs": zod.string().optional(),
+  "seoDescriptionPt": zod.string().optional(),
   "featured": zod.boolean().optional(),
   "published": zod.boolean().optional()
 })
@@ -573,13 +609,22 @@ export const UpdateBlogPostResponse = zod.object({
   "titleEs": zod.string().nullish(),
   "titlePt": zod.string().nullish(),
   "excerpt": zod.string(),
+  "excerptEs": zod.string().nullish(),
+  "excerptPt": zod.string().nullish(),
   "content": zod.string(),
+  "contentEs": zod.string().nullish(),
+  "contentPt": zod.string().nullish(),
   "imageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
   "author": zod.string(),
   "category": zod.string(),
   "readTimeMinutes": zod.number(),
   "seoTitle": zod.string().nullish(),
+  "seoTitleEs": zod.string().nullish(),
+  "seoTitlePt": zod.string().nullish(),
   "seoDescription": zod.string().nullish(),
+  "seoDescriptionEs": zod.string().nullish(),
+  "seoDescriptionPt": zod.string().nullish(),
   "featured": zod.boolean(),
   "published": zod.boolean(),
   "createdAt": zod.string()
@@ -754,6 +799,7 @@ export const DeleteReviewParams = zod.object({
  */
 export const GetSettingsResponse = zod.object({
   "id": zod.number(),
+  "siteName": zod.string().nullish(),
   "heroHeadline": zod.string(),
   "heroHeadlineEs": zod.string().nullish(),
   "heroHeadlinePt": zod.string().nullish(),
@@ -762,6 +808,7 @@ export const GetSettingsResponse = zod.object({
   "heroSubheadlinePt": zod.string().nullish(),
   "heroPrimaryCtaText": zod.string(),
   "heroSecondaryCtaText": zod.string(),
+  "heroImageUrl": zod.string().nullish(),
   "contactEmail": zod.string(),
   "contactPhone": zod.string(),
   "contactWhatsapp": zod.string(),
@@ -769,7 +816,10 @@ export const GetSettingsResponse = zod.object({
   "facebookUrl": zod.string().nullish(),
   "instagramUrl": zod.string().nullish(),
   "tripadvisorUrl": zod.string().nullish(),
-  "googleReviewsUrl": zod.string().nullish()
+  "googleReviewsUrl": zod.string().nullish(),
+  "seoTitle": zod.string().nullish(),
+  "seoDescription": zod.string().nullish(),
+  "ogImageUrl": zod.string().nullish()
 })
 
 
@@ -777,6 +827,7 @@ export const GetSettingsResponse = zod.object({
  * @summary Update site settings
  */
 export const UpdateSettingsBody = zod.object({
+  "siteName": zod.string().optional(),
   "heroHeadline": zod.string().optional(),
   "heroHeadlineEs": zod.string().optional(),
   "heroHeadlinePt": zod.string().optional(),
@@ -785,6 +836,7 @@ export const UpdateSettingsBody = zod.object({
   "heroSubheadlinePt": zod.string().optional(),
   "heroPrimaryCtaText": zod.string().optional(),
   "heroSecondaryCtaText": zod.string().optional(),
+  "heroImageUrl": zod.string().optional(),
   "contactEmail": zod.string().optional(),
   "contactPhone": zod.string().optional(),
   "contactWhatsapp": zod.string().optional(),
@@ -792,11 +844,15 @@ export const UpdateSettingsBody = zod.object({
   "facebookUrl": zod.string().optional(),
   "instagramUrl": zod.string().optional(),
   "tripadvisorUrl": zod.string().optional(),
-  "googleReviewsUrl": zod.string().optional()
+  "googleReviewsUrl": zod.string().optional(),
+  "seoTitle": zod.string().optional(),
+  "seoDescription": zod.string().optional(),
+  "ogImageUrl": zod.string().optional()
 })
 
 export const UpdateSettingsResponse = zod.object({
   "id": zod.number(),
+  "siteName": zod.string().nullish(),
   "heroHeadline": zod.string(),
   "heroHeadlineEs": zod.string().nullish(),
   "heroHeadlinePt": zod.string().nullish(),
@@ -805,6 +861,7 @@ export const UpdateSettingsResponse = zod.object({
   "heroSubheadlinePt": zod.string().nullish(),
   "heroPrimaryCtaText": zod.string(),
   "heroSecondaryCtaText": zod.string(),
+  "heroImageUrl": zod.string().nullish(),
   "contactEmail": zod.string(),
   "contactPhone": zod.string(),
   "contactWhatsapp": zod.string(),
@@ -812,7 +869,10 @@ export const UpdateSettingsResponse = zod.object({
   "facebookUrl": zod.string().nullish(),
   "instagramUrl": zod.string().nullish(),
   "tripadvisorUrl": zod.string().nullish(),
-  "googleReviewsUrl": zod.string().nullish()
+  "googleReviewsUrl": zod.string().nullish(),
+  "seoTitle": zod.string().nullish(),
+  "seoDescription": zod.string().nullish(),
+  "ogImageUrl": zod.string().nullish()
 })
 
 
