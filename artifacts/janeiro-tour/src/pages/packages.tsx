@@ -93,17 +93,16 @@ export default function PackagesPage() {
                   key={pkg.id}
                   className={`relative bg-card border rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 grid lg:grid-cols-5`}
                 >
-                  {/* Badge */}
-                  {pkg.badge && (
-                    <div className={`absolute top-5 left-5 z-10 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow ${BADGE_STYLES[pkg.badgeColor ?? "green"] ?? BADGE_STYLES.green}`}>
-                      {pkg.badge === "Best Seller" ? (
-                        <span className="flex items-center gap-1"><Star size={11} fill="currentColor" />{pkg.badge}</span>
-                      ) : pkg.badge}
-                    </div>
-                  )}
-
                   {/* Image — col-span-2 */}
                   <div className={`relative lg:col-span-2 min-h-72 lg:min-h-0 ${isReversed ? "lg:order-last" : ""}`}>
+                    {/* Badge — overlaid on photo */}
+                    {pkg.badge && (
+                      <div className={`absolute top-5 left-5 z-10 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow ${BADGE_STYLES[pkg.badgeColor ?? "green"] ?? BADGE_STYLES.green}`}>
+                        {pkg.badge === "Best Seller" ? (
+                          <span className="flex items-center gap-1"><Star size={11} fill="currentColor" />{pkg.badge}</span>
+                        ) : pkg.badge}
+                      </div>
+                    )}
                     <img
                       src={pkg.imageUrl}
                       alt={pkg.title}
