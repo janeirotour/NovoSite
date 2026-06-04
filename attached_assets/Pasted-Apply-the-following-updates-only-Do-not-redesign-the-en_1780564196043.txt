@@ -1,0 +1,141 @@
+Apply the following updates only. Do not redesign the entire website and do not modify unrelated sections.
+
+Update Hero Phrase
+
+Replace:
+
+"Discover Brazil Through the Eyes of Those Who Love It"
+
+With a more premium and inspiring headline:
+
+"Experience the Authentic Soul of Brazil"
+
+or another luxury travel-focused headline that feels elegant, emotional and internationally appealing.
+
+Remove Footer Duplication
+
+Remove all duplicated footer sections from every page on the website.
+
+Requirements:
+
+Only one footer should exist per page.
+Apply this correction site-wide.
+Preserve the existing footer design and branding.
+Ensure consistency across all pages.
+Destinations Cleanup
+
+Remove all references to destinations that are not officially offered.
+
+The only destinations displayed anywhere on the website should be:
+
+Rio de Janeiro
+São Paulo
+Bahia
+Foz do Iguaçu
+Recife
+Amazon Rainforest
+
+Remove any references to:
+
+Pantanal
+Paraty
+Florianópolis
+Any other destination not listed above
+
+Apply this update across:
+
+Homepage
+Destination pages
+Menus
+Experiences
+Search filters
+Blog highlights
+Cards
+Footer links
+Internal navigation
+Experiences Cleanup
+
+Remove any Pantanal-related experiences or references.
+
+Only display experiences related to the official destinations listed above.
+
+Premium Destinations Page
+
+When users click "Destinations", open a dedicated premium destination page.
+
+Requirements:
+
+Luxury travel design
+Premium visual hierarchy
+Cinematic destination imagery
+Elegant spacing
+Consistent with Janeiro Tour & Travel branding
+
+Create destination cards for:
+
+Rio de Janeiro
+São Paulo
+Bahia
+Foz do Iguaçu
+Recife
+Amazon Rainforest
+
+Each destination card should include:
+
+Premium banner image
+Destination title
+Short luxury travel description
+Call-to-action button
+
+Example structure:
+
+Destination Banner
+Short destination overview
+Featured experiences
+Explore destination button
+
+The page should feel similar to a luxury travel brand rather than a generic tourism directory.
+
+Language Translation System
+
+Improve multilingual functionality.
+
+When a visitor changes language:
+
+Translate the entire website automatically.
+Translate all navigation items.
+Translate all buttons.
+Translate all pages.
+Translate all destination content.
+Translate all experience content.
+Translate blog posts.
+Translate footer content.
+Translate contact forms.
+Translate SEO metadata where supported.
+
+Languages:
+
+English
+Spanish
+Brazilian Portuguese
+
+Requirements:
+
+No mixed-language content.
+No untranslated sections.
+No placeholder text remaining in another language.
+Ensure a complete and professional multilingual experience across the entire website.
+Brand Consistency
+
+Maintain Janeiro Tour & Travel branding throughout the website.
+
+Do not redesign the website.
+
+Preserve:
+
+Existing structure
+Existing colors
+Existing logo
+Existing visual identity
+
+Only apply the updates requested above.

@@ -15,6 +15,7 @@ export function Footer() {
     { href: "/destinations/5", label: "Bahia" },
     { href: "/destinations/3", label: "Foz do Iguaçu" },
     { href: "/destinations/9", label: "Recife" },
+    { href: "/destinations", label: lang === "es" ? "Amazonía" : lang === "pt" ? "Floresta Amazônica" : "Amazon Rainforest" },
   ];
 
   const experiences = [

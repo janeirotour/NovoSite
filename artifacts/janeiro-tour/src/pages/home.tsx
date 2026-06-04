@@ -145,7 +145,7 @@ export default function Home() {
                 {lang === "en" ? "Where will you go?" : lang === "es" ? "¿A dónde irás?" : "Para onde vai?"}
               </p>
               <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">
-                {lang === "en" ? "Five Cities. Each One Stays With You." : lang === "es" ? "Cinco Ciudades. Cada Una te Marca." : "Cinco Cidades. Cada Uma Fica em Você."}
+                {lang === "en" ? "Six Destinations. Each One Stays With You." : lang === "es" ? "Seis Destinos. Cada Uno te Marca." : "Seis Destinos. Cada Um Fica em Você."}
               </h2>
               <p className="text-muted-foreground text-base max-w-xl">
                 {lang === "en"

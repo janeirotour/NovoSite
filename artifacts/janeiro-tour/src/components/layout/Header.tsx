@@ -12,6 +12,7 @@ const destinations = [
   { href: "/destinations/5", en: "Bahia", es: "Bahía", pt: "Bahia" },
   { href: "/destinations/3", en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu" },
   { href: "/destinations/9", en: "Recife", es: "Recife", pt: "Recife" },
+  { href: "/destinations", en: "Amazon Rainforest", es: "Amazonía", pt: "Floresta Amazônica" },
 ];
 
 const experiences = [

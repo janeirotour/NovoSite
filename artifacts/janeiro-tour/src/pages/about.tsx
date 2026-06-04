@@ -240,7 +240,7 @@ export default function AboutPage() {
             Welcome to Brasil
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-5 leading-tight">
-            Discover Brazil Through the Eyes of Those Who Love It
+            Experience the Authentic Soul of Brazil
           </h2>
           <p className="text-white/70 text-lg mb-10 max-w-2xl mx-auto">
             Welcome to Brazil. Welcome to Janeiro Tour &amp; Travel.
