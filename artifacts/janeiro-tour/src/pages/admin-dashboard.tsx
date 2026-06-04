@@ -76,34 +76,23 @@ import { useState, useRef, useCallback, useEffect } from "react";
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const compressImage = (file: File): Promise<string> =>
+    const readFileAsDataUrl = (file: File): Promise<string> =>
       new Promise((resolve, reject) => {
-        const img = new Image();
-        const objectUrl = URL.createObjectURL(file);
-        img.onload = () => {
-          URL.revokeObjectURL(objectUrl);
-          const MAX = 1600;
-          let { width, height } = img;
-          if (width > MAX || height > MAX) {
-            if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
-            else { width = Math.round(width * MAX / height); height = MAX; }
-          }
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d")!;
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", 0.85));
-        };
-        img.onerror = reject;
-        img.src = objectUrl;
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error("FileReader error: " + reader.error?.message));
+        reader.readAsDataURL(file);
       });
 
     const handleFile = useCallback(async (file: File) => {
       setUploading(true);
       setError(null);
       try {
-        const dataUrl = await compressImage(file);
+        if (file.size > 10 * 1024 * 1024) {
+          setError("Arquivo muito grande. Use uma imagem menor que 10MB.");
+          return;
+        }
+        const dataUrl = await readFileAsDataUrl(file);
         const res = await fetch("/api/upload/image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -114,10 +103,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
         if (data.url) {
           onChange(data.url);
         } else {
-          setError(data.error ?? "Upload failed. Try using a URL instead.");
+          setError(data.error ?? "Upload falhou. Tente usar uma URL.");
         }
-      } catch {
-        setError("Upload failed. Check your connection and try again.");
+      } catch (err) {
+        console.error("[ImageUploader] upload error:", err);
+        setError("Upload falhou: " + String(err instanceof Error ? err.message : err));
       } finally {
         setUploading(false);
       }
