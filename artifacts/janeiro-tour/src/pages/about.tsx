@@ -233,7 +233,7 @@ export default function AboutPage() {
                   On May 3, 2022, the Rio de Janeiro City Council awarded <strong className="text-gray-800">Dandara de Souza Siqueira</strong> an official Motion of Recognition and Praise for her outstanding contribution to tourism in the city of Rio de Janeiro.
                 </p>
                 <p>
-                  The document highlights her role as the founder of Janeiro Tour &amp; Travel, her work on the <em>"Rio para Cariocas e Fluminenses"</em> project, and her contribution to <strong className="text-gray-800">AfroTrip</strong> — an initiative that gives Black travelers from around the world the opportunity to experience Brazil through an Afrocentric lens.
+                  The recognition highlights her dedication to promoting the cultural, historical and social richness of Rio de Janeiro — connecting visitors from around the world with the authentic spirit of the city through immersive, community-rooted experiences.
                 </p>
                 <p>
                   The motion was signed by City Councilwoman <strong className="text-gray-800">Tainá de Paula</strong> at the Teotônio Villela Assembly Chamber.
