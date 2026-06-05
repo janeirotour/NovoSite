@@ -48,7 +48,7 @@ export default function FaqPage() {
     pt: { q: f.questionPt ?? f.question, a: f.answerPt ?? f.answer },
   }));
 
-  const t = {
+  const tx = {
     en: {
       tag: "Help Center",
       h1: "Frequently Asked Questions",
@@ -82,6 +82,28 @@ export default function FaqPage() {
       cert: "Certificada pelo Ministério do Turismo do Brasil",
       certNum: "Registro n° 20.966.047.0001/11",
     },
+    fr: {
+      tag: "Centre d'Aide",
+      h1: "Questions Fréquemment Posées",
+      sub: "Tout ce que vous devez savoir sur les voyages avec Janeiro Tour & Travel.",
+      still: "Vous avez encore des questions?",
+      stillSub: "Notre équipe est disponible 7 jours sur 7 via WhatsApp ou email.",
+      wa: "Chatter sur WhatsApp",
+      contact: "Nous Contacter",
+      cert: "Certifiée par le Ministère du Tourisme du Brésil",
+      certNum: "Enregistrement n° 20.966.047.0001/11",
+    },
+    de: {
+      tag: "Hilfecenter",
+      h1: "Häufig Gestellte Fragen",
+      sub: "Alles, was Sie über Reisen mit Janeiro Tour & Travel wissen müssen.",
+      still: "Haben Sie noch Fragen?",
+      stillSub: "Unser Team ist 7 Tage die Woche per WhatsApp oder E-Mail erreichbar.",
+      wa: "WhatsApp Chat",
+      contact: "Kontaktieren Sie uns",
+      cert: "Zertifiziert vom Brasilianischen Tourismusministerium",
+      certNum: "Registrierung n° 20.966.047.0001/11",
+    },
   }[lang] ?? {
     tag: "Help Center",
     h1: "Frequently Asked Questions",
@@ -100,9 +122,9 @@ export default function FaqPage() {
       <section className="bg-neutral-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFB600]/15 to-[#009743]/10" />
         <div className="relative max-w-3xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-4">{t.tag}</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{t.h1}</h1>
-          <p className="text-white/70 text-lg">{t.sub}</p>
+          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-4">{tx.tag}</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tx.h1}</h1>
+          <p className="text-white/70 text-lg">{tx.sub}</p>
         </div>
       </section>
 
@@ -111,7 +133,7 @@ export default function FaqPage() {
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-center gap-3">
           <Award className="w-5 h-5 text-[#009743] flex-shrink-0" />
           <p className="text-sm text-[#009743] font-medium">
-            {t.cert} — <span className="font-semibold">{t.certNum}</span>
+            {tx.cert} — <span className="font-semibold">{tx.certNum}</span>
           </p>
         </div>
       </div>
@@ -138,18 +160,18 @@ export default function FaqPage() {
 
         {/* CTA */}
         <div className="mt-16 text-center p-10 bg-gray-50 rounded-2xl border border-gray-200">
-          <h3 className="text-2xl font-bold mb-2 text-gray-900">{t.still}</h3>
-          <p className="text-gray-500 mb-7">{t.stillSub}</p>
+          <h3 className="text-2xl font-bold mb-2 text-gray-900">{tx.still}</h3>
+          <p className="text-gray-500 mb-7">{tx.stillSub}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href={WHATSAPP} target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white h-12 px-8 font-semibold gap-2">
                 <MessageCircle className="w-4 h-4" />
-                {t.wa}
+                {tx.wa}
               </Button>
             </a>
             <Link href="/contact">
               <Button variant="outline" size="lg" className="h-12 px-8">
-                {t.contact}
+                {tx.contact}
               </Button>
             </Link>
           </div>

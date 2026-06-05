@@ -2,39 +2,41 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
-import { Menu, X, ChevronDown, Globe, MessageCircle, ShoppingCart } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Lang = "en" | "es" | "pt";
+type Lang = "en" | "es" | "pt" | "fr" | "de";
 
 const destinations = [
-  { href: "/destinations/1", en: "Rio de Janeiro", es: "Río de Janeiro", pt: "Rio de Janeiro" },
-  { href: "/destinations/2", en: "São Paulo", es: "São Paulo", pt: "São Paulo" },
-  { href: "/destinations/5", en: "Bahia", es: "Bahía", pt: "Bahia" },
-  { href: "/destinations/3", en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu" },
-  { href: "/destinations/9", en: "Recife", es: "Recife", pt: "Recife" },
-  { href: "/destinations", en: "Amazon Rainforest", es: "Amazonía", pt: "Floresta Amazônica" },
+  { href: "/destinations/1", en: "Rio de Janeiro", es: "Río de Janeiro", pt: "Rio de Janeiro", fr: "Rio de Janeiro", de: "Rio de Janeiro" },
+  { href: "/destinations/2", en: "São Paulo", es: "São Paulo", pt: "São Paulo", fr: "São Paulo", de: "São Paulo" },
+  { href: "/destinations/5", en: "Bahia", es: "Bahía", pt: "Bahia", fr: "Bahia", de: "Bahia" },
+  { href: "/destinations/3", en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu", fr: "Foz do Iguaçu", de: "Foz do Iguaçu" },
+  { href: "/destinations/9", en: "Recife", es: "Recife", pt: "Recife", fr: "Recife", de: "Recife" },
+  { href: "/destinations", en: "Amazon Rainforest", es: "Amazonía", pt: "Floresta Amazônica", fr: "Forêt Amazonienne", de: "Amazonas-Regenwald" },
 ];
 
 const experiences = [
-  { href: "/tours", en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências" },
-  { href: "/tours?type=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" },
-  { href: "/tours?type=group", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados" },
-  { href: "/tours?category=aerial", en: "Aerial Experiences", es: "Experiencias Aéreas", pt: "Experiências Aéreas" },
-  { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto" },
+  { href: "/tours", en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências", fr: "Toutes les Expériences", de: "Alle Erlebnisse" },
+  { href: "/tours?type=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos", fr: "Tours Privés", de: "Private Touren" },
+  { href: "/tours?type=group", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados", fr: "Tours Partagés", de: "Gruppentouren" },
+  { href: "/tours?category=aerial", en: "Aerial Experiences", es: "Experiencias Aéreas", pt: "Experiências Aéreas", fr: "Expériences Aériennes", de: "Lufterlebnisse" },
+  { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto", fr: "Transferts Aéroport", de: "Flughafentransfers" },
 ];
 
 const aboutItems = [
-  { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História" },
-  { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós" },
-  { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações" },
-  { href: "/faq", en: "FAQ", es: "Preguntas Frecuentes", pt: "Perguntas Frequentes" },
+  { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História", fr: "Notre Histoire", de: "Unsere Geschichte" },
+  { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós", fr: "À Propos", de: "Über Uns" },
+  { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações", fr: "Avis", de: "Bewertungen" },
+  { href: "/faq", en: "FAQ", es: "Preguntas Frecuentes", pt: "Perguntas Frequentes", fr: "FAQ", de: "FAQ" },
 ];
 
-const LANGS: [Lang, string, string][] = [
-  ["en", "EN", "English"],
-  ["es", "ES", "Español"],
-  ["pt", "PT", "Português"],
+const LANGS: [Lang, string, string, string][] = [
+  ["en", "EN", "English", "🇬🇧"],
+  ["es", "ES", "Español", "🇪🇸"],
+  ["pt", "PT", "Português", "🇧🇷"],
+  ["fr", "FR", "Français", "🇫🇷"],
+  ["de", "DE", "Deutsch", "🇩🇪"],
 ];
 
 function NavDropdown({
@@ -45,7 +47,7 @@ function NavDropdown({
   onNavigate,
 }: {
   label: string;
-  items: Array<{ href: string; en: string; es: string; pt: string }>;
+  items: Array<{ href: string; en: string; es: string; pt: string; fr: string; de: string }>;
   lang: Lang;
   isHero: boolean;
   onNavigate: () => void;
@@ -54,8 +56,6 @@ function NavDropdown({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only close-on-outside-click on desktop — on mobile this nav is hidden (CSS)
-    // and the global mousedown listener can interfere with touch-tap synthesis.
     const handler = (e: MouseEvent) => {
       if (window.innerWidth < 1024) return;
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -119,9 +119,6 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // iOS Safari-safe scroll lock: `overflow: hidden` alone doesn't work on iOS.
-  // We use `position: fixed` + saved scroll offset so the page doesn't jump.
-  // Scroll restoration is deferred via rAF so it doesn't cancel touch-based navigation.
   useEffect(() => {
     if (mobileOpen) {
       const scrollY = window.scrollY;
@@ -137,7 +134,6 @@ export function Header() {
       document.body.style.width = "";
       document.body.style.overflow = "";
       delete document.body.dataset.scrollY;
-      // Defer scroll restoration so it doesn't interfere with link navigation
       requestAnimationFrame(() => {
         window.scrollTo(0, savedY);
       });
@@ -164,6 +160,8 @@ export function Header() {
     en: { home: "Home", about: "About Us", dest: "Destinations", exp: "Experiences", pkgs: "Packages", guide: "Travel Guide", contact: "Contact", book: "Book Now" },
     es: { home: "Inicio", about: "Nosotros", dest: "Destinos", exp: "Experiencias", pkgs: "Paquetes", guide: "Guía de Viaje", contact: "Contacto", book: "Reservar" },
     pt: { home: "Início", about: "Sobre Nós", dest: "Destinos", exp: "Experiências", pkgs: "Pacotes", guide: "Guia de Viagem", contact: "Contato", book: "Reservar" },
+    fr: { home: "Accueil", about: "À Propos", dest: "Destinations", exp: "Expériences", pkgs: "Forfaits", guide: "Guide Voyage", contact: "Contact", book: "Réserver" },
+    de: { home: "Startseite", about: "Über Uns", dest: "Reiseziele", exp: "Erlebnisse", pkgs: "Pakete", guide: "Reiseführer", contact: "Kontakt", book: "Jetzt buchen" },
   }[l];
 
   const currentLang = LANGS.find(([code]) => code === l)!;
@@ -193,12 +191,11 @@ export function Header() {
             <span className="hidden text-lg font-bold" style={{ display: "none" }}>Janeiro Tour &amp; Travel</span>
           </Link>
 
-          {/* Desktop nav — About Us is RIGHT after Home */}
+          {/* Desktop nav */}
           <nav className="hidden lg:flex flex-1 items-center gap-0">
             <Link href="/"><span className={cn(navLink, location === "/" && !isHero ? "text-gray-900 font-medium" : "")}>{t.home}</span></Link>
 
             <NavDropdown label={t.about} items={aboutItems} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
-
             <NavDropdown label={t.dest} items={destinations} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
             <NavDropdown label={t.exp} items={experiences} lang={l} isHero={isHero} onNavigate={() => setMobileOpen(false)} />
 
@@ -209,7 +206,7 @@ export function Header() {
 
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-2 ml-auto flex-shrink-0">
-            {/* Language with flags */}
+            {/* Language selector with flags */}
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
@@ -218,21 +215,23 @@ export function Header() {
                   isHero ? "text-white/90 hover:text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                 )}
               >
-                <span className="font-medium">{currentLang[0].toUpperCase()}</span>
+                <span className="text-base leading-none">{currentLang[3]}</span>
+                <span className="font-medium">{currentLang[1]}</span>
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </button>
               {langOpen && (
-                <div className="absolute right-0 top-full mt-1 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                  {LANGS.map(([code, , label]) => (
+                <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                  {LANGS.map(([code, abbr, label, flag]) => (
                     <button
                       key={code}
                       onClick={() => { setLang(code); setLangOpen(false); }}
                       className={cn(
                         "flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-left hover:bg-gray-50 transition-colors",
-                        l === code ? "font-semibold text-gray-900" : "text-gray-600"
+                        l === code ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-600"
                       )}
                     >
-                      <span className="text-xs font-bold text-gray-400 w-6">{code.toUpperCase()}</span>
+                      <span className="text-base leading-none">{flag}</span>
+                      <span className="text-xs font-bold text-gray-400 w-5">{abbr}</span>
                       {label}
                     </button>
                   ))}
@@ -294,16 +293,13 @@ export function Header() {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          {/* Backdrop — tap outside to close */}
           <div
             className="absolute inset-0 bg-black/30"
             onTouchEnd={(e) => { e.preventDefault(); setMobileOpen(false); }}
             onClick={() => setMobileOpen(false)}
           />
-          {/* Drawer panel */}
           <div className="absolute top-16 left-0 right-0 bottom-0 bg-white overflow-y-auto overscroll-contain">
             <nav className="flex flex-col divide-y divide-gray-100">
-              {/* touch-action: manipulation eliminates the 300ms tap delay on iOS */}
               <Link
                 href="/"
                 onClick={() => setMobileOpen(false)}
@@ -345,44 +341,25 @@ export function Header() {
                 </div>
               ))}
 
-              <Link
-                href="/packages"
-                onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
-                style={{ touchAction: "manipulation" }}
-              >
-                {t.pkgs}
-              </Link>
-              <Link
-                href="/blog"
-                onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
-                style={{ touchAction: "manipulation" }}
-              >
-                {t.guide}
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMobileOpen(false)}
-                className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100"
-                style={{ touchAction: "manipulation" }}
-              >
-                {t.contact}
-              </Link>
+              <Link href="/packages" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100" style={{ touchAction: "manipulation" }}>{t.pkgs}</Link>
+              <Link href="/blog" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100" style={{ touchAction: "manipulation" }}>{t.guide}</Link>
+              <Link href="/contact" onClick={() => setMobileOpen(false)} className="px-6 py-4 text-sm text-gray-700 active:bg-gray-100" style={{ touchAction: "manipulation" }}>{t.contact}</Link>
 
               <div className="px-6 py-5 flex flex-col gap-3">
-                <div className="flex gap-2">
-                  {LANGS.map(([code]) => (
+                {/* Language picker — 2 rows of flags */}
+                <div className="grid grid-cols-3 gap-2">
+                  {LANGS.map(([code, abbr, , flag]) => (
                     <button
                       key={code}
                       onClick={() => setLang(code)}
                       style={{ touchAction: "manipulation" }}
                       className={cn(
-                        "flex-1 py-2 rounded-lg text-sm font-medium border flex items-center justify-center transition-colors",
+                        "py-2 px-1 rounded-lg text-xs font-medium border flex items-center justify-center gap-1 transition-colors",
                         l === code ? "bg-gray-900 text-white border-gray-900" : "text-gray-600 border-gray-200"
                       )}
                     >
-                      {code.toUpperCase()}
+                      <span className="text-sm">{flag}</span>
+                      {abbr}
                     </button>
                   ))}
                 </div>

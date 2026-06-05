@@ -22,6 +22,109 @@ const CATEGORIES_EN = [
 
 type TourTypeFilter = "" | "group" | "private";
 
+const TX = {
+  en: {
+    heroTitle: "Explore All Experiences",
+    heroSub: "Find the perfect tour for your Brazil adventure.",
+    filters: "Filters",
+    clear: "Clear",
+    tourType: "Tour Type",
+    destination: "Destination",
+    allDests: "All Destinations",
+    category: "Category",
+    applyFilters: "Apply Filters",
+    allTours: "All Tours",
+    sharedTours: "Shared Tours",
+    privateTours: "Private Tours",
+    found: "experiences found",
+    noFound: "No experiences found",
+    tryFilters: "Try adjusting your filters.",
+    clearFilters: "Clear Filters",
+    privateLabel: "Private Tours",
+    sharedLabel: "Shared Tours",
+  },
+  es: {
+    heroTitle: "Explorar Todas las Experiencias",
+    heroSub: "Encuentra el tour perfecto para tu aventura en Brasil.",
+    filters: "Filtros",
+    clear: "Limpiar",
+    tourType: "Tipo de Tour",
+    destination: "Destino",
+    allDests: "Todos los Destinos",
+    category: "Categoría",
+    applyFilters: "Aplicar Filtros",
+    allTours: "Todos los Tours",
+    sharedTours: "Tours Compartidos",
+    privateTours: "Tours Privados",
+    found: "experiencias encontradas",
+    noFound: "No se encontraron experiencias",
+    tryFilters: "Intenta ajustar tus filtros.",
+    clearFilters: "Limpiar Filtros",
+    privateLabel: "Tours Privados",
+    sharedLabel: "Tours Compartidos",
+  },
+  pt: {
+    heroTitle: "Explorar Todas as Experiências",
+    heroSub: "Encontre o passeio perfeito para sua aventura no Brasil.",
+    filters: "Filtros",
+    clear: "Limpar",
+    tourType: "Tipo de Tour",
+    destination: "Destino",
+    allDests: "Todos os Destinos",
+    category: "Categoria",
+    applyFilters: "Aplicar Filtros",
+    allTours: "Todos os Passeios",
+    sharedTours: "Tours Compartilhados",
+    privateTours: "Tours Privativos",
+    found: "experiências encontradas",
+    noFound: "Nenhuma experiência encontrada",
+    tryFilters: "Tente ajustar seus filtros.",
+    clearFilters: "Limpar Filtros",
+    privateLabel: "Tours Privativos",
+    sharedLabel: "Tours Compartilhados",
+  },
+  fr: {
+    heroTitle: "Explorer Toutes les Expériences",
+    heroSub: "Trouvez le tour parfait pour votre aventure au Brésil.",
+    filters: "Filtres",
+    clear: "Effacer",
+    tourType: "Type de Tour",
+    destination: "Destination",
+    allDests: "Toutes les Destinations",
+    category: "Catégorie",
+    applyFilters: "Appliquer les Filtres",
+    allTours: "Tous les Tours",
+    sharedTours: "Tours Partagés",
+    privateTours: "Tours Privés",
+    found: "expériences trouvées",
+    noFound: "Aucune expérience trouvée",
+    tryFilters: "Essayez d'ajuster vos filtres.",
+    clearFilters: "Effacer les Filtres",
+    privateLabel: "Tours Privés",
+    sharedLabel: "Tours Partagés",
+  },
+  de: {
+    heroTitle: "Alle Erlebnisse entdecken",
+    heroSub: "Finden Sie die perfekte Tour für Ihr Brasilien-Abenteuer.",
+    filters: "Filter",
+    clear: "Löschen",
+    tourType: "Tourtyp",
+    destination: "Reiseziel",
+    allDests: "Alle Reiseziele",
+    category: "Kategorie",
+    applyFilters: "Filter anwenden",
+    allTours: "Alle Touren",
+    sharedTours: "Gruppentouren",
+    privateTours: "Private Touren",
+    found: "Erlebnisse gefunden",
+    noFound: "Keine Erlebnisse gefunden",
+    tryFilters: "Versuchen Sie, Ihre Filter anzupassen.",
+    clearFilters: "Filter löschen",
+    privateLabel: "Private Touren",
+    sharedLabel: "Gruppentouren",
+  },
+};
+
 export default function ToursPage() {
   const sp = new URLSearchParams(window.location.search);
   const [destination, setDestination] = useState(sp.get("destination") || "");
@@ -30,6 +133,7 @@ export default function ToursPage() {
   const [applied, setApplied] = useState({ destination: sp.get("destination") || "", category: sp.get("category") || "", tourType: (sp.get("type") || "") as TourTypeFilter });
 
   const { lang } = useLanguage();
+  const tx = TX[lang] ?? TX.en;
   const { data: tours, isLoading } = useListTours({
     destination: applied.destination || undefined,
     category: applied.category || undefined,
@@ -58,15 +162,12 @@ export default function ToursPage() {
 
   const hasFilters = applied.destination || applied.category || applied.tourType;
 
-  const heroTitle = lang === "en" ? "Explore All Experiences" : lang === "es" ? "Explorar Todas las Experiencias" : "Explorar Todas as Experiências";
-  const heroSub = lang === "en" ? "Find the perfect tour for your Brazil adventure." : lang === "es" ? "Encuentra el tour perfecto para tu aventura en Brasil." : "Encontre o passeio perfeito para sua aventura no Brasil.";
-
   return (
     <div className="pt-24 pb-20">
       <div className="bg-primary text-primary-foreground py-16 mb-12">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="font-serif font-bold text-4xl md:text-5xl mb-4">{heroTitle}</h1>
-          <p className="text-xl max-w-2xl mx-auto opacity-90">{heroSub}</p>
+          <h1 className="font-serif font-bold text-4xl md:text-5xl mb-4">{tx.heroTitle}</h1>
+          <p className="text-xl max-w-2xl mx-auto opacity-90">{tx.heroSub}</p>
         </div>
       </div>
 
@@ -78,11 +179,11 @@ export default function ToursPage() {
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
                 <div className="flex items-center gap-2 font-bold text-lg">
                   <Filter className="w-5 h-5 text-primary" />
-                  {lang === "en" ? "Filters" : "Filtros"}
+                  {tx.filters}
                 </div>
                 {hasFilters && (
                   <button onClick={clear} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                    <X className="w-3.5 h-3.5" /> Clear
+                    <X className="w-3.5 h-3.5" /> {tx.clear}
                   </button>
                 )}
               </div>
@@ -90,14 +191,12 @@ export default function ToursPage() {
               <form onSubmit={apply} className="space-y-5">
                 {/* Tour Type */}
                 <div>
-                  <label className="block text-sm font-bold mb-2">
-                    {lang === "en" ? "Tour Type" : lang === "es" ? "Tipo de Tour" : "Tipo de Tour"}
-                  </label>
+                  <label className="block text-sm font-bold mb-2">{tx.tourType}</label>
                   <div className="space-y-2">
                     {[
-                      { value: "" as TourTypeFilter, en: "All Tours", es: "Todos los Tours", pt: "Todos os Passeios" },
-                      { value: "group" as TourTypeFilter, en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados" },
-                      { value: "private" as TourTypeFilter, en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos" },
+                      { value: "" as TourTypeFilter, label: tx.allTours },
+                      { value: "group" as TourTypeFilter, label: tx.sharedTours },
+                      { value: "private" as TourTypeFilter, label: tx.privateTours },
                     ].map((opt) => (
                       <label key={opt.value} className="flex items-center gap-2 cursor-pointer group">
                         <div
@@ -107,7 +206,7 @@ export default function ToursPage() {
                           {tourType === opt.value && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
                         <span className="text-sm text-foreground" onClick={() => setTourType(opt.value)}>
-                          {lang === "es" ? opt.es : lang === "pt" ? opt.pt : opt.en}
+                          {opt.label}
                         </span>
                       </label>
                     ))}
@@ -116,24 +215,20 @@ export default function ToursPage() {
 
                 {/* Destination */}
                 <div>
-                  <label className="block text-sm font-bold mb-2">
-                    {lang === "en" ? "Destination" : "Destino"}
-                  </label>
+                  <label className="block text-sm font-bold mb-2">{tx.destination}</label>
                   <select
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
                     className="w-full px-3 py-2 rounded-md border border-input bg-background text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
                   >
-                    <option value="">{lang === "en" ? "All Destinations" : "Todos los Destinos"}</option>
+                    <option value="">{tx.allDests}</option>
                     {DESTINATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
 
                 {/* Category */}
                 <div>
-                  <label className="block text-sm font-bold mb-2">
-                    {lang === "en" ? "Category" : "Categoría"}
-                  </label>
+                  <label className="block text-sm font-bold mb-2">{tx.category}</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -145,7 +240,7 @@ export default function ToursPage() {
 
                 <Button type="submit" className="w-full font-bold">
                   <Search className="w-4 h-4 mr-2" />
-                  {lang === "en" ? "Apply Filters" : "Aplicar Filtros"}
+                  {tx.applyFilters}
                 </Button>
               </form>
             </div>
@@ -153,12 +248,11 @@ export default function ToursPage() {
 
           {/* Grid */}
           <main className="flex-1">
-            {/* Active filters summary */}
             {hasFilters && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {applied.tourType && (
                   <span className="flex items-center gap-1.5 text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full font-medium">
-                    {applied.tourType === "private" ? (lang === "en" ? "Private Tours" : "Tours Privados") : (lang === "en" ? "Shared Tours" : "Tours Compartidos")}
+                    {applied.tourType === "private" ? tx.privateLabel : tx.sharedLabel}
                     <X className="w-3 h-3 cursor-pointer" onClick={() => { setTourType(""); setApplied(a => ({ ...a, tourType: "" })); }} />
                   </span>
                 )}
@@ -186,7 +280,7 @@ export default function ToursPage() {
             ) : tours && tours.length > 0 ? (
               <>
                 <p className="text-sm text-muted-foreground mb-4">
-                  {tours.length} {lang === "en" ? "experiences found" : lang === "es" ? "experiencias encontradas" : "experiências encontradas"}
+                  {tours.length} {tx.found}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {tours.map((tour) => (
@@ -197,15 +291,9 @@ export default function ToursPage() {
             ) : (
               <div className="text-center py-20 bg-muted/50 rounded-2xl">
                 <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-bold mb-2">
-                  {lang === "en" ? "No experiences found" : "No se encontraron experiencias"}
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  {lang === "en" ? "Try adjusting your filters." : "Intenta ajustar tus filtros."}
-                </p>
-                <Button variant="outline" onClick={clear}>
-                  {lang === "en" ? "Clear Filters" : "Limpiar Filtros"}
-                </Button>
+                <h3 className="text-xl font-bold mb-2">{tx.noFound}</h3>
+                <p className="text-muted-foreground mb-6">{tx.tryFilters}</p>
+                <Button variant="outline" onClick={clear}>{tx.clearFilters}</Button>
               </div>
             )}
           </main>
