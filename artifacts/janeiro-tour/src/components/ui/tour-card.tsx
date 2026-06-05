@@ -9,38 +9,53 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 
-const PREMIUM_BADGE_LABELS: Record<string, string> = {
-  "Most Personalized Experience": "Most Personalized",
-  "Best for Families": "Best for Families",
-  "Luxury Option": "Luxury",
-  "Luxury Experience": "Luxury Experience",
-  "Most Popular": "Most Popular",
-  "Best Seller": "Best Seller",
-  "Recommended": "Recommended",
-  "Local Expert Guide": "Local Expert",
-  "Fully Customizable": "Fully Customizable",
-};
-
 function formatDuration(hours: number, lang: string): string {
   if (hours < 1) return `${Math.round(hours * 60)} min`;
-  return `${hours} ${lang === "en" ? "hours" : "horas"}`;
+  const word =
+    lang === "es" ? "horas" :
+    lang === "pt" ? "horas" :
+    lang === "fr" ? "heures" :
+    lang === "de" ? "Stunden" :
+    "hours";
+  return `${hours} ${word}`;
 }
 
 function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
   const isPrivate = tourType === "private";
   if (isPrivate) {
+    const label =
+      lang === "es" ? "Tour Privado" :
+      lang === "pt" ? "Tour Privativo" :
+      lang === "fr" ? "Tour Privé" :
+      lang === "de" ? "Private Tour" :
+      "Private Tour";
     return (
       <Badge className="bg-accent text-accent-foreground border-none px-2.5 py-0.5 text-xs font-semibold">
-        {lang === "en" ? "Private Tour" : lang === "es" ? "Tour Privado" : "Tour Privativo"}
+        {label}
       </Badge>
     );
   }
+  const label =
+    lang === "es" ? "Tour Compartido" :
+    lang === "pt" ? "Tour Compartilhado" :
+    lang === "fr" ? "Tour Partagé" :
+    lang === "de" ? "Gruppentour" :
+    "Shared Tour";
   return (
     <Badge className="bg-white/20 text-white border border-white/30 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold">
-      {lang === "en" ? "Shared Tour" : lang === "es" ? "Tour Compartido" : "Tour Compartilhado"}
+      {label}
     </Badge>
   );
 }
+
+const CATEGORY_LABELS: Record<string, Record<string, string>> = {
+  aerial:      { en: "Aerial",      es: "Aéreo",      pt: "Aéreo",      fr: "Aérien",    de: "Lufttour" },
+  nature:      { en: "Adventure",   es: "Aventura",   pt: "Aventura",   fr: "Aventure",   de: "Abenteuer" },
+  culture:     { en: "Culture",     es: "Cultura",    pt: "Cultura",    fr: "Culture",    de: "Kultur" },
+  sightseeing: { en: "Sightseeing", es: "City Tour",  pt: "City Tour",  fr: "Visite",     de: "Stadtbesichtigung" },
+  transfer:    { en: "Transfer",    es: "Traslado",   pt: "Traslado",   fr: "Transfert",  de: "Transfer" },
+  food:        { en: "Food",        es: "Gastronomía",pt: "Gastronomia",fr: "Gastronomie",de: "Kulinarik" },
+};
 
 export function TourCard({ tour }: { tour: Tour }) {
   const { t, lang } = useLanguage();
@@ -71,6 +86,20 @@ export function TourCard({ tour }: { tour: Tour }) {
     setPickerDate(undefined);
   };
 
+  const TX = {
+    topRated:   { en: "Top Rated",       es: "Destacado",       pt: "Destaque",       fr: "Top noté",       de: "Top bewertet" },
+    upTo:       { en: "Up to",           es: "Hasta",           pt: "Até",            fr: "Jusqu'à",        de: "Bis zu" },
+    from:       { en: "From",            es: "Desde",           pt: "A partir de",    fr: "Dès",            de: "Ab" },
+    bookNow:    { en: "Book Now",        es: "Reservar",        pt: "Reservar",       fr: "Réserver",       de: "Buchen" },
+    chooseDate: { en: "Choose a date",   es: "Elige una fecha", pt: "Escolha uma data", fr: "Choisir une date", de: "Datum wählen" },
+    addToCart:  { en: "Add to Cart",     es: "Agregar",         pt: "Adicionar",      fr: "Ajouter",        de: "Hinzufügen" },
+    selectDate: { en: "Select a date first", es: "Selecciona una fecha", pt: "Selecione uma data", fr: "Sélectionnez une date", de: "Datum auswählen" },
+  } as const;
+
+  const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
+
+  const categoryLabel = CATEGORY_LABELS[tour.category]?.[lang] ?? CATEGORY_LABELS[tour.category]?.["en"] ?? tour.category;
+
   return (
     <Link href={`/tours/${tour.slug}`}>
       <div className="group rounded-2xl overflow-hidden bg-card border border-border shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col cursor-pointer hover:-translate-y-1">
@@ -85,17 +114,11 @@ export function TourCard({ tour }: { tour: Tour }) {
           <div className="absolute top-4 left-4 flex gap-2 flex-wrap">
             {tour.featured && (
               <Badge className="bg-primary text-primary-foreground font-bold border-none px-3 py-1">
-                {lang === "en" ? "Top Rated" : lang === "es" ? "Destacado" : "Destaque"}
+                {tx("topRated")}
               </Badge>
             )}
             <Badge className="bg-white/90 text-foreground font-semibold border-none backdrop-blur-sm px-3 py-1">
-              {tour.category === "aerial" ? "Aerial"
-                : tour.category === "nature" ? "Adventure"
-                : tour.category === "culture" ? "Culture"
-                : tour.category === "sightseeing" ? "Sightseeing"
-                : tour.category === "transfer" ? "Transfer"
-                : tour.category === "food" ? "Food"
-                : tour.category}
+              {categoryLabel}
             </Badge>
           </div>
 
@@ -113,7 +136,7 @@ export function TourCard({ tour }: { tour: Tour }) {
             <div className="flex items-center gap-1.5 mb-2">
               <Crown className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
               <span className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
-                {PREMIUM_BADGE_LABELS[premiumBadge] ?? premiumBadge}
+                {premiumBadge}
               </span>
             </div>
           )}
@@ -129,7 +152,7 @@ export function TourCard({ tour }: { tour: Tour }) {
             </div>
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4" />
-              <span>Up to {tour.groupSizeMax}</span>
+              <span>{tx("upTo")} {tour.groupSizeMax}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Globe2 className="w-4 h-4" />
@@ -140,9 +163,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           <div className="mt-auto pt-4 border-t border-border space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs text-muted-foreground block">
-                  {lang === "en" ? "From" : lang === "es" ? "Desde" : "A partir de"}
-                </span>
+                <span className="text-xs text-muted-foreground block">{tx("from")}</span>
                 <span className="font-bold text-lg text-foreground">
                   {tour.currency} {tour.priceFrom}
                 </span>
@@ -164,7 +185,7 @@ export function TourCard({ tour }: { tour: Tour }) {
                   className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  {lang === "en" ? "Book Now" : lang === "es" ? "Reservar" : "Reservar"}
+                  {tx("bookNow")}
                 </button>
               </PopoverTrigger>
               <PopoverContent
@@ -176,7 +197,7 @@ export function TourCard({ tour }: { tour: Tour }) {
                   <div className="text-center">
                     <p className="font-semibold text-sm flex items-center justify-center gap-1.5">
                       <CalendarDays size={15} className="text-primary" />
-                      {lang === "en" ? "Choose a date" : lang === "es" ? "Elige una fecha" : "Escolha uma data"}
+                      {tx("chooseDate")}
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">{t(tour, "title")}</p>
                   </div>
@@ -196,10 +217,10 @@ export function TourCard({ tour }: { tour: Tour }) {
                       {pickerDate ? (
                         <>
                           <ChevronRight size={14} />
-                          {format(pickerDate, "MMM d, yyyy")} — Add to Cart
+                          {format(pickerDate, "MMM d, yyyy")} — {tx("addToCart")}
                         </>
                       ) : (
-                        lang === "en" ? "Select a date first" : lang === "es" ? "Selecciona una fecha" : "Selecione uma data"
+                        tx("selectDate")
                       )}
                     </button>
                   </div>

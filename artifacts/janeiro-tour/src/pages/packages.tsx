@@ -16,24 +16,57 @@ const BADGE_STYLES: Record<string, string> = {
 };
 
 type TourIncluded = { slug: string; title: string; duration: string; description: string };
-
 type FilterKey = "all" | "budget" | "mid" | "premium" | "short" | "long";
 
 interface FilterOption {
   key: FilterKey;
-  en: string;
-  es: string;
-  pt: string;
+  en: string; es: string; pt: string; fr: string; de: string;
 }
 
 const FILTERS: FilterOption[] = [
-  { key: "all",     en: "All Packages",  es: "Todos",          pt: "Todos"           },
-  { key: "budget",  en: "Under $300",    es: "Menos de $300",  pt: "Até $300"        },
-  { key: "mid",     en: "$300 – $500",   es: "$300 – $500",    pt: "$300 – $500"     },
-  { key: "premium", en: "Over $500",     es: "Más de $500",    pt: "Acima de $500"   },
-  { key: "short",   en: "Short (1–2 d)", es: "Corto (1–2 d)",  pt: "Curto (1–2 d)"  },
-  { key: "long",    en: "3+ Days",       es: "3+ Días",        pt: "3+ Dias"         },
+  { key: "all",     en: "All Packages",  es: "Todos",          pt: "Todos",          fr: "Tous",              de: "Alle" },
+  { key: "budget",  en: "Under $300",    es: "Menos de $300",  pt: "Até $300",       fr: "Moins de $300",     de: "Unter $300" },
+  { key: "mid",     en: "$300 – $500",   es: "$300 – $500",    pt: "$300 – $500",    fr: "$300 – $500",       de: "$300 – $500" },
+  { key: "premium", en: "Over $500",     es: "Más de $500",    pt: "Acima de $500",  fr: "Plus de $500",      de: "Über $500" },
+  { key: "short",   en: "Short (1–2 d)", es: "Corto (1–2 d)",  pt: "Curto (1–2 d)", fr: "Court (1–2 j)",     de: "Kurz (1–2 T)" },
+  { key: "long",    en: "3+ Days",       es: "3+ Días",        pt: "3+ Dias",        fr: "3+ Jours",          de: "3+ Tage" },
 ];
+
+const TX = {
+  eyebrow:   { en: "Curated Rio Experiences",        es: "Experiencias Curadas en Río",       pt: "Experiências Curadas no Rio",       fr: "Expériences Sélectionnées à Rio",   de: "Kuratierte Rio-Erlebnisse" },
+  heading:   { en: "Rio Experience Packages",        es: "Paquetes de Experiencias en Río",   pt: "Pacotes de Experiências no Rio",    fr: "Forfaits Expériences à Rio",        de: "Rio-Erlebnispakete" },
+  sub:       {
+    en: "Hand-picked combinations of our best tours — bundled for better value. No hotel, no flights. Just unforgettable moments.",
+    es: "Combinaciones de nuestros mejores tours — sin hotel ni vuelos. Solo momentos inolvidables.",
+    pt: "Combinações dos nossos melhores tours — sem hotel nem passagens. Só momentos inesquecíveis.",
+    fr: "Combinaisons de nos meilleurs tours — sans hôtel ni vols. Juste des moments inoubliables.",
+    de: "Handverlesene Kombinationen unserer besten Touren — ohne Hotel und Flüge. Nur unvergessliche Momente.",
+  },
+  curated:   { en: "Curated by locals",              es: "Curado por locales",                pt: "Curado por locais",                 fr: "Sélectionné par des locaux",        de: "Von Einheimischen zusammengestellt" },
+  save:      { en: "Save up to 27%",                 es: "Ahorra hasta 27%",                  pt: "Economize até 27%",                 fr: "Économisez jusqu'à 27%",            de: "Bis zu 27% sparen" },
+  noHotel:   { en: "No hotel or flights",            es: "Sin hotel ni vuelos",               pt: "Sem hotel nem voos",                fr: "Sans hôtel ni vols",                de: "Ohne Hotel oder Flüge" },
+  blackOwned:{ en: "Black-owned & community-led",    es: "Empresa negra y comunitaria",       pt: "Empresa negra e comunitária",       fr: "Entreprise afro & communautaire",   de: "Afro-geführt & gemeinschaftlich" },
+  searchPh:  { en: "Search packages…",               es: "Buscar paquetes…",                  pt: "Buscar pacotes…",                   fr: "Rechercher des forfaits…",          de: "Pakete suchen…" },
+  noFound:   { en: "No packages found",              es: "No se encontraron paquetes",        pt: "Nenhum pacote encontrado",          fr: "Aucun forfait trouvé",              de: "Keine Pakete gefunden" },
+  noMatch:   { en: "No packages match your search",  es: "Ningún paquete coincide",           pt: "Nenhum pacote encontrado",          fr: "Aucun forfait ne correspond",       de: "Keine Pakete entsprechen Ihrer Suche" },
+  tryOther:  { en: "Try a different keyword or reset the filters.", es: "Prueba otra palabra clave o restablece los filtros.", pt: "Tente outra palavra-chave ou limpe os filtros.", fr: "Essayez un autre mot-clé ou réinitialisez les filtres.", de: "Versuchen Sie ein anderes Stichwort oder setzen Sie die Filter zurück." },
+  clear:     { en: "Clear filters",                  es: "Limpiar filtros",                   pt: "Limpar filtros",                    fr: "Effacer les filtres",               de: "Filter löschen" },
+  perPerson: { en: "per person",                     es: "por persona",                       pt: "por pessoa",                        fr: "par personne",                      de: "pro Person" },
+  included:  { en: "Included experiences",           es: "Experiencias incluidas",            pt: "Experiências incluídas",            fr: "Expériences incluses",              de: "Enthaltene Erlebnisse" },
+  transfers: { en: "Airport transfers included (GIG — arrival & departure)", es: "Traslados aeropuerto incluidos (GIG — llegada y salida)", pt: "Transfers aeroporto incluídos (GIG — chegada e saída)", fr: "Transferts aéroport inclus (GIG — arrivée & départ)", de: "Flughafentransfers inbegriffen (GIG — Ankunft & Abflug)" },
+  seePrices: { en: "See Prices & Book",              es: "Ver Precios y Reservar",            pt: "Ver Preços e Reservar",             fr: "Voir les Prix et Réserver",         de: "Preise anzeigen & buchen" },
+  different: { en: "Something different in mind?",   es: "¿Tienes algo diferente en mente?",  pt: "Tem algo diferente em mente?",      fr: "Quelque chose de différent en tête?", de: "Etwas anderes im Sinn?" },
+  custom:    { en: "Build a Custom Package",         es: "Crea un Paquete Personalizado",     pt: "Monte um Pacote Personalizado",     fr: "Créez un Forfait Personnalisé",     de: "Individuelles Paket zusammenstellen" },
+  customSub: {
+    en: "Tell us your group size, interests and dates — we'll put together a bespoke itinerary with any combination of our tours.",
+    es: "Cuéntanos el tamaño de tu grupo, intereses y fechas — armaremos un itinerario a medida con cualquier combinación de nuestros tours.",
+    pt: "Conte-nos o tamanho do seu grupo, interesses e datas — montaremos um roteiro personalizado com qualquer combinação dos nossos tours.",
+    fr: "Parlez-nous de votre groupe, vos intérêts et vos dates — nous créerons un itinéraire sur mesure avec nos tours.",
+    de: "Sagen Sie uns Ihre Gruppengröße, Interessen und Daten — wir stellen ein maßgeschneidertes Reiseprogramm zusammen.",
+  },
+  getQuote:  { en: "Get a Custom Quote",             es: "Obtener Cotización",                pt: "Solicitar Orçamento",               fr: "Obtenir un Devis",                  de: "Angebot anfordern" },
+  whatsapp:  { en: "Chat on WhatsApp",               es: "Chatear en WhatsApp",               pt: "Conversar no WhatsApp",             fr: "Discuter sur WhatsApp",             de: "Per WhatsApp chatten" },
+} as const;
 
 export default function PackagesPage() {
   const { lang } = useLanguage();
@@ -42,11 +75,11 @@ export default function PackagesPage() {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
 
+  const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
+
   const filtered = useMemo(() => {
     if (!packages) return [];
     let result = [...packages];
-
-    // Text search
     if (query.trim()) {
       const q = query.toLowerCase();
       result = result.filter((p) =>
@@ -55,8 +88,6 @@ export default function PackagesPage() {
         p.description?.toLowerCase().includes(q)
       );
     }
-
-    // Category filter
     if (activeFilter === "budget")  result = result.filter((p) => Number(p.priceFrom) < 300);
     if (activeFilter === "mid")     result = result.filter((p) => Number(p.priceFrom) >= 300 && Number(p.priceFrom) <= 500);
     if (activeFilter === "premium") result = result.filter((p) => Number(p.priceFrom) > 500);
@@ -72,11 +103,18 @@ export default function PackagesPage() {
         return d.includes("3") || d.includes("4") || d.includes("5") || d.includes("week");
       });
     }
-
     return result;
   }, [packages, query, activeFilter]);
 
-  const l = lang as "en" | "es" | "pt";
+  const foundText = () => {
+    const n = filtered.length;
+    if (n === 0) return tx("noFound");
+    if (lang === "es") return `${n} paquete${n > 1 ? "s" : ""} encontrado${n > 1 ? "s" : ""}`;
+    if (lang === "pt") return `${n} pacote${n > 1 ? "s" : ""} encontrado${n > 1 ? "s" : ""}`;
+    if (lang === "fr") return `${n} forfait${n > 1 ? "s" : ""} trouvé${n > 1 ? "s" : ""}`;
+    if (lang === "de") return `${n} Paket${n > 1 ? "e" : ""} gefunden`;
+    return `${n} package${n > 1 ? "s" : ""} found`;
+  };
 
   return (
     <>
@@ -88,19 +126,9 @@ export default function PackagesPage() {
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-sm mb-3">
-            {l === "en" ? "Curated Rio Experiences" : l === "es" ? "Experiencias Curadas en Río" : "Experiências Curadas no Rio"}
-          </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-5">
-            {l === "en" ? "Rio Experience Packages" : l === "es" ? "Paquetes de Experiencias en Río" : "Pacotes de Experiências no Rio"}
-          </h1>
-          <p className="text-white/75 text-lg max-w-2xl mx-auto">
-            {l === "en"
-              ? "Hand-picked combinations of our best tours — bundled for better value. No hotel, no flights. Just unforgettable moments."
-              : l === "es"
-              ? "Combinaciones de nuestros mejores tours — sin hotel ni vuelos. Solo momentos inolvidables."
-              : "Combinações dos nossos melhores tours — sem hotel nem passagens. Só momentos inesquecíveis."}
-          </p>
+          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-sm mb-3">{tx("eyebrow")}</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-5">{tx("heading")}</h1>
+          <p className="text-white/75 text-lg max-w-2xl mx-auto">{tx("sub")}</p>
         </div>
       </section>
 
@@ -108,10 +136,10 @@ export default function PackagesPage() {
       <section className="border-b bg-muted/30">
         <div className="max-w-5xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
           {[
-            { icon: <Award size={18} />, text: l === "en" ? "Curated by locals" : l === "es" ? "Curado por locales" : "Curado por locais" },
-            { icon: <Tag size={18} />,   text: l === "en" ? "Save up to 27%" : l === "es" ? "Ahorra hasta 27%" : "Economize até 27%" },
-            { icon: <Layers size={18} />,text: l === "en" ? "No hotel or flights" : l === "es" ? "Sin hotel ni vuelos" : "Sem hotel nem voos" },
-            { icon: <Heart size={18} />, text: l === "en" ? "Black-owned & community-led" : l === "es" ? "Empresa negra y comunitaria" : "Empresa negra e comunitária" },
+            { icon: <Award size={18} />, text: tx("curated") },
+            { icon: <Tag size={18} />,   text: tx("save") },
+            { icon: <Layers size={18} />,text: tx("noHotel") },
+            { icon: <Heart size={18} />, text: tx("blackOwned") },
           ].map((v) => (
             <div key={v.text} className="flex flex-col items-center gap-1">
               <span className="text-green-600">{v.icon}</span>
@@ -124,27 +152,22 @@ export default function PackagesPage() {
       {/* Search & Filters */}
       <section className="sticky top-16 z-30 bg-white/95 backdrop-blur border-b shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          {/* Search */}
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={l === "en" ? "Search packages…" : l === "es" ? "Buscar paquetes…" : "Buscar pacotes…"}
+              placeholder={tx("searchPh")}
               className="w-full pl-9 pr-8 py-2.5 text-sm rounded-xl border border-input bg-background focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
             />
             {query && (
-              <button
-                onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
+              <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
 
-          {/* Filter pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 sm:pb-0 scrollbar-hide flex-nowrap">
             <SlidersHorizontal className="w-4 h-4 text-muted-foreground flex-shrink-0 mr-0.5" />
             {FILTERS.map((f) => (
@@ -158,7 +181,7 @@ export default function PackagesPage() {
                     : "bg-white text-gray-600 border-gray-200 hover:border-green-400 hover:text-green-700"
                   }`}
               >
-                {f[l]}
+                {f[lang as keyof FilterOption] ?? f.en}
               </button>
             ))}
           </div>
@@ -167,17 +190,8 @@ export default function PackagesPage() {
 
       {/* Packages List */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-
-        {/* Result count */}
         {!isLoading && (
-          <p className="text-sm text-muted-foreground mb-6">
-            {filtered.length === 0
-              ? (l === "en" ? "No packages found" : l === "es" ? "No se encontraron paquetes" : "Nenhum pacote encontrado")
-              : l === "en" ? `${filtered.length} package${filtered.length > 1 ? "s" : ""} found`
-              : l === "es" ? `${filtered.length} paquete${filtered.length > 1 ? "s" : ""} encontrado${filtered.length > 1 ? "s" : ""}`
-              : `${filtered.length} pacote${filtered.length > 1 ? "s" : ""} encontrado${filtered.length > 1 ? "s" : ""}`
-            }
-          </p>
+          <p className="text-sm text-muted-foreground mb-6">{foundText()}</p>
         )}
 
         {isLoading ? (
@@ -187,29 +201,21 @@ export default function PackagesPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">🔍</p>
-            <p className="text-lg font-semibold mb-2">
-              {l === "en" ? "No packages match your search" : l === "es" ? "Ningún paquete coincide" : "Nenhum pacote encontrado"}
-            </p>
-            <p className="text-muted-foreground text-sm mb-6">
-              {l === "en" ? "Try a different keyword or reset the filters." : l === "es" ? "Prueba otra palabra clave o restablece los filtros." : "Tente outra palavra-chave ou limpe os filtros."}
-            </p>
+            <p className="text-lg font-semibold mb-2">{tx("noMatch")}</p>
+            <p className="text-muted-foreground text-sm mb-6">{tx("tryOther")}</p>
             <Button variant="outline" onClick={() => { setQuery(""); setActiveFilter("all"); }}>
-              {l === "en" ? "Clear filters" : l === "es" ? "Limpiar filtros" : "Limpar filtros"}
+              {tx("clear")}
             </Button>
           </div>
         ) : (
           <div className="space-y-6">
             {filtered.map((pkg, idx) => {
-              const tours    = (pkg.toursIncluded ?? []) as TourIncluded[];
+              const tours      = (pkg.toursIncluded ?? []) as TourIncluded[];
               const highlights = (pkg.highlights ?? []) as string[];
               const isReversed = idx % 2 === 1;
 
               return (
-                <div
-                  key={pkg.id}
-                  className="relative bg-card border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 grid lg:grid-cols-5"
-                >
-                  {/* Image — col-span-2, shorter than before */}
+                <div key={pkg.id} className="relative bg-card border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 grid lg:grid-cols-5">
                   <div className={`relative lg:col-span-2 min-h-52 lg:min-h-0 ${isReversed ? "lg:order-last" : ""}`}>
                     {pkg.badge && (
                       <div className={`absolute top-4 left-4 z-10 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide shadow ${BADGE_STYLES[pkg.badgeColor ?? "green"] ?? BADGE_STYLES.green}`}>
@@ -218,11 +224,7 @@ export default function PackagesPage() {
                         ) : pkg.badge}
                       </div>
                     )}
-                    <img
-                      src={pkg.imageUrl}
-                      alt={pkg.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+                    <img src={pkg.imageUrl} alt={pkg.title} className="absolute inset-0 w-full h-full object-cover" />
                     {pkg.savingsPercent && (
                       <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm">
                         Save {pkg.savingsPercent}%
@@ -230,9 +232,7 @@ export default function PackagesPage() {
                     )}
                   </div>
 
-                  {/* Content — col-span-3, tighter padding */}
                   <div className="lg:col-span-3 p-5 flex flex-col gap-4">
-                    {/* Header */}
                     <div className="flex items-start justify-between gap-3 flex-wrap">
                       <div>
                         <h3 className="text-xl font-bold leading-tight">{pkg.title}</h3>
@@ -244,21 +244,16 @@ export default function PackagesPage() {
                       </div>
                       <div className="text-right flex-shrink-0">
                         <p className="text-2xl font-bold text-green-600">${Number(pkg.priceFrom).toFixed(0)}</p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {l === "en" ? "per person" : l === "es" ? "por persona" : "por pessoa"}
-                        </p>
+                        <p className="text-[11px] text-muted-foreground">{tx("perPerson")}</p>
                         {pkg.originalPrice && (
                           <p className="text-[11px] line-through text-muted-foreground">${Number(pkg.originalPrice).toFixed(0)}</p>
                         )}
                       </div>
                     </div>
 
-                    {/* Included experiences — compact pills */}
                     {tours.length > 0 && (
                       <div>
-                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                          {l === "en" ? "Included experiences" : l === "es" ? "Experiencias incluidas" : "Experiências incluídas"}
-                        </p>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{tx("included")}</p>
                         <div className="flex flex-col gap-1.5">
                           {tours.map((t, ti) => (
                             <div key={t.slug} className="flex gap-2.5 items-start bg-muted/40 rounded-lg px-3 py-2 border">
@@ -274,18 +269,14 @@ export default function PackagesPage() {
                               </span>
                             </div>
                           ))}
-                          {/* Transfers row — compact */}
                           <div className="flex gap-2 items-center bg-blue-50 rounded-lg px-3 py-1.5 border border-blue-100 text-xs text-blue-700">
                             <Plane size={11} className="flex-shrink-0" />
-                            <span className="font-medium">
-                              {l === "en" ? "Airport transfers included (GIG — arrival & departure)" : l === "es" ? "Traslados aeropuerto incluidos (GIG — llegada y salida)" : "Transfers aeroporto incluídos (GIG — chegada e saída)"}
-                            </span>
+                            <span className="font-medium">{tx("transfers")}</span>
                           </div>
                         </div>
                       </div>
                     )}
 
-                    {/* Highlights — compact */}
                     {highlights.length > 0 && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
                         {highlights.slice(0, 4).map((h) => (
@@ -297,12 +288,10 @@ export default function PackagesPage() {
                       </div>
                     )}
 
-                    {/* CTA */}
                     <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t mt-auto">
                       <Link href={`/packages/${pkg.slug}`} className="flex-1">
                         <Button className="w-full h-10 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm gap-1.5">
-                          {l === "en" ? "See Prices & Book" : l === "es" ? "Ver Precios y Reservar" : "Ver Preços e Reservar"}
-                          <ArrowRight size={14} />
+                          {tx("seePrices")} <ArrowRight size={14} />
                         </Button>
                       </Link>
                       <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="sm:w-auto">
@@ -320,28 +309,18 @@ export default function PackagesPage() {
 
         {/* Custom Package CTA */}
         <div className="mt-14 text-center bg-primary/5 border border-primary/20 rounded-2xl p-10">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-2">
-            {l === "en" ? "Something different in mind?" : l === "es" ? "¿Tienes algo diferente en mente?" : "Tem algo diferente em mente?"}
-          </p>
-          <h3 className="text-2xl font-bold mb-2">
-            {l === "en" ? "Build a Custom Package" : l === "es" ? "Crea un Paquete Personalizado" : "Monte um Pacote Personalizado"}
-          </h3>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-7">
-            {l === "en"
-              ? "Tell us your group size, interests and dates — we'll put together a bespoke itinerary with any combination of our tours."
-              : l === "es"
-              ? "Cuéntanos el tamaño de tu grupo, intereses y fechas — armaremos un itinerario a medida con cualquier combinación de nuestros tours."
-              : "Conte-nos o tamanho do seu grupo, interesses e datas — montaremos um roteiro personalizado com qualquer combinação dos nossos tours."}
-          </p>
+          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-2">{tx("different")}</p>
+          <h3 className="text-2xl font-bold mb-2">{tx("custom")}</h3>
+          <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-7">{tx("customSub")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/contact">
               <Button size="lg" className="h-11 px-7 bg-green-600 hover:bg-green-700 text-white font-semibold">
-                {l === "en" ? "Get a Custom Quote" : l === "es" ? "Obtener Cotización" : "Solicitar Orçamento"}
+                {tx("getQuote")}
               </Button>
             </Link>
             <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="h-11 px-7 border-green-300 text-green-700 hover:bg-green-50">
-                {l === "en" ? "Chat on WhatsApp" : l === "es" ? "Chatear en WhatsApp" : "Conversar no WhatsApp"}
+                {tx("whatsapp")}
               </Button>
             </a>
           </div>

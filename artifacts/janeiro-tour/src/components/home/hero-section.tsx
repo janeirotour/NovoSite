@@ -7,37 +7,51 @@ import { ArrowRight, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 
 const slides = [
-  {
-    src: "/images/banner-janeiro.jpg",
-    alt: "Janeiro Tour group at Cristo Redentor",
-    positionY: "center",
-  },
-  {
-    src: "/images/exp-christ.png",
-    alt: "Cristo Redentor — Rio de Janeiro",
-    positionY: "center",
-  },
-  {
-    src: "/images/hero-rio.png",
-    alt: "Pão de Açúcar — Rio de Janeiro",
-    positionY: "center",
-  },
-  {
-    src: "/images/hero-iguazu.png",
-    alt: "Foz do Iguaçu — Cataratas",
-    positionY: "bottom",
-  },
-  {
-    src: "/images/dest-salvador.png",
-    alt: "Bahia — Salvador",
-    positionY: "center",
-  },
-  {
-    src: "/images/dest-amazon.png",
-    alt: "Amazônia — Floresta Tropical",
-    positionY: "center",
-  },
+  { src: "/images/banner-janeiro.jpg",  alt: "Janeiro Tour group at Cristo Redentor", positionY: "center" },
+  { src: "/images/exp-christ.png",      alt: "Cristo Redentor — Rio de Janeiro",       positionY: "center" },
+  { src: "/images/hero-rio.png",        alt: "Pão de Açúcar — Rio de Janeiro",         positionY: "center" },
+  { src: "/images/hero-iguazu.png",     alt: "Foz do Iguaçu — Cataratas",             positionY: "bottom" },
+  { src: "/images/dest-salvador.png",   alt: "Bahia — Salvador",                       positionY: "center" },
+  { src: "/images/dest-amazon.png",     alt: "Amazônia — Floresta Tropical",           positionY: "center" },
 ];
+
+const TX = {
+  headline: {
+    en: "Brazil Through the Eyes of Those Who Love It",
+    es: "Brasil a Través de los Ojos de Quienes lo Aman",
+    pt: "Brasil pelos Olhos de Quem o Ama",
+    fr: "Le Brésil à Travers les Yeux de Ceux Qui l'Aiment",
+    de: "Brasilien durch die Augen derer, die es lieben",
+  },
+  subheadline: {
+    en: "Real places. Real people. Experiences that stay with you long after you leave.",
+    es: "Lugares reales. Personas reales. Experiencias que permanecen contigo mucho después de partir.",
+    pt: "Lugares reais. Pessoas reais. Experiências que ficam com você muito depois de partir.",
+    fr: "De vrais endroits. De vraies personnes. Des expériences qui restent avec vous longtemps après votre départ.",
+    de: "Echte Orte. Echte Menschen. Erlebnisse, die noch lange nach der Reise nachwirken.",
+  },
+  explore: {
+    en: "Explore Experiences",
+    es: "Explorar Experiencias",
+    pt: "Explorar Experiências",
+    fr: "Explorer les Expériences",
+    de: "Erlebnisse Erkunden",
+  },
+  discover: {
+    en: "Discover Brazil",
+    es: "Descubrir Brasil",
+    pt: "Descobrir o Brasil",
+    fr: "Découvrir le Brésil",
+    de: "Brasilien Entdecken",
+  },
+  trusted: {
+    en: "Trusted by travelers from around the world",
+    es: "La confianza de viajeros de todo el mundo",
+    pt: "Confiado por viajantes do mundo inteiro",
+    fr: "La confiance de voyageurs du monde entier",
+    de: "Das Vertrauen von Reisenden aus aller Welt",
+  },
+} as const;
 
 export function HeroSection() {
   const { t, lang } = useLanguage();
@@ -45,17 +59,10 @@ export function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [fading, setFading] = useState(false);
 
-  const headline = t(settings, "heroHeadline",
-    lang === "en" ? "Brazil Through the Eyes of Those Who Love It" :
-    lang === "es" ? "Brasil a Través de los Ojos de Quienes lo Aman" :
-    "Brasil pelos Olhos de Quem o Ama"
-  );
+  const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
 
-  const subheadline = t(settings, "heroSubheadline",
-    lang === "en" ? "Real places. Real people. Experiences that stay with you long after you leave." :
-    lang === "es" ? "Lugares reales. Personas reales. Experiencias que permanecen contigo mucho después de partir." :
-    "Lugares reais. Pessoas reais. Experiências que ficam com você muito depois de partir."
-  );
+  const headline = t(settings, "heroHeadline", tx("headline"));
+  const subheadline = t(settings, "heroSubheadline", tx("subheadline"));
 
   const goTo = useCallback((index: number) => {
     setFading(true);
@@ -113,7 +120,7 @@ export function HeroSection() {
                   size="lg"
                   className="rounded-full px-8 py-6 text-base font-semibold bg-[#FFB600] hover:bg-[#e6a400] text-black shadow-lg border-0"
                 >
-                  {lang === "en" ? "Explore Experiences" : lang === "es" ? "Explorar Experiencias" : "Explorar Experiências"}
+                  {tx("explore")}
                 </Button>
               </Link>
               <Link href="/destinations">
@@ -122,7 +129,7 @@ export function HeroSection() {
                   variant="ghost"
                   className="rounded-full px-8 py-6 text-base font-semibold text-white border border-white/40 hover:bg-white/15 hover:border-white/60 backdrop-blur-sm gap-2"
                 >
-                  {lang === "en" ? "Discover Brazil" : lang === "es" ? "Descubrir Brasil" : "Descobrir o Brasil"}
+                  {tx("discover")}
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
@@ -161,13 +168,7 @@ export function HeroSection() {
             <div className="flex text-[#FFB600]">
               {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
             </div>
-            <span className="text-white font-semibold text-sm">
-              {lang === "en"
-                ? "Trusted by travelers from around the world"
-                : lang === "es"
-                ? "La confianza de viajeros de todo el mundo"
-                : "Confiado por viajantes do mundo inteiro"}
-            </span>
+            <span className="text-white font-semibold text-sm">{tx("trusted")}</span>
           </div>
           <div className="hidden md:flex items-center gap-6 text-white/50 text-xs">
             <span className="w-px h-4 bg-white/20" />

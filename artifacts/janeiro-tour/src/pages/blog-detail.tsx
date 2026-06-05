@@ -8,6 +8,16 @@ import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+const TX = {
+  loading:    { en: "Loading article...",             es: "Cargando artículo...",              pt: "Carregando artigo...",              fr: "Chargement de l'article...",           de: "Artikel wird geladen..." },
+  notFound:   { en: "Article not found",              es: "Artículo no encontrado",            pt: "Artigo não encontrado",             fr: "Article introuvable",                  de: "Artikel nicht gefunden" },
+  backBlog:   { en: "Back to Blog",                   es: "Volver al Blog",                    pt: "Voltar ao Blog",                    fr: "Retour au Blog",                       de: "Zurück zum Blog" },
+  minRead:    { en: "min read",                       es: "min de lectura",                    pt: "min de leitura",                    fr: "min de lecture",                       de: "Min. Lesezeit" },
+  ctaTitle:   { en: "Ready to Experience Brazil?",    es: "¿Listo para Vivir Brasil?",         pt: "Pronto para Experienciar o Brasil?",fr: "Prêt à Découvrir le Brésil ?",         de: "Bereit, Brasilien zu erleben?" },
+  ctaSub:     { en: "Book your tour with our expert local guides", es: "Reserva tu tour con nuestros guías locales expertos", pt: "Reserve seu tour com nossos guias locais especialistas", fr: "Réservez votre tour avec nos guides locaux experts", de: "Buchen Sie Ihre Tour mit unseren lokalen Experten" },
+  exploreTours:{ en: "Explore Tours",                 es: "Explorar Tours",                    pt: "Explorar Tours",                    fr: "Explorer les Tours",                   de: "Touren Erkunden" },
+} as const;
+
 export default function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
   const postId = parseInt(id ?? "0", 10);
@@ -15,11 +25,13 @@ export default function BlogDetailPage() {
 
   const { data: post, isLoading } = useGetBlogPost(postId);
 
+  const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
+
   if (isLoading) {
     return (
       <MainLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-pulse text-xl text-muted-foreground">Loading article...</div>
+          <div className="animate-pulse text-xl text-muted-foreground">{tx("loading")}</div>
         </div>
       </MainLayout>
     );
@@ -29,18 +41,25 @@ export default function BlogDetailPage() {
     return (
       <MainLayout>
         <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-          <h1 className="text-2xl font-bold">Article not found</h1>
-          <Link href="/blog"><Button>Back to Blog</Button></Link>
+          <h1 className="text-2xl font-bold">{tx("notFound")}</h1>
+          <Link href="/blog"><Button>{tx("backBlog")}</Button></Link>
         </div>
       </MainLayout>
     );
   }
 
-  const title = lang === "es" ? (post.titleEs ?? post.title) : lang === "pt" ? (post.titlePt ?? post.title) : post.title;
+  const title =
+    lang === "es" ? (post.titleEs ?? post.title) :
+    lang === "pt" ? (post.titlePt ?? post.title) :
+    post.title;
+
   const content =
     lang === "es" ? (post.contentEs ?? post.content) :
     lang === "pt" ? (post.contentPt ?? post.content) :
     post.content;
+
+  const dateLocale =
+    lang === "fr" ? "fr-FR" : lang === "de" ? "de-DE" : lang === "pt" ? "pt-BR" : lang === "es" ? "es-ES" : "en-US";
 
   return (
     <MainLayout>
@@ -50,14 +69,14 @@ export default function BlogDetailPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 max-w-4xl mx-auto">
           <Link href="/blog" className="inline-flex items-center gap-1 text-white/80 hover:text-white mb-4 transition-colors text-sm">
-            <ChevronLeft size={16} /> Back to Blog
+            <ChevronLeft size={16} /> {tx("backBlog")}
           </Link>
           <Badge className="bg-primary/90 text-primary-foreground mb-3">{post.category}</Badge>
           <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">{title}</h1>
           <div className="flex items-center gap-6 mt-4 text-white/80 text-sm">
             <span className="flex items-center gap-1.5"><User size={14} /> {post.author}</span>
-            <span className="flex items-center gap-1.5"><Clock size={14} /> {post.readTimeMinutes} min read</span>
-            <span>{new Date(post.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+            <span className="flex items-center gap-1.5"><Clock size={14} /> {post.readTimeMinutes} {tx("minRead")}</span>
+            <span>{new Date(post.createdAt).toLocaleDateString(dateLocale, { month: "long", day: "numeric", year: "numeric" })}</span>
           </div>
         </div>
       </section>
@@ -82,11 +101,11 @@ export default function BlogDetailPage() {
 
         {/* CTA */}
         <div className="mt-16 p-8 bg-primary/10 rounded-2xl border border-primary/20 text-center">
-          <h3 className="text-2xl font-bold mb-2">Ready to Experience Brazil?</h3>
-          <p className="text-muted-foreground mb-6">Book your tour with our expert local guides</p>
+          <h3 className="text-2xl font-bold mb-2">{tx("ctaTitle")}</h3>
+          <p className="text-muted-foreground mb-6">{tx("ctaSub")}</p>
           <Link href="/tours">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8">
-              Explore Tours
+              {tx("exploreTours")}
             </Button>
           </Link>
         </div>

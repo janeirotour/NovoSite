@@ -6,16 +6,46 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Check, Car, Clock, Shield } from "lucide-react";
 
-const features = [
-  { icon: Car, title: "Door-to-Door Service", desc: "Private pickup from airport to your hotel, no shared shuttles" },
-  { icon: Clock, title: "Flight Monitoring", desc: "We track your flight in real-time so we're always ready" },
-  { icon: Shield, title: "Professional Drivers", desc: "Licensed, English-speaking drivers with clean, modern vehicles" },
-  { icon: Check, title: "Fixed Pricing", desc: "No meters, no surprises — transparent pricing confirmed at booking" },
-];
+const TX = {
+  eyebrow:    { en: "Seamless Arrivals",            es: "Llegadas sin Complicaciones",        pt: "Chegadas sem Complicações",          fr: "Arrivées Sans Stress",               de: "Entspannte Ankünfte" },
+  heading:    { en: "Brazil Airport Transfers",     es: "Traslados Aeropuerto Brasil",        pt: "Transfers Aeroporto Brasil",         fr: "Transferts Aéroport Brésil",         de: "Brasilien Flughafentransfers" },
+  sub:        {
+    en: "Private, reliable, and stress-free airport transfers across Brazil's major cities",
+    es: "Traslados aeropuerto privados, confiables y sin estrés en las principales ciudades de Brasil",
+    pt: "Transfers aeroporto privados, confiáveis e sem estresse nas principais cidades do Brasil",
+    fr: "Transferts aéroport privés, fiables et sans stress dans les principales villes du Brésil",
+    de: "Private, zuverlässige und stressfreie Flughafentransfers in Brasiliens wichtigsten Städten",
+  },
+  book:       { en: "Book a Transfer",              es: "Reservar un Traslado",               pt: "Reservar um Transfer",               fr: "Réserver un Transfert",              de: "Transfer buchen" },
+  f1title:    { en: "Door-to-Door Service",         es: "Servicio Puerta a Puerta",           pt: "Serviço Porta a Porta",              fr: "Service Porte-à-Porte",              de: "Tür-zu-Tür-Service" },
+  f1desc:     { en: "Private pickup from airport to your hotel, no shared shuttles", es: "Traslado privado del aeropuerto a tu hotel, sin shuttles compartidos", pt: "Traslado privado do aeroporto ao seu hotel, sem shuttles compartilhados", fr: "Prise en charge privée de l'aéroport à votre hôtel, sans navettes partagées", de: "Privater Transfer vom Flughafen zum Hotel, keine gemeinsamen Shuttles" },
+  f2title:    { en: "Flight Monitoring",            es: "Seguimiento de Vuelo",               pt: "Monitoramento de Voo",               fr: "Suivi de Vol",                       de: "Flugüberwachung" },
+  f2desc:     { en: "We track your flight in real-time so we're always ready", es: "Seguimos tu vuelo en tiempo real para estar siempre listos", pt: "Acompanhamos seu voo em tempo real para estar sempre prontos", fr: "Nous suivons votre vol en temps réel pour être toujours prêts", de: "Wir verfolgen Ihren Flug in Echtzeit, damit wir immer bereit sind" },
+  f3title:    { en: "Professional Drivers",         es: "Conductores Profesionales",          pt: "Motoristas Profissionais",           fr: "Chauffeurs Professionnels",          de: "Professionelle Fahrer" },
+  f3desc:     { en: "Licensed, English-speaking drivers with clean, modern vehicles", es: "Conductores licenciados, que hablan inglés, con vehículos modernos y limpios", pt: "Motoristas licenciados, que falam inglês, com veículos modernos e limpos", fr: "Chauffeurs licenciés, anglophones, avec des véhicules propres et modernes", de: "Lizenzierte, englischsprachige Fahrer mit sauberen, modernen Fahrzeugen" },
+  f4title:    { en: "Fixed Pricing",                es: "Precio Fijo",                        pt: "Preço Fixo",                         fr: "Prix Fixes",                         de: "Feste Preise" },
+  f4desc:     { en: "No meters, no surprises — transparent pricing confirmed at booking", es: "Sin taxímetros, sin sorpresas — precios transparentes confirmados al reservar", pt: "Sem taxímetros, sem surpresas — preços transparentes confirmados na reserva", fr: "Pas de compteur, pas de surprises — prix transparents confirmés à la réservation", de: "Keine Taxameter, keine Überraschungen — transparente Preise bei der Buchung bestätigt" },
+  available:  { en: "Available Transfer Services",  es: "Servicios de Traslado Disponibles",  pt: "Serviços de Transfer Disponíveis",   fr: "Services de Transfert Disponibles",  de: "Verfügbare Transferdienste" },
+  contactUs:  { en: "Contact us for transfer availability", es: "Contáctanos para disponibilidad de traslados", pt: "Contacte-nos para disponibilidade de transfers", fr: "Contactez-nous pour la disponibilité des transferts", de: "Kontaktieren Sie uns für die Transferverfügbarkeit" },
+  whatsapp:   { en: "WhatsApp for Transfer Booking",es: "WhatsApp para Reservas",             pt: "WhatsApp para Reservas",             fr: "WhatsApp pour les Réservations",    de: "WhatsApp für Buchungen" },
+  ctaTitle:   { en: "Need a Custom Transfer?",      es: "¿Necesitas un Traslado Personalizado?", pt: "Precisa de um Transfer Personalizado?", fr: "Besoin d'un Transfert Personnalisé?", de: "Brauchen Sie einen individuellen Transfer?" },
+  ctaSub:     { en: "Contact us for point-to-point transfers, intercity routes, and group shuttles", es: "Contáctanos para traslados punto a punto, rutas interurbanas y shuttles grupales", pt: "Contacte-nos para transfers ponto a ponto, rotas intermunicipais e shuttles em grupo", fr: "Contactez-nous pour des transferts point à point, des trajets interurbains et des navettes de groupe", de: "Kontaktieren Sie uns für Punkt-zu-Punkt-Transfers, Stadtverbindungen und Gruppen-Shuttles" },
+  whatsappUs: { en: "WhatsApp Us",                  es: "Escríbenos por WhatsApp",            pt: "Fale pelo WhatsApp",                 fr: "Contactez-nous par WhatsApp",        de: "WhatsApp schreiben" },
+  contactLink:{ en: "Contact Us",                   es: "Contáctanos",                        pt: "Contacte-nos",                       fr: "Nous Contacter",                     de: "Kontakt aufnehmen" },
+} as const;
 
 export default function TransfersPage() {
   const { lang } = useLanguage();
   const { data: tours, isLoading } = useListTours({ category: "transfer" });
+
+  const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
+
+  const features = [
+    { icon: Car,    title: tx("f1title"), desc: tx("f1desc") },
+    { icon: Clock,  title: tx("f2title"), desc: tx("f2desc") },
+    { icon: Shield, title: tx("f3title"), desc: tx("f3desc") },
+    { icon: Check,  title: tx("f4title"), desc: tx("f4desc") },
+  ];
 
   return (
     <>
@@ -27,14 +57,12 @@ export default function TransfersPage() {
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-4">Seamless Arrivals</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Brazil Airport Transfers</h1>
-          <p className="text-white/80 text-xl max-w-2xl mx-auto mb-10">
-            Private, reliable, and stress-free airport transfers across Brazil's major cities
-          </p>
+          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-4">{tx("eyebrow")}</p>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">{tx("heading")}</h1>
+          <p className="text-white/80 text-xl max-w-2xl mx-auto mb-10">{tx("sub")}</p>
           <a href="https://wa.me/+5521972633333" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="h-14 px-10 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground">
-              Book a Transfer
+              {tx("book")}
             </Button>
           </a>
         </div>
@@ -55,7 +83,7 @@ export default function TransfersPage() {
         </div>
 
         {/* Transfer Listings */}
-        <h2 className="text-3xl font-bold mb-8">Available Transfer Services</h2>
+        <h2 className="text-3xl font-bold mb-8">{tx("available")}</h2>
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-80 rounded-2xl" />)}
@@ -66,9 +94,9 @@ export default function TransfersPage() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-muted-foreground mb-4">Contact us for transfer availability</p>
+            <p className="text-muted-foreground mb-4">{tx("contactUs")}</p>
             <a href="https://wa.me/+5521972633333" target="_blank" rel="noopener noreferrer">
-              <Button>WhatsApp for Transfer Booking</Button>
+              <Button>{tx("whatsapp")}</Button>
             </a>
           </div>
         )}
@@ -76,14 +104,14 @@ export default function TransfersPage() {
 
       {/* CTA */}
       <section className="bg-primary py-20 text-center">
-        <h2 className="text-3xl font-bold text-primary-foreground mb-4">Need a Custom Transfer?</h2>
-        <p className="text-primary-foreground/80 mb-8">Contact us for point-to-point transfers, intercity routes, and group shuttles</p>
+        <h2 className="text-3xl font-bold text-primary-foreground mb-4">{tx("ctaTitle")}</h2>
+        <p className="text-primary-foreground/80 mb-8">{tx("ctaSub")}</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="https://wa.me/+5521972633333" target="_blank" rel="noopener noreferrer">
-            <Button size="lg" variant="secondary" className="h-12 px-8">WhatsApp Us</Button>
+            <Button size="lg" variant="secondary" className="h-12 px-8">{tx("whatsappUs")}</Button>
           </a>
           <Link href="/contact">
-            <Button size="lg" variant="outline" className="h-12 px-8 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">Contact Us</Button>
+            <Button size="lg" variant="outline" className="h-12 px-8 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">{tx("contactLink")}</Button>
           </Link>
         </div>
       </section>
