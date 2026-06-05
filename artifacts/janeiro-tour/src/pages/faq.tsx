@@ -104,6 +104,17 @@ export default function FaqPage() {
       cert: "Zertifiziert vom Brasilianischen Tourismusministerium",
       certNum: "Registrierung n° 20.966.047.0001/11",
     },
+    no: {
+      tag: "Hjelpesenter",
+      h1: "Ofte stilte spørsmål",
+      sub: "Alt du trenger å vite om å reise med Janeiro Tour & Travel.",
+      still: "Har du fortsatt spørsmål?",
+      stillSub: "Teamet vårt er tilgjengelig 7 dager i uken via WhatsApp eller e-post.",
+      wa: "Chat på WhatsApp",
+      contact: "Kontakt oss",
+      cert: "Sertifisert av det brasilianske turismedepartementet",
+      certNum: "Registrering nr 20.966.047.0001/11",
+    },
   }[lang] ?? {
     tag: "Help Center",
     h1: "Frequently Asked Questions",

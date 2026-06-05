@@ -235,11 +235,11 @@ export default function TourDetailPage() {
             <Badge variant="outline" className="text-white border-white/50 capitalize">{tour.category}</Badge>
             {tour.tourType === "private" ? (
               <Badge className="bg-accent text-accent-foreground font-semibold px-3">
-                {lang === "es" ? "Tour Privado" : lang === "pt" ? "Tour Privativo" : lang === "fr" ? "Tour Privé" : lang === "de" ? "Private Tour" : "Private Tour"}
+                {lang === "es" ? "Tour Privado" : lang === "pt" ? "Tour Privativo" : lang === "fr" ? "Tour Privé" : lang === "de" ? "Private Tour" : lang === "no" ? "Privat tur" : "Private Tour"}
               </Badge>
             ) : (
               <Badge className="bg-white/20 text-white border border-white/40 backdrop-blur-sm font-semibold px-3">
-                {lang === "es" ? "Tour Compartido" : lang === "pt" ? "Tour Compartilhado" : lang === "fr" ? "Tour Partagé" : lang === "de" ? "Gruppentour" : "Shared Tour"}
+                {lang === "es" ? "Tour Compartido" : lang === "pt" ? "Tour Compartilhado" : lang === "fr" ? "Tour Partagé" : lang === "de" ? "Gruppentour" : lang === "no" ? "Gruppetur" : "Shared Tour"}
               </Badge>
             )}
           </div>
@@ -363,6 +363,8 @@ export default function TourDetailPage() {
                     ? "L'ordre des activités peut être ajusté en fonction de la logistique et des conditions du jour, en priorisant toujours la meilleure expérience pour le groupe."
                     : lang === "de"
                     ? "Die Reihenfolge der Aktivitäten kann je nach Logistik und Tagesbedingungen angepasst werden, wobei stets das beste Erlebnis für die Gruppe Priorität hat."
+                    : lang === "no"
+                    ? "Rekkefølgen på aktivitetene kan justeres basert på logistikk og daglige forhold, alltid med fokus på den beste opplevelsen for gruppen."
                     : "The order of activities may be adjusted based on logistics and daily conditions, always prioritising the best experience for the group."}
                 </p>
               </div>
@@ -382,6 +384,8 @@ export default function TourDetailPage() {
                       ? "Le transport aller-retour n'est pas inclus mais peut être ajouté comme option supplémentaire lors de la réservation."
                       : lang === "de"
                       ? "Der Hin- und Rücktransport ist nicht inbegriffen, kann aber bei der Buchung als optionales Extra hinzugefügt werden."
+                      : lang === "no"
+                      ? "Tur-retur transport er ikke inkludert, men kan legges til som tilvalg ved bestilling."
                       : "Round-trip transportation is not included but can be added as an optional extra at the time of booking."}
                   </p>
                 </div>

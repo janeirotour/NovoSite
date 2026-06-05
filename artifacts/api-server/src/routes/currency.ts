@@ -2,7 +2,7 @@ import { Router } from "express";
 
 const router = Router();
 
-const SUPPORTED: string[] = ["USD", "EUR", "GBP", "BRL", "CAD", "AUD", "ARS", "CLP", "MXN"];
+const SUPPORTED: string[] = ["USD", "EUR", "GBP", "BRL", "CAD", "AUD", "ARS", "CLP", "MXN", "NOK"];
 
 const FALLBACK_RATES: Record<string, number> = {
   USD: 1,
@@ -14,6 +14,7 @@ const FALLBACK_RATES: Record<string, number> = {
   ARS: 900,
   CLP: 920,
   MXN: 17.2,
+  NOK: 10.7,
 };
 
 interface RatesCache {

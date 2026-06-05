@@ -17,6 +17,7 @@ function formatDuration(hours: number, lang: string): string {
     lang === "pt" ? "horas" :
     lang === "fr" ? "heures" :
     lang === "de" ? "Stunden" :
+    lang === "no" ? "timer" :
     "hours";
   return `${hours} ${word}`;
 }
@@ -29,6 +30,7 @@ function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
       lang === "pt" ? "Tour Privativo" :
       lang === "fr" ? "Tour Privé" :
       lang === "de" ? "Private Tour" :
+      lang === "no" ? "Privat tur" :
       "Private Tour";
     return (
       <Badge className="bg-accent text-accent-foreground border-none px-2.5 py-0.5 text-xs font-semibold">
@@ -41,6 +43,7 @@ function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
     lang === "pt" ? "Tour Compartilhado" :
     lang === "fr" ? "Tour Partagé" :
     lang === "de" ? "Gruppentour" :
+    lang === "no" ? "Gruppetur" :
     "Shared Tour";
   return (
     <Badge className="bg-white/20 text-white border border-white/30 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold">
@@ -50,12 +53,12 @@ function TourTypeBadge({ tourType, lang }: { tourType: string; lang: string }) {
 }
 
 const CATEGORY_LABELS: Record<string, Record<string, string>> = {
-  aerial:      { en: "Aerial",      es: "Aéreo",      pt: "Aéreo",      fr: "Aérien",    de: "Lufttour" },
-  nature:      { en: "Adventure",   es: "Aventura",   pt: "Aventura",   fr: "Aventure",   de: "Abenteuer" },
-  culture:     { en: "Culture",     es: "Cultura",    pt: "Cultura",    fr: "Culture",    de: "Kultur" },
-  sightseeing: { en: "Sightseeing", es: "City Tour",  pt: "City Tour",  fr: "Visite",     de: "Stadtbesichtigung" },
-  transfer:    { en: "Transfer",    es: "Traslado",   pt: "Traslado",   fr: "Transfert",  de: "Transfer" },
-  food:        { en: "Food",        es: "Gastronomía",pt: "Gastronomia",fr: "Gastronomie",de: "Kulinarik" },
+  aerial:      { en: "Aerial",      es: "Aéreo",      pt: "Aéreo",      fr: "Aérien",    de: "Lufttour",           no: "Lufttour" },
+  nature:      { en: "Adventure",   es: "Aventura",   pt: "Aventura",   fr: "Aventure",   de: "Abenteuer",          no: "Eventyr" },
+  culture:     { en: "Culture",     es: "Cultura",    pt: "Cultura",    fr: "Culture",    de: "Kultur",             no: "Kultur" },
+  sightseeing: { en: "Sightseeing", es: "City Tour",  pt: "City Tour",  fr: "Visite",     de: "Stadtbesichtigung",  no: "Sightseeing" },
+  transfer:    { en: "Transfer",    es: "Traslado",   pt: "Traslado",   fr: "Transfert",  de: "Transfer",           no: "Transfer" },
+  food:        { en: "Food",        es: "Gastronomía",pt: "Gastronomia",fr: "Gastronomie",de: "Kulinarik",          no: "Mat" },
 };
 
 export function TourCard({ tour }: { tour: Tour }) {
@@ -89,13 +92,13 @@ export function TourCard({ tour }: { tour: Tour }) {
   };
 
   const TX = {
-    topRated:   { en: "Top Rated",       es: "Destacado",       pt: "Destaque",       fr: "Top noté",       de: "Top bewertet" },
-    upTo:       { en: "Up to",           es: "Hasta",           pt: "Até",            fr: "Jusqu'à",        de: "Bis zu" },
-    from:       { en: "From",            es: "Desde",           pt: "A partir de",    fr: "Dès",            de: "Ab" },
-    bookNow:    { en: "Book Now",        es: "Reservar",        pt: "Reservar",       fr: "Réserver",       de: "Buchen" },
-    chooseDate: { en: "Choose a date",   es: "Elige una fecha", pt: "Escolha uma data", fr: "Choisir une date", de: "Datum wählen" },
-    addToCart:  { en: "Add to Cart",     es: "Agregar",         pt: "Adicionar",      fr: "Ajouter",        de: "Hinzufügen" },
-    selectDate: { en: "Select a date first", es: "Selecciona una fecha", pt: "Selecione uma data", fr: "Sélectionnez une date", de: "Datum auswählen" },
+    topRated:   { en: "Top Rated",       es: "Destacado",       pt: "Destaque",       fr: "Top noté",       de: "Top bewertet",   no: "Topprangert" },
+    upTo:       { en: "Up to",           es: "Hasta",           pt: "Até",            fr: "Jusqu'à",        de: "Bis zu",         no: "Opptil" },
+    from:       { en: "From",            es: "Desde",           pt: "A partir de",    fr: "Dès",            de: "Ab",             no: "Fra" },
+    bookNow:    { en: "Book Now",        es: "Reservar",        pt: "Reservar",       fr: "Réserver",       de: "Buchen",         no: "Bestill nå" },
+    chooseDate: { en: "Choose a date",   es: "Elige una fecha", pt: "Escolha uma data", fr: "Choisir une date", de: "Datum wählen", no: "Velg dato" },
+    addToCart:  { en: "Add to Cart",     es: "Agregar",         pt: "Adicionar",      fr: "Ajouter",        de: "Hinzufügen",     no: "Legg i kurv" },
+    selectDate: { en: "Select a date first", es: "Selecciona una fecha", pt: "Selecione uma data", fr: "Sélectionnez une date", de: "Datum auswählen", no: "Velg dato først" },
   } as const;
 
   const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];

@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { ArrowRight } from "lucide-react";
 
-type Lang = "en" | "es" | "pt" | "fr" | "de";
+type Lang = "en" | "es" | "pt" | "fr" | "de" | "no";
 
 const DESTINATIONS = [
   {
@@ -15,6 +15,7 @@ const DESTINATIONS = [
     pt: { name: "Rio de Janeiro", tagline: "A Cidade Maravilhosa", desc: "Cristo Redentor, Copacabana, Lapa, Pão de Açúcar — o Rio é uma cidade que impressiona os sentidos e fica na alma. Sinta seu ritmo, sua beleza, sua gente." },
     fr: { name: "Rio de Janeiro", tagline: "La Ville Merveilleuse", desc: "Le Christ Rédempteur, Copacabana, Lapa, le Pain de Sucre — Rio est une ville qui submerge les sens et reste dans l'âme. Vivez son rythme, sa beauté, ses habitants." },
     de: { name: "Rio de Janeiro", tagline: "Die Wunderbare Stadt", desc: "Christus der Erlöser, Copacabana, Lapa, Zuckerhut — Rio ist eine Stadt, die die Sinne überwältigt und in der Seele bleibt. Erleben Sie ihren Rhythmus, ihre Schönheit, ihre Menschen." },
+    no: { name: "Rio de Janeiro", tagline: "Den vidunderlige byen", desc: "Kristus Frelseren, Copacabana, Lapa, Sugarloaf — Rio er en by som overveldende sansene og som blir i sjelen. Opplev dens rytme, dens skjønnhet, dens mennesker." },
   },
   {
     id: 2,
@@ -25,6 +26,7 @@ const DESTINATIONS = [
     pt: { name: "São Paulo", tagline: "A Cidade Que Nunca Para", desc: "Gastronomia, arte, arquitetura e cultura em escala extraordinária. São Paulo é o coração cosmopolita do Brasil — um mundo dentro de uma cidade." },
     fr: { name: "São Paulo", tagline: "La Ville Qui Ne S'Arrête Jamais", desc: "Gastronomie, art, architecture et culture à une échelle extraordinaire. São Paulo est le cœur cosmopolite du Brésil — un monde dans une ville." },
     de: { name: "São Paulo", tagline: "Die Stadt, die niemals schläft", desc: "Gastronomie, Kunst, Architektur und Kultur in außergewöhnlichem Ausmaß. São Paulo ist Brasiliens kosmopolitisches Herz — eine Welt in einer Stadt." },
+    no: { name: "São Paulo", tagline: "Byen som aldri stopper", desc: "Gastronomi, kunst, arkitektur og kultur i eksepsjonelt omfang. São Paulo er Brasils kosmopolitiske hjerte — en verden i én by." },
   },
   {
     id: 5,
@@ -35,6 +37,7 @@ const DESTINATIONS = [
     pt: { name: "Bahia", tagline: "O Coração da Cultura Afro-Brasileira", desc: "O histórico Pelourinho de Salvador, música Axé, candomblé e o carnaval mais vibrante do Brasil. A Bahia é onde a alma do Brasil verdadeiramente vive." },
     fr: { name: "Bahia", tagline: "Le Cœur de la Culture Afro-Brésilienne", desc: "Le Pelourinho historique de Salvador, la musique Axé, le candomblé et le carnaval le plus vibrant du Brésil. Bahia est là où l'âme du Brésil vit vraiment." },
     de: { name: "Bahia", tagline: "Das Herz der Afro-Brasilianischen Kultur", desc: "Das historische Pelourinho in Salvador, Axé-Musik, Candomblé und der lebendigste Karneval Brasiliens. Bahia ist der Ort, wo Brasiliens Seele wirklich lebt." },
+    no: { name: "Bahia", tagline: "Hjertet av afro-brasiliansk kultur", desc: "Det historiske Pelourinho i Salvador, Axé-musikk, Candomblé og det mest levende karnevalet i Brasil. Bahia er der Brasils sjel virkelig lever." },
   },
   {
     id: 3,
@@ -45,6 +48,7 @@ const DESTINATIONS = [
     pt: { name: "Foz do Iguaçu", tagline: "Uma das Maiores Maravilhas do Mundo", desc: "O sistema de cachoeiras mais poderoso do planeta. As Cataratas do Iguaçu se estendem pela fronteira entre Brasil e Argentina — um espetáculo que tira o fôlego até do viajante mais experiente." },
     fr: { name: "Foz do Iguaçu", tagline: "Une des Plus Grandes Merveilles du Monde", desc: "Le système de chutes d'eau le plus puissant de la planète. Les chutes d'Iguaçu s'étendent à la frontière entre le Brésil et l'Argentine — un spectacle qui coupe le souffle même au voyageur le plus aguerri." },
     de: { name: "Foz do Iguaçu", tagline: "Eines der größten Weltwunder", desc: "Das mächtigste Wasserfallsystem des Planeten. Die Iguaçu-Fälle erstrecken sich über die Grenze zwischen Brasilien und Argentinien — ein Spektakel, das selbst erfahrenen Reisenden den Atem verschlägt." },
+    no: { name: "Foz do Iguaçu", tagline: "Et av verdens største naturundere", desc: "Det mektigste fossesystemet på planeten. Iguaçu-fossene strekker seg over grensen mellom Brasil og Argentina — et skuespill som tar pusten fra selv erfarne reisende." },
   },
   {
     id: 9,
@@ -55,6 +59,7 @@ const DESTINATIONS = [
     pt: { name: "Recife", tagline: "A Veneza do Brasil", desc: "Canais, pontes coloniais, praias deslumbrantes e um carnaval de frevo único no mundo. Recife e Olinda oferecem cultura e beleza em igual medida." },
     fr: { name: "Recife", tagline: "La Venise du Brésil", desc: "Voies navigables, ponts coloniaux, plages magnifiques et un carnaval frevo unique au monde. Recife et Olinda offrent culture et beauté à parts égales." },
     de: { name: "Recife", tagline: "Das Venedig Brasiliens", desc: "Wasserstraßen, Kolonialbrücken, atemberaubende Strände und ein einzigartiger Frevo-Karneval. Recife und Olinda bieten Kultur und Schönheit in gleichem Maß." },
+    no: { name: "Recife", tagline: "Brasils Venezia", desc: "Vannveier, kolonialbroer, fantastiske strender og en unik Frevo-karneval. Recife og Olinda tilbyr kultur og skjønnhet i like store doser." },
   },
   {
     id: 0,
@@ -65,6 +70,7 @@ const DESTINATIONS = [
     pt: { name: "Floresta Amazônica", tagline: "Os Pulmões da Terra", desc: "A maior floresta tropical do mundo — 5,5 milhões de quilômetros quadrados de fauna, rios e vida ancestral. Uma jornada única na vida rumo ao extraordinário." },
     fr: { name: "Forêt Amazonienne", tagline: "Les Poumons de la Terre", desc: "La plus grande forêt tropicale du monde — 5,5 millions de kilomètres carrés de faune, de rivières et de vie ancestrale. Un voyage unique dans l'extraordinaire." },
     de: { name: "Amazonas-Regenwald", tagline: "Die Lunge der Erde", desc: "Der größte tropische Regenwald der Welt — 5,5 Millionen Quadratkilometer Tierwelt, Flüsse und uraltes Leben. Eine einmalige Reise ins Außergewöhnliche." },
+    no: { name: "Amazonas-regnskogen", tagline: "Jordens lunge", desc: "Verdens største tropiske regnskog — 5,5 millioner kvadratkilometer med dyreliv, elver og eldgammelt liv. En enestående reise inn i det ekstraordinære." },
   },
 ];
 
@@ -129,6 +135,18 @@ const t = {
     browse: "Erlebnisse ansehen",
     talk: "Sprechen Sie uns an",
   },
+  no: {
+    eyebrow: "Utforsk Brasil",
+    heading: "Seks eksepsjonelle reisemål",
+    sub: "Hvert reisemål har sin egen rytme, sin egen kultur, sin egen måte å bli hos deg lenge etter avreise.",
+    cta: "Utforsk",
+    inquire: "Spør om dette reisemålet",
+    readyEyebrow: "Klar til å reise?",
+    readyTitle: "Ikke sikker på hvor du vil?",
+    readyDesc: "Teamet vårt kjenner hvert reisemål inn og ut. Fortell oss om reisestilen din, så lager vi den perfekte Brasil-reisen for deg.",
+    browse: "Se opplevelser",
+    talk: "Kontakt oss",
+  },
 };
 
 export default function DestinationsPage() {
@@ -141,6 +159,8 @@ export default function DestinationsPage() {
       ? "Destinations | Janeiro Tour & Travel"
       : l === "de"
       ? "Reiseziele | Janeiro Tour & Travel"
+      : l === "no"
+      ? "Reisemål | Janeiro Tour & Travel"
       : "Destinos | Janeiro Tour & Travel";
   }, [l]);
 

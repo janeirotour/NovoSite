@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de';
+export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'no';
 
-const VALID: Language[] = ['en', 'es', 'pt', 'fr', 'de'];
+const VALID: Language[] = ['en', 'es', 'pt', 'fr', 'de', 'no'];
 
 export function useLanguage() {
   const [lang, setLang] = useState<Language>(() => {

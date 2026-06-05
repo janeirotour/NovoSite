@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 
-export type CurrencyCode = "USD" | "EUR" | "GBP" | "BRL" | "CAD" | "AUD" | "ARS" | "CLP" | "MXN";
+export type CurrencyCode = "USD" | "EUR" | "GBP" | "BRL" | "CAD" | "AUD" | "ARS" | "CLP" | "MXN" | "NOK";
 
 export const CURRENCY_META: Record<CurrencyCode, { label: string; flag: string; locale: string; fractionDigits: number }> = {
   USD: { label: "US Dollar",          flag: "🇺🇸", locale: "en-US", fractionDigits: 0 },
@@ -12,6 +12,7 @@ export const CURRENCY_META: Record<CurrencyCode, { label: string; flag: string; 
   ARS: { label: "Peso Argentino",     flag: "🇦🇷", locale: "es-AR", fractionDigits: 0 },
   CLP: { label: "Peso Chileno",       flag: "🇨🇱", locale: "es-CL", fractionDigits: 0 },
   MXN: { label: "Peso Mexicano",      flag: "🇲🇽", locale: "es-MX", fractionDigits: 0 },
+  NOK: { label: "Norsk krone",        flag: "🇳🇴", locale: "nb-NO", fractionDigits: 0 },
 };
 
 export const CURRENCIES = Object.keys(CURRENCY_META) as CurrencyCode[];
@@ -23,11 +24,12 @@ const LOCALE_TO_CURRENCY: Record<string, CurrencyCode> = {
   "fr":    "EUR", "fr-FR": "EUR", "fr-BE": "EUR", "it":    "EUR",
   "it-IT": "EUR", "nl":    "EUR", "nl-NL": "EUR", "pt-PT": "EUR",
   "es-ES": "EUR", "es-FR": "EUR",
+  "nb":    "NOK", "nb-NO": "NOK", "no":    "NOK", "nn":    "NOK",
 };
 
 const FALLBACK_RATES: Record<CurrencyCode, number> = {
   USD: 1, EUR: 0.92, GBP: 0.79, BRL: 4.97,
-  CAD: 1.36, AUD: 1.53, ARS: 900, CLP: 920, MXN: 17.2,
+  CAD: 1.36, AUD: 1.53, ARS: 900, CLP: 920, MXN: 17.2, NOK: 10.7,
 };
 
 function detectCurrency(): CurrencyCode {

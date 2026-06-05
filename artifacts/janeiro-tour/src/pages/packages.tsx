@@ -21,52 +21,54 @@ type FilterKey = "all" | "budget" | "mid" | "premium" | "short" | "long";
 
 interface FilterOption {
   key: FilterKey;
-  en: string; es: string; pt: string; fr: string; de: string;
+  en: string; es: string; pt: string; fr: string; de: string; no: string;
 }
 
 const FILTERS: FilterOption[] = [
-  { key: "all",     en: "All Packages",  es: "Todos",          pt: "Todos",          fr: "Tous",              de: "Alle" },
-  { key: "budget",  en: "Under $300",    es: "Menos de $300",  pt: "Até $300",       fr: "Moins de $300",     de: "Unter $300" },
-  { key: "mid",     en: "$300 – $500",   es: "$300 – $500",    pt: "$300 – $500",    fr: "$300 – $500",       de: "$300 – $500" },
-  { key: "premium", en: "Over $500",     es: "Más de $500",    pt: "Acima de $500",  fr: "Plus de $500",      de: "Über $500" },
-  { key: "short",   en: "Short (1–2 d)", es: "Corto (1–2 d)",  pt: "Curto (1–2 d)", fr: "Court (1–2 j)",     de: "Kurz (1–2 T)" },
-  { key: "long",    en: "3+ Days",       es: "3+ Días",        pt: "3+ Dias",        fr: "3+ Jours",          de: "3+ Tage" },
+  { key: "all",     en: "All Packages",  es: "Todos",          pt: "Todos",          fr: "Tous",              de: "Alle",          no: "Alle pakker" },
+  { key: "budget",  en: "Under $300",    es: "Menos de $300",  pt: "Até $300",       fr: "Moins de $300",     de: "Unter $300",    no: "Under $300" },
+  { key: "mid",     en: "$300 – $500",   es: "$300 – $500",    pt: "$300 – $500",    fr: "$300 – $500",       de: "$300 – $500",   no: "$300 – $500" },
+  { key: "premium", en: "Over $500",     es: "Más de $500",    pt: "Acima de $500",  fr: "Plus de $500",      de: "Über $500",     no: "Over $500" },
+  { key: "short",   en: "Short (1–2 d)", es: "Corto (1–2 d)",  pt: "Curto (1–2 d)", fr: "Court (1–2 j)",     de: "Kurz (1–2 T)",  no: "Kort (1–2 d)" },
+  { key: "long",    en: "3+ Days",       es: "3+ Días",        pt: "3+ Dias",        fr: "3+ Jours",          de: "3+ Tage",       no: "3+ Dager" },
 ];
 
 const TX = {
-  eyebrow:   { en: "Curated Rio Experiences",        es: "Experiencias Curadas en Río",       pt: "Experiências Curadas no Rio",       fr: "Expériences Sélectionnées à Rio",   de: "Kuratierte Rio-Erlebnisse" },
-  heading:   { en: "Rio Experience Packages",        es: "Paquetes de Experiencias en Río",   pt: "Pacotes de Experiências no Rio",    fr: "Forfaits Expériences à Rio",        de: "Rio-Erlebnispakete" },
+  eyebrow:   { en: "Curated Rio Experiences",        es: "Experiencias Curadas en Río",       pt: "Experiências Curadas no Rio",       fr: "Expériences Sélectionnées à Rio",   de: "Kuratierte Rio-Erlebnisse",          no: "Kuraterte Rio-opplevelser" },
+  heading:   { en: "Rio Experience Packages",        es: "Paquetes de Experiencias en Río",   pt: "Pacotes de Experiências no Rio",    fr: "Forfaits Expériences à Rio",        de: "Rio-Erlebnispakete",                 no: "Rio-opplevelsespakker" },
   sub:       {
     en: "Hand-picked combinations of our best tours — bundled for better value. No hotel, no flights. Just unforgettable moments.",
     es: "Combinaciones de nuestros mejores tours — sin hotel ni vuelos. Solo momentos inolvidables.",
     pt: "Combinações dos nossos melhores tours — sem hotel nem passagens. Só momentos inesquecíveis.",
     fr: "Combinaisons de nos meilleurs tours — sans hôtel ni vols. Juste des moments inoubliables.",
     de: "Handverlesene Kombinationen unserer besten Touren — ohne Hotel und Flüge. Nur unvergessliche Momente.",
+    no: "Håndplukkede kombinasjoner av våre beste turer — buntet for bedre verdi. Ingen hotell, ingen flyreiser. Bare uforglemmelige øyeblikk.",
   },
-  curated:   { en: "Curated by locals",              es: "Curado por locales",                pt: "Curado por locais",                 fr: "Sélectionné par des locaux",        de: "Von Einheimischen zusammengestellt" },
-  save:      { en: "Save up to 27%",                 es: "Ahorra hasta 27%",                  pt: "Economize até 27%",                 fr: "Économisez jusqu'à 27%",            de: "Bis zu 27% sparen" },
-  noHotel:   { en: "No hotel or flights",            es: "Sin hotel ni vuelos",               pt: "Sem hotel nem voos",                fr: "Sans hôtel ni vols",                de: "Ohne Hotel oder Flüge" },
-  blackOwned:{ en: "Black-owned & community-led",    es: "Empresa negra y comunitaria",       pt: "Empresa negra e comunitária",       fr: "Entreprise afro & communautaire",   de: "Afro-geführt & gemeinschaftlich" },
-  searchPh:  { en: "Search packages…",               es: "Buscar paquetes…",                  pt: "Buscar pacotes…",                   fr: "Rechercher des forfaits…",          de: "Pakete suchen…" },
-  noFound:   { en: "No packages found",              es: "No se encontraron paquetes",        pt: "Nenhum pacote encontrado",          fr: "Aucun forfait trouvé",              de: "Keine Pakete gefunden" },
-  noMatch:   { en: "No packages match your search",  es: "Ningún paquete coincide",           pt: "Nenhum pacote encontrado",          fr: "Aucun forfait ne correspond",       de: "Keine Pakete entsprechen Ihrer Suche" },
-  tryOther:  { en: "Try a different keyword or reset the filters.", es: "Prueba otra palabra clave o restablece los filtros.", pt: "Tente outra palavra-chave ou limpe os filtros.", fr: "Essayez un autre mot-clé ou réinitialisez les filtres.", de: "Versuchen Sie ein anderes Stichwort oder setzen Sie die Filter zurück." },
-  clear:     { en: "Clear filters",                  es: "Limpiar filtros",                   pt: "Limpar filtros",                    fr: "Effacer les filtres",               de: "Filter löschen" },
-  perPerson: { en: "per person",                     es: "por persona",                       pt: "por pessoa",                        fr: "par personne",                      de: "pro Person" },
-  included:  { en: "Included experiences",           es: "Experiencias incluidas",            pt: "Experiências incluídas",            fr: "Expériences incluses",              de: "Enthaltene Erlebnisse" },
-  transfers: { en: "Airport transfers included (GIG — arrival & departure)", es: "Traslados aeropuerto incluidos (GIG — llegada y salida)", pt: "Transfers aeroporto incluídos (GIG — chegada e saída)", fr: "Transferts aéroport inclus (GIG — arrivée & départ)", de: "Flughafentransfers inbegriffen (GIG — Ankunft & Abflug)" },
-  seePrices: { en: "See Prices & Book",              es: "Ver Precios y Reservar",            pt: "Ver Preços e Reservar",             fr: "Voir les Prix et Réserver",         de: "Preise anzeigen & buchen" },
-  different: { en: "Something different in mind?",   es: "¿Tienes algo diferente en mente?",  pt: "Tem algo diferente em mente?",      fr: "Quelque chose de différent en tête?", de: "Etwas anderes im Sinn?" },
-  custom:    { en: "Build a Custom Package",         es: "Crea un Paquete Personalizado",     pt: "Monte um Pacote Personalizado",     fr: "Créez un Forfait Personnalisé",     de: "Individuelles Paket zusammenstellen" },
+  curated:   { en: "Curated by locals",              es: "Curado por locales",                pt: "Curado por locais",                 fr: "Sélectionné par des locaux",        de: "Von Einheimischen zusammengestellt", no: "Kuratert av lokalbefolkningen" },
+  save:      { en: "Save up to 27%",                 es: "Ahorra hasta 27%",                  pt: "Economize até 27%",                 fr: "Économisez jusqu'à 27%",            de: "Bis zu 27% sparen",                  no: "Spar opptil 27%" },
+  noHotel:   { en: "No hotel or flights",            es: "Sin hotel ni vuelos",               pt: "Sem hotel nem voos",                fr: "Sans hôtel ni vols",                de: "Ohne Hotel oder Flüge",              no: "Ingen hotell eller flyreiser" },
+  blackOwned:{ en: "Black-owned & community-led",    es: "Empresa negra y comunitaria",       pt: "Empresa negra e comunitária",       fr: "Entreprise afro & communautaire",   de: "Afro-geführt & gemeinschaftlich",    no: "Svart eid og fellesskapsdrevet" },
+  searchPh:  { en: "Search packages…",               es: "Buscar paquetes…",                  pt: "Buscar pacotes…",                   fr: "Rechercher des forfaits…",          de: "Pakete suchen…",                     no: "Søk etter pakker…" },
+  noFound:   { en: "No packages found",              es: "No se encontraron paquetes",        pt: "Nenhum pacote encontrado",          fr: "Aucun forfait trouvé",              de: "Keine Pakete gefunden",              no: "Ingen pakker funnet" },
+  noMatch:   { en: "No packages match your search",  es: "Ningún paquete coincide",           pt: "Nenhum pacote encontrado",          fr: "Aucun forfait ne correspond",       de: "Keine Pakete entsprechen Ihrer Suche", no: "Ingen pakker samsvarer med søket" },
+  tryOther:  { en: "Try a different keyword or reset the filters.", es: "Prueba otra palabra clave o restablece los filtros.", pt: "Tente outra palavra-chave ou limpe os filtros.", fr: "Essayez un autre mot-clé ou réinitialisez les filtres.", de: "Versuchen Sie ein anderes Stichwort oder setzen Sie die Filter zurück.", no: "Prøv et annet søkeord eller tilbakestill filtrene." },
+  clear:     { en: "Clear filters",                  es: "Limpiar filtros",                   pt: "Limpar filtros",                    fr: "Effacer les filtres",               de: "Filter löschen",                     no: "Tøm filtre" },
+  perPerson: { en: "per person",                     es: "por persona",                       pt: "por pessoa",                        fr: "par personne",                      de: "pro Person",                         no: "per person" },
+  included:  { en: "Included experiences",           es: "Experiencias incluidas",            pt: "Experiências incluídas",            fr: "Expériences incluses",              de: "Enthaltene Erlebnisse",              no: "Inkluderte opplevelser" },
+  transfers: { en: "Airport transfers included (GIG — arrival & departure)", es: "Traslados aeropuerto incluidos (GIG — llegada y salida)", pt: "Transfers aeroporto incluídos (GIG — chegada e saída)", fr: "Transferts aéroport inclus (GIG — arrivée & départ)", de: "Flughafentransfers inbegriffen (GIG — Ankunft & Abflug)", no: "Flyplasstransfer inkludert (GIG — ankomst og avreise)" },
+  seePrices: { en: "See Prices & Book",              es: "Ver Precios y Reservar",            pt: "Ver Preços e Reservar",             fr: "Voir les Prix et Réserver",         de: "Preise anzeigen & buchen",           no: "Se priser og bestill" },
+  different: { en: "Something different in mind?",   es: "¿Tienes algo diferente en mente?",  pt: "Tem algo diferente em mente?",      fr: "Quelque chose de différent en tête?", de: "Etwas anderes im Sinn?",           no: "Noe annet i tankene?" },
+  custom:    { en: "Build a Custom Package",         es: "Crea un Paquete Personalizado",     pt: "Monte um Pacote Personalizado",     fr: "Créez un Forfait Personnalisé",     de: "Individuelles Paket zusammenstellen", no: "Lag en egendefinert pakke" },
   customSub: {
     en: "Tell us your group size, interests and dates — we'll put together a bespoke itinerary with any combination of our tours.",
     es: "Cuéntanos el tamaño de tu grupo, intereses y fechas — armaremos un itinerario a medida con cualquier combinación de nuestros tours.",
     pt: "Conte-nos o tamanho do seu grupo, interesses e datas — montaremos um roteiro personalizado com qualquer combinação dos nossos tours.",
     fr: "Parlez-nous de votre groupe, vos intérêts et vos dates — nous créerons un itinéraire sur mesure avec nos tours.",
     de: "Sagen Sie uns Ihre Gruppengröße, Interessen und Daten — wir stellen ein maßgeschneidertes Reiseprogramm zusammen.",
+    no: "Fortell oss gruppestørrelse, interesser og datoer — vi setter sammen et skreddersydd reiseprogram med en kombinasjon av turene våre.",
   },
-  getQuote:  { en: "Get a Custom Quote",             es: "Obtener Cotización",                pt: "Solicitar Orçamento",               fr: "Obtenir un Devis",                  de: "Angebot anfordern" },
-  whatsapp:  { en: "Chat on WhatsApp",               es: "Chatear en WhatsApp",               pt: "Conversar no WhatsApp",             fr: "Discuter sur WhatsApp",             de: "Per WhatsApp chatten" },
+  getQuote:  { en: "Get a Custom Quote",             es: "Obtener Cotización",                pt: "Solicitar Orçamento",               fr: "Obtenir un Devis",                  de: "Angebot anfordern",                  no: "Få et tilbud" },
+  whatsapp:  { en: "Chat on WhatsApp",               es: "Chatear en WhatsApp",               pt: "Conversar no WhatsApp",             fr: "Discuter sur WhatsApp",             de: "Per WhatsApp chatten",               no: "Chat på WhatsApp" },
 } as const;
 
 export default function PackagesPage() {

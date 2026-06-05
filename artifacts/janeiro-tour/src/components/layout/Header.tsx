@@ -6,30 +6,30 @@ import { CurrencySelector } from "@/components/ui/currency-selector";
 import { Menu, X, ChevronDown, MessageCircle, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Lang = "en" | "es" | "pt" | "fr" | "de";
+type Lang = "en" | "es" | "pt" | "fr" | "de" | "no";
 
 const destinations = [
-  { href: "/destinations/1", en: "Rio de Janeiro", es: "Río de Janeiro", pt: "Rio de Janeiro", fr: "Rio de Janeiro", de: "Rio de Janeiro" },
-  { href: "/destinations/2", en: "São Paulo", es: "São Paulo", pt: "São Paulo", fr: "São Paulo", de: "São Paulo" },
-  { href: "/destinations/5", en: "Bahia", es: "Bahía", pt: "Bahia", fr: "Bahia", de: "Bahia" },
-  { href: "/destinations/3", en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu", fr: "Foz do Iguaçu", de: "Foz do Iguaçu" },
-  { href: "/destinations/9", en: "Recife", es: "Recife", pt: "Recife", fr: "Recife", de: "Recife" },
-  { href: "/destinations", en: "Amazon Rainforest", es: "Amazonía", pt: "Floresta Amazônica", fr: "Forêt Amazonienne", de: "Amazonas-Regenwald" },
+  { href: "/destinations/1", en: "Rio de Janeiro", es: "Río de Janeiro", pt: "Rio de Janeiro", fr: "Rio de Janeiro", de: "Rio de Janeiro", no: "Rio de Janeiro" },
+  { href: "/destinations/2", en: "São Paulo", es: "São Paulo", pt: "São Paulo", fr: "São Paulo", de: "São Paulo", no: "São Paulo" },
+  { href: "/destinations/5", en: "Bahia", es: "Bahía", pt: "Bahia", fr: "Bahia", de: "Bahia", no: "Bahia" },
+  { href: "/destinations/3", en: "Foz do Iguaçu", es: "Foz do Iguazú", pt: "Foz do Iguaçu", fr: "Foz do Iguaçu", de: "Foz do Iguaçu", no: "Foz do Iguaçu" },
+  { href: "/destinations/9", en: "Recife", es: "Recife", pt: "Recife", fr: "Recife", de: "Recife", no: "Recife" },
+  { href: "/destinations", en: "Amazon Rainforest", es: "Amazonía", pt: "Floresta Amazônica", fr: "Forêt Amazonienne", de: "Amazonas-Regenwald", no: "Amazonas-regnskogen" },
 ];
 
 const experiences = [
-  { href: "/tours", en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências", fr: "Toutes les Expériences", de: "Alle Erlebnisse" },
-  { href: "/tours?type=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos", fr: "Tours Privés", de: "Private Touren" },
-  { href: "/tours?type=group", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados", fr: "Tours Partagés", de: "Gruppentouren" },
-  { href: "/tours?category=aerial", en: "Aerial Experiences", es: "Experiencias Aéreas", pt: "Experiências Aéreas", fr: "Expériences Aériennes", de: "Lufterlebnisse" },
-  { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto", fr: "Transferts Aéroport", de: "Flughafentransfers" },
+  { href: "/tours", en: "All Experiences", es: "Todas las Experiencias", pt: "Todas as Experiências", fr: "Toutes les Expériences", de: "Alle Erlebnisse", no: "Alle opplevelser" },
+  { href: "/tours?type=private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privativos", fr: "Tours Privés", de: "Private Touren", no: "Private turer" },
+  { href: "/tours?type=group", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados", fr: "Tours Partagés", de: "Gruppentouren", no: "Gruppeturer" },
+  { href: "/tours?category=aerial", en: "Aerial Experiences", es: "Experiencias Aéreas", pt: "Experiências Aéreas", fr: "Expériences Aériennes", de: "Lufterlebnisse", no: "Luftopplevelser" },
+  { href: "/tours?category=transfer", en: "Airport Transfers", es: "Traslados Aeropuerto", pt: "Traslados Aeroporto", fr: "Transferts Aéroport", de: "Flughafentransfers", no: "Flyplasstransfer" },
 ];
 
 const aboutItems = [
-  { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História", fr: "Notre Histoire", de: "Unsere Geschichte" },
-  { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós", fr: "À Propos", de: "Über Uns" },
-  { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações", fr: "Avis", de: "Bewertungen" },
-  { href: "/faq", en: "FAQ", es: "Preguntas Frecuentes", pt: "Perguntas Frequentes", fr: "FAQ", de: "FAQ" },
+  { href: "/our-story", en: "Our Story", es: "Nuestra Historia", pt: "Nossa História", fr: "Notre Histoire", de: "Unsere Geschichte", no: "Vår historie" },
+  { href: "/about", en: "About Us", es: "Nosotros", pt: "Sobre Nós", fr: "À Propos", de: "Über Uns", no: "Om oss" },
+  { href: "/reviews", en: "Reviews", es: "Reseñas", pt: "Avaliações", fr: "Avis", de: "Bewertungen", no: "Anmeldelser" },
+  { href: "/faq", en: "FAQ", es: "Preguntas Frecuentes", pt: "Perguntas Frequentes", fr: "FAQ", de: "FAQ", no: "FAQ" },
 ];
 
 const LANGS: [Lang, string, string, string][] = [
@@ -38,6 +38,7 @@ const LANGS: [Lang, string, string, string][] = [
   ["pt", "PT", "Português", "🇧🇷"],
   ["fr", "FR", "Français", "🇫🇷"],
   ["de", "DE", "Deutsch", "🇩🇪"],
+  ["no", "NO", "Norsk", "🇳🇴"],
 ];
 
 function NavDropdown({
@@ -48,7 +49,7 @@ function NavDropdown({
   onNavigate,
 }: {
   label: string;
-  items: Array<{ href: string; en: string; es: string; pt: string; fr: string; de: string }>;
+  items: Array<{ href: string; en: string; es: string; pt: string; fr: string; de: string; no: string }>;
   lang: Lang;
   isHero: boolean;
   onNavigate: () => void;
@@ -163,6 +164,7 @@ export function Header() {
     pt: { home: "Início", about: "Sobre Nós", dest: "Destinos", exp: "Experiências", pkgs: "Pacotes", guide: "Guia de Viagem", contact: "Contato", book: "Reservar" },
     fr: { home: "Accueil", about: "À Propos", dest: "Destinations", exp: "Expériences", pkgs: "Forfaits", guide: "Guide Voyage", contact: "Contact", book: "Réserver" },
     de: { home: "Startseite", about: "Über Uns", dest: "Reiseziele", exp: "Erlebnisse", pkgs: "Pakete", guide: "Reiseführer", contact: "Kontakt", book: "Jetzt buchen" },
+    no: { home: "Hjem", about: "Om oss", dest: "Reisemål", exp: "Opplevelser", pkgs: "Pakker", guide: "Reiseguide", contact: "Kontakt", book: "Bestill nå" },
   }[l];
 
   const currentLang = LANGS.find(([code]) => code === l)!;

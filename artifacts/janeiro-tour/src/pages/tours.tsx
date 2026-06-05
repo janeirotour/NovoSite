@@ -123,6 +123,26 @@ const TX = {
     privateLabel: "Private Touren",
     sharedLabel: "Gruppentouren",
   },
+  no: {
+    heroTitle: "Utforsk alle opplevelser",
+    heroSub: "Finn den perfekte turen for ditt Brasil-eventyr.",
+    filters: "Filtre",
+    clear: "Tøm",
+    tourType: "Turtype",
+    destination: "Reisemål",
+    allDests: "Alle reisemål",
+    category: "Kategori",
+    applyFilters: "Bruk filtre",
+    allTours: "Alle turer",
+    sharedTours: "Gruppeturer",
+    privateTours: "Private turer",
+    found: "opplevelser funnet",
+    noFound: "Ingen opplevelser funnet",
+    tryFilters: "Prøv å justere filtrene dine.",
+    clearFilters: "Tøm filtre",
+    privateLabel: "Private turer",
+    sharedLabel: "Gruppeturer",
+  },
 };
 
 export default function ToursPage() {
