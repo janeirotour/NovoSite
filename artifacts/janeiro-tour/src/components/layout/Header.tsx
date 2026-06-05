@@ -230,21 +230,21 @@ export function Header() {
                   {/* Left column — primary links */}
                   <div className="p-4 border-r border-gray-100">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-3 mb-2">Experiences</p>
-                    <Link href="/tours" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 group transition-colors">
-                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0"><Globe className="w-4 h-4 text-primary" /></span>
-                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">{t.allTours}</span><span className="block text-xs text-gray-500 mt-0.5">Shared &amp; private experiences</span></span>
+                    <Link href="/tours" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#009743]/5 group transition-colors">
+                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center flex-shrink-0"><Globe className="w-4 h-4 text-[#009743]" /></span>
+                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-[#009743] transition-colors">{t.allTours}</span><span className="block text-xs text-gray-500 mt-0.5">Shared &amp; private experiences</span></span>
                     </Link>
-                    <Link href="/private-tours" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 group transition-colors">
-                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0"><Crown className="w-4 h-4 text-amber-600" /></span>
-                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">{t.privateTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.privateSub}</span></span>
+                    <Link href="/private-tours" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 group transition-colors">
+                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0"><Crown className="w-4 h-4 text-primary" /></span>
+                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">{t.privateTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.privateSub}</span></span>
                     </Link>
-                    <Link href="/tours?category=aerial" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 group transition-colors">
-                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0"><Wind className="w-4 h-4 text-emerald-700" /></span>
-                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-emerald-800 transition-colors">{t.aerialTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.aerialSub}</span></span>
+                    <Link href="/tours?category=aerial" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#009743]/5 group transition-colors">
+                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center flex-shrink-0"><Wind className="w-4 h-4 text-[#009743]" /></span>
+                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-[#009743] transition-colors">{t.aerialTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.aerialSub}</span></span>
                     </Link>
-                    <Link href="/transfers" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 group transition-colors">
-                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><Clock className="w-4 h-4 text-gray-600" /></span>
-                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">{t.transfers}</span><span className="block text-xs text-gray-500 mt-0.5">{t.transferSub}</span></span>
+                    <Link href="/transfers" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#009743]/5 group transition-colors">
+                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center flex-shrink-0"><Clock className="w-4 h-4 text-[#009743]" /></span>
+                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-[#009743] transition-colors">{t.transfers}</span><span className="block text-xs text-gray-500 mt-0.5">{t.transferSub}</span></span>
                     </Link>
                   </div>
                   {/* Right column — featured CTA */}
@@ -276,15 +276,15 @@ export function Header() {
               <div className={cn(dropdownBase, "w-60")}>
                 <div className="p-2">
                   {[
-                    { href: "/packages", label: t.allPkgs, icon: <Package className="w-4 h-4" />, color: "bg-primary/10 text-primary" },
-                    { href: "/packages?type=rio", label: t.rioPkgs, icon: <MapPin className="w-4 h-4" />, color: "bg-emerald-100 text-emerald-700" },
-                    { href: "/packages?type=luxury", label: t.luxuryPkgs, icon: <Gem className="w-4 h-4" />, color: "bg-amber-100 text-amber-700" },
-                    { href: "/packages?type=family", label: t.familyPkgs, icon: <Users className="w-4 h-4" />, color: "bg-orange-100 text-orange-700" },
-                    { href: "/packages?type=cruise", label: t.cruisePkgs, icon: <Anchor className="w-4 h-4" />, color: "bg-gray-100 text-gray-600" },
-                  ].map(({ href, label, icon, color }) => (
-                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
-                      <span className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0", color)}>{icon}</span>
-                      <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">{label}</span>
+                    { href: "/packages", label: t.allPkgs, icon: <Package className="w-4 h-4" />, bg: "bg-[#009743]/10", fg: "text-[#009743]" },
+                    { href: "/packages?type=rio", label: t.rioPkgs, icon: <MapPin className="w-4 h-4" />, bg: "bg-[#009743]/10", fg: "text-[#009743]" },
+                    { href: "/packages?type=luxury", label: t.luxuryPkgs, icon: <Gem className="w-4 h-4" />, bg: "bg-primary/10", fg: "text-primary" },
+                    { href: "/packages?type=family", label: t.familyPkgs, icon: <Users className="w-4 h-4" />, bg: "bg-[#009743]/10", fg: "text-[#009743]" },
+                    { href: "/packages?type=cruise", label: t.cruisePkgs, icon: <Anchor className="w-4 h-4" />, bg: "bg-[#009743]/10", fg: "text-[#009743]" },
+                  ].map(({ href, label, icon, bg, fg }) => (
+                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#009743]/5 transition-colors group">
+                      <span className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0", bg, fg)}>{icon}</span>
+                      <span className="text-sm text-gray-700 group-hover:text-[#009743] font-medium">{label}</span>
                     </Link>
                   ))}
                 </div>
@@ -300,9 +300,9 @@ export function Header() {
                     { href: "/destinations", label: t.destinations, icon: <Globe className="w-4 h-4" /> },
                     { href: "/faq", label: t.travelTips, icon: <BookOpen className="w-4 h-4" /> },
                   ].map(({ href, label, icon }) => (
-                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
-                      <span className="text-gray-400 group-hover:text-primary transition-colors">{icon}</span>
-                      <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">{label}</span>
+                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#009743]/5 transition-colors group">
+                      <span className="text-gray-400 group-hover:text-[#009743] transition-colors">{icon}</span>
+                      <span className="text-sm text-gray-700 group-hover:text-[#009743] font-medium">{label}</span>
                     </Link>
                   ))}
                 </div>
@@ -318,9 +318,9 @@ export function Header() {
                     { href: "/our-story", label: t.ourStory, icon: <Star className="w-4 h-4" /> },
                     { href: "/reviews", label: t.reviews, icon: <Shield className="w-4 h-4" /> },
                   ].map(({ href, label, icon }) => (
-                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
+                    <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 transition-colors group">
                       <span className="text-gray-400 group-hover:text-primary transition-colors">{icon}</span>
-                      <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">{label}</span>
+                      <span className="text-sm text-gray-700 group-hover:text-primary font-medium">{label}</span>
                     </Link>
                   ))}
                 </div>
@@ -505,7 +505,7 @@ export function Header() {
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"><Globe className="w-4 h-4 text-primary" /></span>
+                    <span className="w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center"><Globe className="w-4 h-4 text-[#009743]" /></span>
                     {t.tours}
                   </span>
                   <ChevronDown className={cn("w-5 h-5 text-gray-400 transition-transform", mobileSection === "tours" && "rotate-180")} />
@@ -579,7 +579,7 @@ export function Header() {
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><BookOpen className="w-4 h-4 text-emerald-600" /></span>
+                    <span className="w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center"><BookOpen className="w-4 h-4 text-[#009743]" /></span>
                     {t.guide}
                   </span>
                   <ChevronDown className={cn("w-5 h-5 text-gray-400 transition-transform", mobileSection === "guide" && "rotate-180")} />
@@ -613,7 +613,7 @@ export function Header() {
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center"><Star className="w-4 h-4 text-amber-500" /></span>
+                    <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"><Star className="w-4 h-4 text-primary" /></span>
                     {t.about}
                   </span>
                   <ChevronDown className={cn("w-5 h-5 text-gray-400 transition-transform", mobileSection === "about" && "rotate-180")} />
@@ -645,7 +645,7 @@ export function Header() {
                 className="flex items-center gap-2.5 py-3.5 text-base font-semibold text-gray-900"
                 style={{ touchAction: "manipulation" }}
               >
-                <span className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"><Phone className="w-4 h-4 text-gray-600" /></span>
+                <span className="w-8 h-8 rounded-lg bg-[#009743]/10 flex items-center justify-center"><Phone className="w-4 h-4 text-[#009743]" /></span>
                 {t.contact}
               </Link>
             </div>
