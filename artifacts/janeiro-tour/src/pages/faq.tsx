@@ -122,7 +122,7 @@ export default function FaqPage() {
       <section className="bg-neutral-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFB600]/15 to-[#009743]/10" />
         <div className="relative max-w-3xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-4">{tx.tag}</p>
+          <p className="eyebrow text-[#FFB600] mb-4">{tx.tag}</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tx.h1}</h1>
           <p className="text-white/70 text-lg">{tx.sub}</p>
         </div>

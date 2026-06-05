@@ -146,8 +146,8 @@ export default function AboutPage() {
         <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&q=80" alt="Rio de Janeiro — Janeiro Tour & Travel" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/55" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-5">{tx("eyebrow")}</p>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-5 max-w-3xl leading-tight">{tx("heroTitle")}</h1>
+          <p className="eyebrow text-[#FFB600] mb-5">{tx("eyebrow")}</p>
+          <h1 className="text-[2.75rem] md:text-6xl font-bold text-white mb-5 max-w-3xl leading-[1.1]">{tx("heroTitle")}</h1>
           <p className="text-white/75 text-lg md:text-xl max-w-2xl leading-relaxed">{tx("heroSub")}</p>
         </div>
       </section>
@@ -167,8 +167,8 @@ export default function AboutPage() {
               </div>
             </div>
             <div>
-              <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">{tx("founderTag")}</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-3 leading-tight">Meet Dandara</h2>
+              <p className="eyebrow text-[#FFB600] mb-5">{tx("founderTag")}</p>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-gray-900 mb-4 leading-tight">Meet Dandara</h2>
               <div className="flex flex-wrap gap-2 mb-6">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#3d1c00] text-[#f5c07a]">
                   <Shield size={11} /> {tx("blackOwned")}
@@ -177,7 +177,7 @@ export default function AboutPage() {
                   {tx("afroPioneer")}
                 </span>
               </div>
-              <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed">
+              <div className="space-y-4 text-gray-600 text-base leading-[1.8]">
                 <p>{tx("p1")}</p>
                 <p>{tx("p2")}</p>
                 <p>{tx("p3")}</p>
@@ -190,9 +190,9 @@ export default function AboutPage() {
       {/* Full story */}
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-3xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">{tx("fullStory")}</p>
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">{tx("fullStory")}</p>
           <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-10 text-center leading-tight">{tx("whyWeDo")}</h2>
-          <div className="space-y-5 text-gray-600 text-[15px] leading-relaxed">
+          <div className="space-y-5 text-gray-600 text-base leading-[1.8]">
             <p>{tx("fs1")}</p>
             <p>{tx("fs2")}</p>
             <p>{tx("fs3")}</p>
@@ -207,7 +207,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1598977054078-a4dd2d53c2ef?w=1400&q=60')] bg-cover bg-center" />
         <div className="relative max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] uppercase tracking-widest mb-5">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#f5c07a]/15 text-[#f5c07a] tracking-[0.06em] mb-5">
               <Shield size={12} /> {tx("blackOwned")} · {tx("card3t")}
             </span>
             <h2 className="font-bold text-3xl md:text-4xl text-white mb-5 leading-tight">{tx("afroTitle")}</h2>
@@ -250,12 +250,12 @@ export default function AboutPage() {
               </div>
             </div>
             <div>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] uppercase tracking-widest mb-5">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#009743]/10 text-[#009743] tracking-[0.06em] mb-5">
                 <Award size={12} /> {tx("recognition")}
               </span>
-              <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-5 leading-tight">{tx("recTitle")}</h2>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-gray-900 mb-5 leading-tight">{tx("recTitle")}</h2>
               <p className="text-[#FFB600] font-semibold text-sm mb-6">{tx("recSub")}</p>
-              <div className="space-y-4 text-gray-600 text-[15px] leading-relaxed mb-8">
+              <div className="space-y-4 text-gray-600 text-base leading-[1.8] mb-8">
                 <p>{tx("rec1")} <strong className="text-gray-800">Dandara de Souza Siqueira</strong> {tx("rec1b")}</p>
                 <p>{tx("rec2")}</p>
                 <p>{tx("rec3")} <strong className="text-gray-800">Tainá de Paula</strong> {tx("rec3b")}</p>
@@ -276,8 +276,8 @@ export default function AboutPage() {
       {/* Our Journey */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">{tx("timeline")}</p>
-          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-14 text-center">{tx("journey")}</h2>
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">{tx("timeline")}</p>
+          <h2 className="font-bold text-3xl md:text-[2.75rem] text-gray-900 mb-14 text-center">{tx("journey")}</h2>
           <div className="relative">
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 -translate-x-1/2" />
             <div className="space-y-10">
@@ -303,8 +303,8 @@ export default function AboutPage() {
       {/* Our Values */}
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-6xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">{tx("standFor")}</p>
-          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-12 text-center">{tx("ourValues")}</h2>
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">{tx("standFor")}</p>
+          <h2 className="font-bold text-3xl md:text-[2.75rem] text-gray-900 mb-12 text-center">{tx("ourValues")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="bg-white rounded-2xl p-7 border border-gray-100 hover:shadow-md transition-shadow">
@@ -322,9 +322,9 @@ export default function AboutPage() {
       {/* Why Travel With Us */}
       <section id="why-us" className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">{tx("diff")}</p>
-          <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-4 text-center">{tx("whyUs")}</h2>
-          <p className="text-gray-500 text-base max-w-xl mx-auto text-center mb-12">{tx("whyUsSub")}</p>
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">{tx("diff")}</p>
+          <h2 className="font-bold text-3xl md:text-[2.75rem] text-gray-900 mb-5 text-center">{tx("whyUs")}</h2>
+          <p className="text-gray-500 text-[1.0625rem] max-w-xl mx-auto text-center mb-12">{tx("whyUsSub")}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyUs.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex gap-4 p-6 rounded-2xl border border-gray-100 hover:shadow-md transition-shadow bg-white">
@@ -344,9 +344,9 @@ export default function AboutPage() {
       {/* Reviews */}
       <section id="reviews" className="py-20 bg-[#fafaf8]">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">{tx("travelersSay")}</p>
+          <p className="eyebrow text-[#FFB600] mb-5">{tx("travelersSay")}</p>
           <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-4">{tx("tripadvisor")}</h2>
-          <p className="text-gray-500 text-base mb-10">{tx("tripSub")}</p>
+          <p className="text-gray-500 text-[1.0625rem] mb-10">{tx("tripSub")}</p>
           <div className="bg-white border border-gray-200 rounded-2xl p-12 flex flex-col items-center justify-center gap-4 min-h-[220px]">
             <svg viewBox="0 0 24 24" className="w-10 h-10 fill-[#00af87]" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
@@ -363,7 +363,7 @@ export default function AboutPage() {
       <section className="py-28 bg-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[url('/images/banner-janeiro.jpg')] bg-cover bg-center" />
         <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-5">{tx("welcome")}</p>
+          <p className="eyebrow text-[#FFB600] mb-5">{tx("welcome")}</p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-5 leading-tight">{tx("ctaTitle")}</h2>
           <p className="text-white/70 text-lg mb-10 max-w-2xl mx-auto">{tx("ctaSub")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -21,7 +21,7 @@ export default function OurStoryPage() {
         />
         <div className="absolute inset-0 bg-black/55" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-5">
+          <p className="eyebrow text-[#FFB600] mb-5">
             Janeiro Tour &amp; Travel
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 max-w-3xl leading-tight">
@@ -59,7 +59,7 @@ export default function OurStoryPage() {
             </div>
 
             <div>
-              <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">
+              <p className="eyebrow text-[#FFB600] mb-4">
                 Our Founder
               </p>
               <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-3 leading-tight">
@@ -101,7 +101,7 @@ export default function OurStoryPage() {
       {/* Timeline */}
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-4xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">
             Timeline
           </p>
           <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-14 text-center">

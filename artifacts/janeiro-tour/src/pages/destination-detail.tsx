@@ -71,7 +71,7 @@ export default function DestinationDetailPage() {
           <Link href="/destinations" className="inline-flex items-center gap-1 text-white/80 hover:text-white mb-4 transition-colors text-sm">
             <ChevronLeft size={16} /> {tx("allDest")}
           </Link>
-          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-2">{destination.country}</p>
+          <p className="eyebrow text-primary mb-3">{destination.country}</p>
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">{name}</h1>
         </div>
       </section>

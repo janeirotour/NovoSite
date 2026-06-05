@@ -382,9 +382,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-10">
             <div>
-              <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">{tx.expEyebrow}</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">{tx.expTitle}</h2>
-              <p className="text-muted-foreground text-base max-w-xl">{tx.expDesc}</p>
+              <p className="eyebrow text-primary mb-4">{tx.expEyebrow}</p>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-foreground mb-4">{tx.expTitle}</h2>
+              <p className="text-muted-foreground text-[1.0625rem] leading-relaxed max-w-xl">{tx.expDesc}</p>
             </div>
             <Link href="/tours" className="hidden md:flex items-center text-sm font-semibold text-primary hover:underline gap-1">
               {tx.expLink} <ArrowRight className="w-4 h-4" />
@@ -418,9 +418,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
             <div>
-              <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">{tx.revEyebrow}</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">{tx.revTitle}</h2>
-              <p className="text-muted-foreground text-base max-w-xl">{tx.revDesc}</p>
+              <p className="eyebrow text-primary mb-4">{tx.revEyebrow}</p>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-foreground mb-4">{tx.revTitle}</h2>
+              <p className="text-muted-foreground text-[1.0625rem] leading-relaxed max-w-xl">{tx.revDesc}</p>
             </div>
             <div className="flex items-center gap-3 bg-[#fafaf8] rounded-2xl px-6 py-4 border border-gray-100 shrink-0">
               <div className="text-center">
@@ -474,9 +474,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-10">
             <div>
-              <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">{tx.pkgEyebrow}</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">{tx.pkgTitle}</h2>
-              <p className="text-muted-foreground text-base max-w-xl">{tx.pkgDesc}</p>
+              <p className="eyebrow text-primary mb-4">{tx.pkgEyebrow}</p>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-foreground mb-4">{tx.pkgTitle}</h2>
+              <p className="text-muted-foreground text-[1.0625rem] leading-relaxed max-w-xl">{tx.pkgDesc}</p>
             </div>
             <Link href="/packages" className="hidden md:flex items-center text-sm font-semibold text-primary hover:underline gap-1">
               {tx.pkgLink} <ArrowRight className="w-4 h-4" />
@@ -574,8 +574,8 @@ export default function Home() {
               <Heart className="w-5 h-5 text-primary" />
             </span>
           </div>
-          <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-6">{tx.beliefEyebrow}</p>
-          <blockquote className="text-2xl md:text-3xl font-light leading-relaxed text-white/90 italic mb-8">
+          <p className="eyebrow text-primary mb-6">{tx.beliefEyebrow}</p>
+          <blockquote className="text-2xl md:text-4xl font-light leading-relaxed text-white/90 italic mb-8">
             {tx.beliefQuote}
           </blockquote>
           <p className="text-white/50 text-sm mb-10">— Janeiro Tour &amp; Travel, {tx.beliefYear}</p>
@@ -600,9 +600,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-10">
             <div>
-              <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">{tx.destEyebrow}</p>
-              <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">{tx.destTitle}</h2>
-              <p className="text-muted-foreground text-base max-w-xl">{tx.destDesc}</p>
+              <p className="eyebrow text-primary mb-4">{tx.destEyebrow}</p>
+              <h2 className="font-bold text-3xl md:text-[2.75rem] text-foreground mb-4">{tx.destTitle}</h2>
+              <p className="text-muted-foreground text-[1.0625rem] leading-relaxed max-w-xl">{tx.destDesc}</p>
             </div>
             <Link href="/destinations" className="hidden md:flex items-center text-sm font-semibold text-primary hover:underline gap-1">
               {tx.destLink} <ArrowRight className="w-4 h-4" />
@@ -635,9 +635,9 @@ export default function Home() {
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-primary font-semibold text-xs uppercase tracking-widest mb-3">{tx.styleEyebrow}</p>
-            <h2 className="font-bold text-3xl md:text-4xl text-foreground mb-3">{tx.styleTitle}</h2>
-            <p className="text-muted-foreground text-base max-w-xl mx-auto">{tx.styleDesc}</p>
+            <p className="eyebrow text-primary mb-4">{tx.styleEyebrow}</p>
+            <h2 className="font-bold text-3xl md:text-[2.75rem] text-foreground mb-4">{tx.styleTitle}</h2>
+            <p className="text-muted-foreground text-[1.0625rem] leading-relaxed max-w-xl mx-auto">{tx.styleDesc}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -692,7 +692,7 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <div className="flex justify-center gap-2 mb-6">
             <Award className="w-6 h-6 text-primary" />
-            <span className="text-primary text-sm font-semibold uppercase tracking-widest">{tx.ctaBadge}</span>
+            <span className="eyebrow text-primary">{tx.ctaBadge}</span>
           </div>
           <h2 className="font-bold text-4xl md:text-5xl text-white mb-5 leading-tight">{tx.ctaTitle}</h2>
           <p className="text-white/70 text-lg mb-4 max-w-2xl mx-auto">{tx.ctaDesc}</p>

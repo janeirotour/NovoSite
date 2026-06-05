@@ -41,7 +41,7 @@ export default function BlogPage() {
       <section className="relative bg-neutral-900 py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10" />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-4">{tx("eyebrow")}</p>
+          <p className="eyebrow text-primary mb-4">{tx("eyebrow")}</p>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">{tx("heading")}</h1>
           <p className="text-white/70 text-xl max-w-2xl mx-auto">{tx("sub")}</p>
         </div>

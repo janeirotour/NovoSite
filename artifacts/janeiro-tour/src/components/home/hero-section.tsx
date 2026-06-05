@@ -105,7 +105,7 @@ export function HeroSection() {
         {/* Content */}
         <div className="absolute inset-0 z-20 flex flex-col justify-end pb-28 md:pb-32 px-6 md:px-12 lg:px-20 max-w-7xl mx-auto left-0 right-0">
           <div className="max-w-3xl">
-            <p className="text-[#FFB600] font-semibold text-sm md:text-base tracking-widest uppercase mb-4 drop-shadow">
+            <p className="eyebrow text-[#FFB600] mb-5 drop-shadow">
               Janeiro Tour &amp; Travel
             </p>
             <h1 className="text-white font-bold text-4xl md:text-6xl lg:text-7xl leading-[1.1] mb-5 drop-shadow-lg">
@@ -172,7 +172,7 @@ export function HeroSection() {
           </div>
           <div className="hidden md:flex items-center gap-6 text-white/50 text-xs">
             <span className="w-px h-4 bg-white/20" />
-            <span className="text-white/60 font-medium tracking-wide text-xs uppercase">50+ countries</span>
+            <span className="text-white/60 font-medium tracking-[0.05em] text-xs">50+ countries</span>
           </div>
         </div>
       </div>

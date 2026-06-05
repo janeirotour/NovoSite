@@ -55,7 +55,7 @@ export default function ContactPage() {
       <section className="bg-neutral-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[url('/images/hero-rio.png')] bg-cover bg-center" />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-4">{tx("eyebrow")}</p>
+          <p className="eyebrow text-[#FFB600] mb-4">{tx("eyebrow")}</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tx("heading")}</h1>
           <p className="text-white/70 text-lg max-w-2xl mx-auto">{tx("sub")}</p>
         </div>

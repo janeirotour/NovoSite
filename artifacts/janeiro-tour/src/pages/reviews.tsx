@@ -48,7 +48,7 @@ export default function ReviewsPage() {
       <section className="bg-gray-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[url('/images/banner-janeiro.jpg')] bg-cover bg-center" />
         <div className="relative max-w-3xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-5">{tx("eyebrow")}</p>
+          <p className="eyebrow text-[#FFB600] mb-5">{tx("eyebrow")}</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tx("heading")}</h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto">{tx("sub")}</p>
         </div>
@@ -77,7 +77,7 @@ export default function ReviewsPage() {
       {/* Testimonials grid */}
       <section className="py-20 bg-[#fafaf8]">
         <div className="max-w-6xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4 text-center">{tx("guestStories")}</p>
+          <p className="eyebrow text-[#FFB600] mb-4 text-center">{tx("guestStories")}</p>
           <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-12 text-center">{tx("experiences")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials.map((t) => {
@@ -103,7 +103,7 @@ export default function ReviewsPage() {
       {/* TripAdvisor widget */}
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">TripAdvisor</p>
+          <p className="eyebrow text-[#FFB600] mb-4">TripAdvisor</p>
           <h2 className="font-bold text-2xl text-gray-900 mb-6">{tx("tripTitle")}</h2>
           <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12 flex flex-col items-center gap-4 min-h-[180px] justify-center">
             <a href="https://www.tripadvisor.com/Attraction_Review-g303488-d14760440-Reviews-Janeiro_Tour_Travel-State_of_Rio_de_Janeiro.html"

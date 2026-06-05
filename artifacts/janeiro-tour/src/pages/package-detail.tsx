@@ -159,7 +159,7 @@ export default function PackageDetailPage() {
                   <div className="absolute -left-5 top-1 w-4 h-4 rounded-full bg-green-600 border-2 border-background flex items-center justify-center">
                     <Plane size={8} className="text-white" />
                   </div>
-                  <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Day 1</p>
+                  <p className="text-xs font-bold text-green-600 tracking-[0.05em] mb-1">Day 1</p>
                   <h3 className="font-semibold text-base mb-1">Arrival in Rio de Janeiro</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     You land at Galeão International Airport (GIG). Our team picks you up and transfers you directly
@@ -177,7 +177,7 @@ export default function PackageDetailPage() {
                     <div className="absolute -left-5 top-1 w-4 h-4 rounded-full bg-green-600 border-2 border-background flex items-center justify-center">
                       <MapPin size={8} className="text-white" />
                     </div>
-                    <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Day 2</p>
+                    <p className="text-xs font-bold text-green-600 tracking-[0.05em] mb-1">Day 2</p>
                     <h3 className="font-semibold text-base mb-1">{day2Tour.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{day2Tour.description}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -197,7 +197,7 @@ export default function PackageDetailPage() {
                     <div className="absolute -left-5 top-1 w-4 h-4 rounded-full bg-green-600 border-2 border-background flex items-center justify-center">
                       <MapPin size={8} className="text-white" />
                     </div>
-                    <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Day 3</p>
+                    <p className="text-xs font-bold text-green-600 tracking-[0.05em] mb-1">Day 3</p>
                     <div className="space-y-4">
                       {day3Tours.map((t) => (
                         <div key={t.slug}>
@@ -288,7 +288,7 @@ export default function PackageDetailPage() {
 
                 {/* Activities breakdown */}
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                  <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">
                     Activities
                   </p>
                   {tours.map((t) => (
@@ -309,7 +309,7 @@ export default function PackageDetailPage() {
 
                 {/* Transfers breakdown */}
                 <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                  <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">
                     Transfers
                   </p>
                   <div className="flex justify-between text-xs gap-2">

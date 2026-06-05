@@ -126,7 +126,7 @@ export default function PackagesPage() {
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-sm mb-3">{tx("eyebrow")}</p>
+          <p className="text-[#FFB600] font-semibold tracking-[0.06em] text-sm mb-3">{tx("eyebrow")}</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-5">{tx("heading")}</h1>
           <p className="text-white/75 text-lg max-w-2xl mx-auto">{tx("sub")}</p>
         </div>
@@ -253,7 +253,7 @@ export default function PackagesPage() {
 
                     {tours.length > 0 && (
                       <div>
-                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{tx("included")}</p>
+                        <p className="text-[10px] font-semibold text-muted-foreground tracking-[0.05em] mb-1.5">{tx("included")}</p>
                         <div className="flex flex-col gap-1.5">
                           {tours.map((t, ti) => (
                             <div key={t.slug} className="flex gap-2.5 items-start bg-muted/40 rounded-lg px-3 py-2 border">
@@ -309,7 +309,7 @@ export default function PackagesPage() {
 
         {/* Custom Package CTA */}
         <div className="mt-14 text-center bg-primary/5 border border-primary/20 rounded-2xl p-10">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-2">{tx("different")}</p>
+          <p className="eyebrow text-[#FFB600] mb-2">{tx("different")}</p>
           <h3 className="text-2xl font-bold mb-2">{tx("custom")}</h3>
           <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-7">{tx("customSub")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

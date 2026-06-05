@@ -658,7 +658,7 @@ export default function TourDetailPage() {
 
                 {/* Booking Summary */}
                 <div className="bg-muted/40 rounded-xl p-3 space-y-1.5 text-sm border">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Booking Summary</p>
+                  <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">Booking Summary</p>
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">
                       {activePricingTier ? activePricingTier.label : `$${tour.priceFrom}/person`} × {localPax}

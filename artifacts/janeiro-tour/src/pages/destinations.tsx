@@ -156,7 +156,7 @@ export default function DestinationsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <p className="text-[#FFB600] font-semibold uppercase tracking-widest text-xs mb-5">{tx.eyebrow}</p>
+          <p className="eyebrow text-[#FFB600] mb-5">{tx.eyebrow}</p>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight max-w-4xl">{tx.heading}</h1>
           <p className="text-white/75 text-lg md:text-xl max-w-2xl leading-relaxed">{tx.sub}</p>
         </div>
@@ -177,14 +177,14 @@ export default function DestinationsPage() {
                   <img src={dest.image} alt={info.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
                   <div className={`absolute bottom-5 ${isReversed ? "right-5" : "left-5"}`}>
-                    <span className="bg-[#FFB600] text-black text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+                    <span className="bg-[#FFB600] text-black text-xs font-bold tracking-[0.06em] px-3 py-1.5 rounded-full">
                       {info.tagline}
                     </span>
                   </div>
                 </div>
 
                 <div className={`w-full lg:w-2/5 flex flex-col justify-center p-10 lg:p-14 bg-white ${isReversed ? "lg:pr-14 lg:pl-10" : ""}`}>
-                  <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">{tx.eyebrow}</p>
+                  <p className="eyebrow text-[#FFB600] mb-4">{tx.eyebrow}</p>
                   <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-5 leading-tight">{info.name}</h2>
                   <p className="text-gray-500 text-base leading-relaxed mb-8">{info.desc}</p>
                   <div className="flex flex-col sm:flex-row gap-3">
@@ -212,7 +212,7 @@ export default function DestinationsPage() {
       {/* CTA */}
       <section className="py-24 bg-[#fafaf8] text-center">
         <div className="max-w-2xl mx-auto px-4">
-          <p className="text-[#FFB600] font-semibold text-xs uppercase tracking-widest mb-4">{tx.readyEyebrow}</p>
+          <p className="eyebrow text-[#FFB600] mb-4">{tx.readyEyebrow}</p>
           <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-4">{tx.readyTitle}</h2>
           <p className="text-gray-500 text-base mb-10">{tx.readyDesc}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
