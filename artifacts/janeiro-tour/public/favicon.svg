@@ -1,3 +1,14 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 115">
+  <defs>
+    <clipPath id="b">
+      <ellipse cx="50" cy="46" rx="41" ry="44"/>
+    </clipPath>
+  </defs>
+  <!-- Balloon body (green) -->
+  <ellipse cx="50" cy="46" rx="41" ry="44" fill="#1D8A3C"/>
+  <!-- Yellow diagonal swoosh -->
+  <path d="M 8 72 C 18 18 60 6 80 24 C 76 58 58 82 34 90 Z"
+        fill="#F5A623" clip-path="url(#b)"/>
+  <!-- Basket / bottom oval -->
+  <ellipse cx="50" cy="93" rx="14" ry="6.5" fill="#1D8A3C"/>
 </svg>
