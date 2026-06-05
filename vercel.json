@@ -7,6 +7,10 @@
     {
       "source": "/uploads/:path*",
       "destination": "https://travel-booker-pro.replit.app/uploads/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
