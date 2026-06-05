@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Check, Minus, Plus, Clock, Users, ArrowRight, ChevronLeft, Plane, MapPin, Car, CalendarDays, CreditCard, MessageCircle } from "lucide-react";
 import { useState, useMemo } from "react";
 import { PackageBookingModal } from "@/components/ui/PackageBookingModal";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 // ─── Vehicle tiers — same across all packages ─────────────────────────────────
 const VEHICLE_TIERS = [
@@ -73,6 +74,7 @@ const BADGE_STYLES: Record<string, string> = {
 export default function PackageDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { data: pkg, isLoading } = useGetPackage(slug!);
+  const { formatPrice, currency } = useCurrency();
   const [pax, setPax] = useState(2);
 
   const tours     = useMemo(() => (pkg?.toursIncluded ?? []) as TourEntry[], [pkg]);
@@ -250,10 +252,10 @@ export default function PackageDetailPage() {
               <div className="bg-primary p-5">
                 <p className="text-primary-foreground/80 text-sm font-medium">Package total</p>
                 <p className="text-3xl font-bold text-primary-foreground">
-                  ${grandTotal.toFixed(0)} <span className="text-base font-normal">USD</span>
+                  {formatPrice(grandTotal)}
                 </p>
                 <p className="text-primary-foreground/80 text-xs mt-1">
-                  ${perPerson.toFixed(0)}/person · {pax} traveler{pax !== 1 ? "s" : ""}
+                  {formatPrice(perPerson)}/person · {pax} traveler{pax !== 1 ? "s" : ""}
                 </p>
               </div>
 
@@ -297,10 +299,10 @@ export default function PackageDetailPage() {
                         {t.title.split("—")[0].trim().split(" ").slice(0, 5).join(" ")}
                         {t.title.split(" ").length > 5 ? "…" : ""}
                         <span className="text-muted-foreground/60 ml-1">
-                          (${getTourUnitPrice(t, pax)}/pax × {pax})
+                          ({formatPrice(getTourUnitPrice(t, pax))}/pax × {pax})
                         </span>
                       </span>
-                      <span className="font-medium flex-shrink-0">${getTourTotal(t, pax).toFixed(0)}</span>
+                      <span className="font-medium flex-shrink-0">{formatPrice(getTourTotal(t, pax))}</span>
                     </div>
                   ))}
                 </div>
@@ -315,20 +317,20 @@ export default function PackageDetailPage() {
                   <div className="flex justify-between text-xs gap-2">
                     <span className="text-muted-foreground">
                       Arrival transfer (GIG)
-                      <span className="text-muted-foreground/60 ml-1">(${TRANSFER_PRICE_PER_PERSON}/pax × {pax})</span>
+                      <span className="text-muted-foreground/60 ml-1">({formatPrice(TRANSFER_PRICE_PER_PERSON)}/pax × {pax})</span>
                     </span>
-                    <span className="font-medium flex-shrink-0">${transferIn}</span>
+                    <span className="font-medium flex-shrink-0">{formatPrice(transferIn)}</span>
                   </div>
                   <div className="flex justify-between text-xs gap-2">
                     <span className="text-muted-foreground">
                       Departure transfer (GIG)
-                      <span className="text-muted-foreground/60 ml-1">(${TRANSFER_PRICE_PER_PERSON}/pax × {pax})</span>
+                      <span className="text-muted-foreground/60 ml-1">({formatPrice(TRANSFER_PRICE_PER_PERSON)}/pax × {pax})</span>
                     </span>
-                    <span className="font-medium flex-shrink-0">${transferOut}</span>
+                    <span className="font-medium flex-shrink-0">{formatPrice(transferOut)}</span>
                   </div>
                   <div className="flex justify-between text-xs text-muted-foreground/60">
                     <span>Round-trip transport × 2 days ({vt.vehicle})</span>
-                    <span>${vt.price * 2}</span>
+                    <span>{formatPrice(vt.price * 2)}</span>
                   </div>
                 </div>
 
@@ -338,12 +340,17 @@ export default function PackageDetailPage() {
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs text-green-600 font-medium">
                     <span>Package discount (5%)</span>
-                    <span>−${discount.toFixed(0)}</span>
+                    <span>−{formatPrice(discount)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-sm">
                     <span>Total</span>
-                    <span className="text-green-600">${grandTotal.toFixed(0)} USD</span>
+                    <span className="text-green-600">{formatPrice(grandTotal)}</span>
                   </div>
+                  {currency !== "USD" && (
+                    <p className="text-[10px] text-muted-foreground pt-1">
+                      Prices shown in {currency} for convenience. Final payment processed in USD.
+                    </p>
+                  )}
                 </div>
 
                 <Separator />
@@ -428,8 +435,8 @@ export default function PackageDetailPage() {
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-2.5 text-right font-bold text-green-600">${gt.toFixed(0)}</td>
-                      <td className="px-5 py-2.5 text-right">${(gt / n).toFixed(0)}</td>
+                      <td className="px-5 py-2.5 text-right font-bold text-green-600">{formatPrice(gt)}</td>
+                      <td className="px-5 py-2.5 text-right">{formatPrice(gt / n)}</td>
                     </tr>
                   );
                 })}

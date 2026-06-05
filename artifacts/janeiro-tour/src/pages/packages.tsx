@@ -1,5 +1,6 @@
 import { useListPackages } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -70,6 +71,7 @@ const TX = {
 
 export default function PackagesPage() {
   const { lang } = useLanguage();
+  const { formatPrice } = useCurrency();
   const { data: packages, isLoading } = useListPackages();
 
   const [query, setQuery] = useState("");
@@ -243,10 +245,10 @@ export default function PackagesPage() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <p className="text-2xl font-bold text-green-600">${Number(pkg.priceFrom).toFixed(0)}</p>
+                        <p className="text-2xl font-bold text-green-600">{formatPrice(Number(pkg.priceFrom))}</p>
                         <p className="text-[11px] text-muted-foreground">{tx("perPerson")}</p>
                         {pkg.originalPrice && (
-                          <p className="text-[11px] line-through text-muted-foreground">${Number(pkg.originalPrice).toFixed(0)}</p>
+                          <p className="text-[11px] line-through text-muted-foreground">{formatPrice(Number(pkg.originalPrice))}</p>
                         )}
                       </div>
                     </div>

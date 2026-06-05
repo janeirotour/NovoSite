@@ -1,4 +1,5 @@
 import { useCart } from "@/contexts/CartContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { X, Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +9,7 @@ import { BookingFormModal } from "@/components/ui/BookingFormModal";
 export function CartSidebar() {
   const { items, isOpen, closeCart, removeItem, updatePax, clearCart, totalPrice, totalItems } =
     useCart();
+  const { formatPrice, currency } = useCurrency();
   const [showBookingForm, setShowBookingForm] = useState(false);
 
   const extrasTotal = items.reduce(
@@ -86,7 +88,7 @@ export function CartSidebar() {
                           {item.title}
                         </p>
                         <p className="text-green-600 font-bold text-sm mt-1">
-                          ${item.priceFrom}{" "}
+                          {formatPrice(item.priceFrom)}{" "}
                           <span className="text-xs font-normal text-muted-foreground">
                             / person
                           </span>
@@ -118,7 +120,7 @@ export function CartSidebar() {
                           >
                             <span className="text-muted-foreground">+ {e.name}</span>
                             <span className="text-green-600 font-medium">
-                              +${e.price.toFixed(0)}
+                              +{formatPrice(e.price)}
                             </span>
                           </div>
                         ))}
@@ -150,7 +152,7 @@ export function CartSidebar() {
                         </button>
                       </div>
                       <p className="text-sm font-bold text-green-600 w-16 text-right">
-                        ${(item.priceFrom * item.pax + itemExtrasTotal).toFixed(0)}
+                        {formatPrice(item.priceFrom * item.pax + itemExtrasTotal)}
                       </p>
                     </div>
                   </div>
@@ -164,20 +166,22 @@ export function CartSidebar() {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Extras</span>
                     <span className="text-green-600 font-medium">
-                      +${extrasTotal.toFixed(0)} USD
+                      +{formatPrice(extrasTotal)}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between items-center">
                   <span className="font-bold">Total</span>
                   <span className="font-bold text-lg text-green-600">
-                    ${grandTotal.toFixed(0)} USD
+                    {formatPrice(grandTotal)}
                   </span>
                 </div>
               </div>
 
               <p className="text-xs text-muted-foreground">
-                Final price includes all taxes and fees. Prices are per person.
+                {currency === "USD"
+                  ? "Final price includes all taxes and fees. Prices are per person."
+                  : `Prices shown in ${currency} for convenience. Final payment processed in USD.`}
               </p>
 
               <Separator />

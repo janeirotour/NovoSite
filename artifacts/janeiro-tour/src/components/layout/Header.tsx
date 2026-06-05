@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
+import { CurrencySelector } from "@/components/ui/currency-selector";
 import { Menu, X, ChevronDown, MessageCircle, ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -206,6 +207,11 @@ export function Header() {
 
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-2 ml-auto flex-shrink-0">
+            {/* Currency selector */}
+            <CurrencySelector isHero={isHero} />
+
+            <div className={cn("w-px h-4", isHero ? "bg-white/20" : "bg-gray-200")} />
+
             {/* Language selector with flags */}
             <div ref={langRef} className="relative">
               <button
@@ -238,8 +244,6 @@ export function Header() {
                 </div>
               )}
             </div>
-
-            <div className={cn("w-px h-4", isHero ? "bg-white/20" : "bg-gray-200")} />
 
             {/* Cart */}
             <button

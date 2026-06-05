@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Tour } from "@workspace/api-client-react";
 import { Clock, MapPin, Users, Globe2, Star, Crown, ShoppingCart, CalendarDays, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -60,6 +61,7 @@ const CATEGORY_LABELS: Record<string, Record<string, string>> = {
 export function TourCard({ tour }: { tour: Tour }) {
   const { t, lang } = useLanguage();
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
   const premiumBadge = (tour as Tour & { premiumBadge?: string | null }).premiumBadge;
 
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -165,7 +167,7 @@ export function TourCard({ tour }: { tour: Tour }) {
               <div>
                 <span className="text-xs text-muted-foreground block">{tx("from")}</span>
                 <span className="font-bold text-lg text-foreground">
-                  {tour.currency} {tour.priceFrom}
+                  {formatPrice(Number(tour.priceFrom))}
                 </span>
               </div>
               <div className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded font-bold text-sm">

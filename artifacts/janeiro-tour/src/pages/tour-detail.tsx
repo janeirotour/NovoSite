@@ -4,6 +4,7 @@ import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourE
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Star, Clock, Users, Globe, MapPin, Check, X, ChevronLeft, MessageCircle, Info, Truck, ShoppingCart, Minus, Plus, CalendarDays, Tag, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,7 @@ export default function TourDetailPage() {
   const isNumeric = /^\d+$/.test(param);
   const tourId = isNumeric ? parseInt(param, 10) : 0;
   const { lang } = useLanguage();
+  const { formatPrice, currency } = useCurrency();
 
   // Enable only the relevant hook — both must be called unconditionally (React rules).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -476,12 +478,12 @@ export default function TourDetailPage() {
                   {pricingRules && pricingRules.length > 0 ? "Total for your group" : "From"}
                 </p>
                 <p className="text-3xl font-bold text-primary-foreground">
-                  ${calculatedTourPrice.toFixed(0)} <span className="text-lg font-normal">{tour.currency}</span>
+                  {formatPrice(calculatedTourPrice)}
                 </p>
                 <p className="text-primary-foreground/80 text-xs mt-1">
                   {activePricingTier
                     ? `${activePricingTier.label} · ${localPax} traveler${localPax !== 1 ? "s" : ""}`
-                    : `$${tour.priceFrom}/person · ${localPax} traveler${localPax !== 1 ? "s" : ""}`
+                    : `${formatPrice(Number(tour.priceFrom))}/person · ${localPax} traveler${localPax !== 1 ? "s" : ""}`
                   }
                 </p>
               </div>
@@ -649,7 +651,7 @@ export default function TourDetailPage() {
                             className="rounded accent-green-600"
                           />
                           <span className="flex-1 text-sm">{extra.name}</span>
-                          <span className="text-green-600 font-semibold text-sm">+${extra.price}</span>
+                          <span className="text-green-600 font-semibold text-sm">+{formatPrice(extra.price)}</span>
                         </label>
                       ))}
                     </div>
@@ -661,26 +663,31 @@ export default function TourDetailPage() {
                   <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">Booking Summary</p>
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">
-                      {activePricingTier ? activePricingTier.label : `$${tour.priceFrom}/person`} × {localPax}
+                      {activePricingTier ? activePricingTier.label : `${formatPrice(Number(tour.priceFrom))}/person`} × {localPax}
                     </span>
-                    <span className="font-medium">${calculatedTourPrice.toFixed(0)}</span>
+                    <span className="font-medium">{formatPrice(calculatedTourPrice)}</span>
                   </div>
                   {effectiveTransportation && (
                     <div className="flex justify-between text-xs">
                       <span className="text-muted-foreground">🚐 {effectiveTransportation.vehicle}</span>
-                      <span className="text-green-600 font-medium">+${effectiveTransportation.price.toFixed(0)}</span>
+                      <span className="text-green-600 font-medium">+{formatPrice(effectiveTransportation.price)}</span>
                     </div>
                   )}
                   {selectedExtrasTotal > 0 && (
                     <div className="flex justify-between text-xs">
                       <span className="text-muted-foreground">Add-ons</span>
-                      <span className="text-green-600 font-medium">+${selectedExtrasTotal.toFixed(0)}</span>
+                      <span className="text-green-600 font-medium">+{formatPrice(selectedExtrasTotal)}</span>
                     </div>
                   )}
                   <div className="flex justify-between font-bold pt-1.5 border-t mt-1">
                     <span>Total</span>
-                    <span className="text-green-600">${grandTotal.toFixed(0)} {tour.currency}</span>
+                    <span className="text-green-600">{formatPrice(grandTotal)}</span>
                   </div>
+                  {currency !== "USD" && (
+                    <p className="text-[10px] text-muted-foreground pt-0.5">
+                      Prices shown in {currency} for convenience. Final payment in USD.
+                    </p>
+                  )}
                 </div>
 
                 <Separator />

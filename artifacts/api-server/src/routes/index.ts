@@ -13,10 +13,12 @@ import extrasRouter from "./extras";
 import reservationsRouter from "./reservations";
 import availabilityRouter from "./availability";
 import packagesRouter from "./packages";
+import currencyRouter from "./currency";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(currencyRouter);
 router.use(toursRouter);
 router.use(destinationsRouter);
 router.use(blogRouter);

@@ -1,0 +1,69 @@
+Implement automatic currency conversion for the Janeiro Tour website.
+
+Goal:
+When an international visitor enters the website, prices should automatically display in the visitor's local currency based on their country/location, while still allowing manual currency selection.
+
+Requirements:
+
+1. Detect visitor country automatically using browser locale and/or IP geolocation.
+2. Map countries to currencies:
+   - United States: USD
+   - Canada: CAD
+   - United Kingdom: GBP
+   - European Union countries: EUR
+   - Australia: AUD
+   - Brazil: BRL
+   - Argentina: ARS
+   - Chile: CLP
+   - Mexico: MXN
+   - Default fallback: USD
+
+3. Add a currency selector in the header and checkout/package price areas.
+4. Convert all visible prices automatically:
+   - package cards
+   - package detail pages
+   - cart
+   - booking summary
+   - checkout totals
+   - upsells/add-ons
+
+5. Use reliable exchange rates.
+   - Create a clean currency conversion service/module.
+   - Support fallback static rates if live rates fail.
+   - Cache exchange rates to avoid excessive API calls.
+   - Do not expose secret API keys on the frontend.
+
+6. Format prices correctly using Intl.NumberFormat.
+   Examples:
+   - USD: $1,250
+   - EUR: €1,150
+   - GBP: £980
+   - BRL: R$ 6.200
+
+7. Store the selected currency in localStorage so returning visitors keep their preference.
+
+8. Add a small note near converted prices:
+   “Prices shown in your selected currency for convenience. Final payment may be processed in USD.”
+
+9. Ensure Stripe/payment integration remains safe:
+   - Do not trust frontend-converted prices for payment amounts.
+   - Keep backend price calculation authoritative.
+   - If Stripe supports multi-currency checkout in the current project, implement it safely.
+   - Otherwise, display converted prices for browsing and charge in the base currency.
+
+10. Make sure the feature works on Vercel production.
+
+11. Test the site with several currencies:
+   - USD
+   - EUR
+   - GBP
+   - BRL
+   - CAD
+   - AUD
+
+After implementing, provide a summary of:
+- files changed
+- how country detection works
+- how exchange rates are handled
+- how to add more currencies later
+- any environment variables needed
