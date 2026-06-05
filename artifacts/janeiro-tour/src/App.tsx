@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { CartProvider } from "@/contexts/CartContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CartSidebar } from "@/components/ui/CartSidebar";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
@@ -108,6 +109,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <LanguageProvider>
         <CurrencyProvider>
           <CartProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
@@ -117,6 +119,7 @@ function App() {
             <Toaster />
           </CartProvider>
         </CurrencyProvider>
+        </LanguageProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

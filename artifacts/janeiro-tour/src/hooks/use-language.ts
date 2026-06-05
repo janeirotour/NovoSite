@@ -1,35 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useLanguageContext, type Language } from "@/contexts/LanguageContext";
 
-export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'no';
-
-const VALID: Language[] = ['en', 'es', 'pt', 'fr', 'de', 'no'];
+export type { Language };
 
 export function useLanguage() {
-  const [lang, setLang] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('jt_lang');
-      if (stored && VALID.includes(stored as Language)) {
-        return stored as Language;
-      }
-    }
-    return 'en';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('jt_lang', lang);
-  }, [lang]);
+  const { lang, setLang } = useLanguageContext();
 
   const t = <T extends Record<string, any>>(
     obj: T | undefined | null,
     baseKey: string,
-    fallback = ''
+    fallback = ""
   ): string => {
     if (!obj) return fallback;
-    
-    if (lang === 'en') return obj[baseKey] || fallback;
-    
+
+    if (lang === "en") return obj[baseKey] || fallback;
+
     const langKey = `${baseKey}${lang.charAt(0).toUpperCase() + lang.slice(1)}`;
-    
+
     return obj[langKey as keyof T] || obj[baseKey] || fallback;
   };
 
