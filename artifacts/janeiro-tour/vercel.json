@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://travel-booker-pro.replit.app/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://travel-booker-pro.replit.app/uploads/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
