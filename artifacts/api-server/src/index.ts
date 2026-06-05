@@ -46,6 +46,3 @@ await initStripe();
 app.listen(port, () => {
   logger.info({ port }, "Server listening");
 });
-
-  logger.info({ port }, "Server listening");
-});

@@ -1,0 +1,128 @@
+You are a senior SEO engineer, technical SEO specialist, and conversion-focused travel website architect.
+
+Your task is to transform this Rio de Janeiro tourism website into a world-class SEO platform optimized for international visitors searching on Google.
+
+OBJECTIVES:
+
+1. Maximize organic traffic from:
+- United States
+- Canada
+- United Kingdom
+- Australia
+- Germany
+- France
+- Netherlands
+- Scandinavia
+
+2. Rank for high-intent tourism keywords including:
+- Rio de Janeiro tours
+- Best tours in Rio de Janeiro
+- Private tours Rio de Janeiro
+- Rio de Janeiro travel guide
+- Things to do in Rio de Janeiro
+- Christ the Redeemer tour
+- Sugarloaf Mountain tour
+- Favela tour Rio
+- Rio local guide
+- Rio day tours
+- Brazil travel experiences
+- Rio sightseeing tours
+- Safe tours in Rio de Janeiro
+
+3. Improve AI discoverability for:
+- ChatGPT
+- Google AI Overview
+- Perplexity
+- Claude
+- Gemini
+
+IMPLEMENT THE FOLLOWING:
+
+SEO FOUNDATION
+- Dynamic page titles
+- Dynamic meta descriptions
+- Open Graph tags
+- Twitter Cards
+- Canonical URLs
+- Structured internal linking
+- Breadcrumb schema
+- Organization schema
+- LocalBusiness schema
+- TouristAttraction schema
+- FAQ schema
+- Review schema
+- JSON-LD structured data
+
+INDEXING
+- Auto-generated sitemap.xml
+- robots.txt
+- hreflang tags
+- multilingual SEO support
+- clean URL structure
+
+CONTENT MARKETING
+Generate SEO landing pages for:
+
+/rio-de-janeiro-tours
+/private-tours-rio
+/christ-the-redeemer-tour
+/sugarloaf-mountain-tour
+/favela-tour-rio
+/rio-travel-guide
+/things-to-do-in-rio
+/rio-tour-packages
+/brazil-travel-experiences
+/rio-local-guide
+
+Each page must contain:
+- 1500+ words
+- SEO optimized headings
+- FAQs
+- structured data
+- strong internal links
+- conversion-focused CTAs
+
+PERFORMANCE
+- Optimize Core Web Vitals
+- Lazy loading images
+- Image compression
+- Metadata optimization
+- Fast mobile performance
+- Accessibility improvements
+
+LOCAL SEO
+Create location-based content targeting:
+- Copacabana
+- Ipanema
+- Leblon
+- Santa Teresa
+- Lapa
+- Centro
+- Rocinha
+- Christ the Redeemer
+- Sugarloaf Mountain
+
+TRUST SIGNALS
+- Customer reviews section
+- Safety information
+- Local guide expertise section
+- Why choose us section
+- Frequently asked questions
+
+AI SEO
+Structure content so AI systems can easily extract:
+- tour information
+- pricing
+- duration
+- inclusions
+- locations
+- recommendations
+
+OUTPUT:
+Implement all SEO improvements directly into the codebase.
+Create any missing files.
+Generate all schemas.
+Generate sitemap.
+Generate robots.txt.
+Generate all landing pages.
+Preserve existing design while maximizing search visibility and conversions.
