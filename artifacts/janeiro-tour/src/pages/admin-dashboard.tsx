@@ -878,26 +878,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
     const listToArray = (s: string) => s.split("\n").map(l => l.trim()).filter(Boolean);
     const arrayToList = (a: unknown[]) => (a as string[]).join("\n");
 
-    // toursIncluded is an array of {slug, title, duration} objects — edit as JSON
-    const [toursJson, setToursJson] = useState(() => {
-      try { return JSON.stringify(form.toursIncluded, null, 2); } catch { return "[]"; }
-    });
-    const [toursJsonError, setToursJsonError] = useState<string | null>(null);
-
-    const handleToursJsonChange = (raw: string) => {
-      setToursJson(raw);
-      try {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          set("toursIncluded", parsed);
-          setToursJsonError(null);
-        } else {
-          setToursJsonError("Must be a JSON array");
-        }
-      } catch {
-        setToursJsonError("Invalid JSON");
-      }
+    type TourEntry = { slug: string; title: string; duration: string; priceFrom?: number; description?: string };
+    const getTours = () => (form.toursIncluded as TourEntry[]) ?? [];
+    const setTourEntry = (i: number, field: keyof TourEntry, val: string | number) => {
+      const arr = [...getTours()]; arr[i] = { ...arr[i], [field]: val }; set("toursIncluded", arr);
     };
+    const addTourEntry = () => set("toursIncluded", [...getTours(), { slug: "", title: "", duration: "", priceFrom: 0, description: "" }]);
+    const removeTourEntry = (i: number) => set("toursIncluded", getTours().filter((_, j) => j !== i));
 
     return (
       <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
@@ -996,20 +983,43 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Textarea rows={4} value={arrayToList(form.includedItems)} onChange={e => set("includedItems", listToArray(e.target.value))} placeholder={"3 curated tours\nRound-trip transport\nAirport arrival & departure transfers"} />
         </div>
 
-        {/* ── Tours Included JSON ── */}
-        <div className="space-y-1">
-          <Label className="flex items-center gap-2">
-            Tours Included
-            <span className="text-xs text-muted-foreground font-normal">(JSON array of {`{slug, title, duration}`})</span>
-          </Label>
-          <Textarea
-            rows={6}
-            value={toursJson}
-            onChange={e => handleToursJsonChange(e.target.value)}
-            className="font-mono text-xs"
-            placeholder={'[\n  {"slug":"little-africa","title":"Little Africa Tour","duration":"4h"},\n  {"slug":"favela-tour","title":"Favela Tour","duration":"3h"}\n]'}
-          />
-          {toursJsonError && <p className="text-xs text-destructive mt-1">{toursJsonError}</p>}
+        {/* ── Tours Included ── */}
+        <div className="space-y-2">
+          <Label>Tours Included in Package</Label>
+          <p className="text-xs text-muted-foreground -mt-1">Add the individual tours that make up this package</p>
+          {getTours().map((t, i) => (
+            <div key={i} className="border rounded-lg p-3 space-y-2 bg-muted/20">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tour {i + 1}</span>
+                <Button type="button" variant="ghost" size="sm" onClick={() => removeTourEntry(i)}><Trash2 size={13} /></Button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label className="text-xs">Title *</Label>
+                  <Input value={t.title} onChange={e => setTourEntry(i, "title", e.target.value)} placeholder="Little Africa Tour" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Slug *</Label>
+                  <Input value={t.slug} onChange={e => setTourEntry(i, "slug", e.target.value)} placeholder="little-africa" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Duration</Label>
+                  <Input value={t.duration} onChange={e => setTourEntry(i, "duration", e.target.value)} placeholder="4 hours" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Price From (USD)</Label>
+                  <Input type="number" value={t.priceFrom ?? ""} onChange={e => setTourEntry(i, "priceFrom", parseFloat(e.target.value) || 0)} placeholder="95" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Short Description (optional)</Label>
+                <Input value={t.description ?? ""} onChange={e => setTourEntry(i, "description", e.target.value)} placeholder="Cultural walking tour through historic Afro-Brazilian neighborhoods" />
+              </div>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" className="gap-1.5" onClick={addTourEntry}>
+            <Plus size={13} /> Add Tour to Package
+          </Button>
         </div>
 
         {/* ── Published ── */}
@@ -1022,7 +1032,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button
             onClick={() => onSave(form)}
-            disabled={!!toursJsonError}
             className="gap-1.5"
           >
             <Save size={14} /> Save Package
@@ -1127,6 +1136,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
                   <TableCell className="text-sm text-muted-foreground">{pkg.sortOrder}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <a href={`/packages/${pkg.slug}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="ghost" size="sm" title="View on site"><ExternalLink size={14} /></Button>
+                      </a>
                       <Dialog open={editPkg?.id === pkg.id} onOpenChange={open => !open && setEditPkg(null)}>
                         <DialogTrigger asChild>
                           <Button variant="ghost" size="sm" onClick={() => setEditPkg(pkg)}><Pencil size={15} /></Button>
@@ -1226,6 +1238,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <a href={`/tours/${tour.slug}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="ghost" size="sm" title="View on site"><ExternalLink size={14} /></Button>
+                      </a>
                       <Dialog open={editTour?.id === tour.id} onOpenChange={open => !open && setEditTour(null)}>
                         <DialogTrigger asChild>
                           <Button variant="ghost" size="sm" onClick={() => setEditTour(tour as unknown as Record<string, unknown>)}><Pencil size={15} /></Button>
@@ -1376,6 +1391,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
                     <TableCell>{dest.featured && <Badge variant="outline" className="text-green-600 border-green-300 text-xs">Featured</Badge>}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
+                        <a href={`/destinations/${dest.slug}`} target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="sm" title="View on site"><ExternalLink size={14} /></Button>
+                        </a>
                         <Button variant="ghost" size="sm" onClick={() => setEditDest(dest)}><Pencil size={15} /></Button>
                         <ConfirmDelete label="destination" onConfirm={() => deleteDest.mutate({ id: dest.id })} />
                       </div>
@@ -1555,16 +1573,22 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <ImageUploader value={str("imageUrl")} onChange={v => onChange("imageUrl", v)} label="Featured Image *" />
         <div className="space-y-2">
           <Label>Gallery Images</Label>
-          <p className="text-xs text-muted-foreground">Additional images displayed within the article</p>
+          <p className="text-xs text-muted-foreground">Additional images displayed within the article. Upload or paste URLs.</p>
           {imgs().map((img, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <Input value={img} onChange={e => { const a = [...imgs()]; a[i] = e.target.value; onChange("galleryImages", a); }} placeholder="https://..." className="flex-1" />
-              {img && <img src={img} alt="" className="w-10 h-8 rounded object-cover border flex-shrink-0" onError={e => (e.target as HTMLImageElement).style.display = "none"} />}
-              <Button type="button" variant="ghost" size="sm" onClick={() => onChange("galleryImages", imgs().filter((_, idx) => idx !== i))}><Trash2 size={13} /></Button>
+            <div key={i} className="border rounded-lg p-3 space-y-2 bg-muted/20">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Image {i + 1}</span>
+                <Button type="button" variant="ghost" size="sm" onClick={() => onChange("galleryImages", imgs().filter((_, idx) => idx !== i))}><Trash2 size={13} /></Button>
+              </div>
+              <ImageUploader
+                label={`Gallery Image ${i + 1}`}
+                value={img}
+                onChange={v => { const a = [...imgs()]; a[i] = v; onChange("galleryImages", a); }}
+              />
             </div>
           ))}
-          <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => onChange("galleryImages", [...imgs(), ""])}>
-            <Plus size={13} />Add Gallery Image
+          <Button type="button" variant="outline" size="sm" className="gap-1.5" onClick={() => onChange("galleryImages", [...imgs(), ""])}>
+            <Plus size={13} /> Add Gallery Image
           </Button>
         </div>
       </div>
@@ -1662,6 +1686,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
+                        <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="sm" title="View on site"><ExternalLink size={14} /></Button>
+                        </a>
                         <Button variant="ghost" size="sm" title="Duplicate post" onClick={() => duplicatePost(post)}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                         </Button>
@@ -1948,12 +1975,20 @@ import { useState, useRef, useCallback, useEffect } from "react";
           </div>
           <div className="bg-card border rounded-xl p-6 space-y-4">
             <h3 className="font-semibold">Languages</h3>
-            <p className="text-sm text-muted-foreground">The site supports English, Spanish and Portuguese. Use the Tour and FAQ editors to add translations.</p>
-            <div className="grid grid-cols-3 gap-4">
-              {["English (EN) — Default", "Español (ES)", "Português PT-BR"].map(lang => (
-                <div key={lang} className="flex items-center gap-2 p-3 border rounded-lg bg-muted/30">
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="text-sm font-medium">{lang}</span>
+            <p className="text-sm text-muted-foreground">The site supports 5 languages. All UI text is fully translated. Dynamic content (tour descriptions, blog posts) supports EN/ES/PT — French and German fall back to English content.</p>
+            <div className="grid grid-cols-5 gap-3">
+              {[
+                { code: "EN", name: "English", badge: "Default", full: true },
+                { code: "ES", name: "Español", badge: "Full", full: true },
+                { code: "PT", name: "Português", badge: "Full", full: true },
+                { code: "FR", name: "Français", badge: "UI only", full: false },
+                { code: "DE", name: "Deutsch", badge: "UI only", full: false },
+              ].map(lang => (
+                <div key={lang.code} className="flex flex-col items-center gap-1.5 p-3 border rounded-lg bg-muted/30 text-center">
+                  <div className={`w-2 h-2 rounded-full ${lang.full ? "bg-green-500" : "bg-amber-400"}`} />
+                  <span className="text-sm font-bold">{lang.code}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">{lang.name}</span>
+                  <span className={`text-xs font-medium ${lang.full ? "text-green-600" : "text-amber-600"}`}>{lang.badge}</span>
                 </div>
               ))}
             </div>
