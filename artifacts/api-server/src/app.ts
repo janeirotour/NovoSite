@@ -2,9 +2,15 @@ import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import session from "express-session";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { WebhookHandlers } from "./webhookHandlers";
+
+const __apiDir = dirname(fileURLToPath(import.meta.url));
+const WORKSPACE_ROOT = join(__apiDir, "..", "..", "..");
+const UPLOADS_DIR = join(WORKSPACE_ROOT, "artifacts", "janeiro-tour", "public", "uploads");
 
 const app: Express = express();
 
@@ -66,6 +72,11 @@ app.use(
     },
   }),
 );
+
+app.use("/uploads", express.static(UPLOADS_DIR, {
+  maxAge: "7d",
+  immutable: false,
+}));
 
 app.use("/api", router);
 
