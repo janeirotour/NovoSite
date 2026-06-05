@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
 import { CurrencySelector } from "@/components/ui/currency-selector";
-import { Menu, X, ChevronDown, MessageCircle, ShoppingCart, Star, Shield, Phone, Globe, Map, BookOpen, Users, Plane, Crown, Clock } from "lucide-react";
+import { Menu, X, ChevronDown, MessageCircle, ShoppingCart, Star, Shield, Globe, Map, BookOpen, Users, Plane, Crown, Clock, Package, MapPin, Gem, Anchor, Wind, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Lang = "en" | "es" | "pt" | "fr" | "de" | "no";
@@ -238,9 +238,9 @@ export function Header() {
                       <span className="mt-0.5 w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0"><Crown className="w-4 h-4 text-amber-600" /></span>
                       <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-amber-700 transition-colors">{t.privateTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.privateSub}</span></span>
                     </Link>
-                    <Link href="/tours?category=aerial" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-sky-50 group transition-colors">
-                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center flex-shrink-0"><Plane className="w-4 h-4 text-sky-600" /></span>
-                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-sky-700 transition-colors">{t.aerialTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.aerialSub}</span></span>
+                    <Link href="/tours?category=aerial" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 group transition-colors">
+                      <span className="mt-0.5 w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0"><Wind className="w-4 h-4 text-emerald-700" /></span>
+                      <span><span className="block text-sm font-semibold text-gray-900 group-hover:text-emerald-800 transition-colors">{t.aerialTours}</span><span className="block text-xs text-gray-500 mt-0.5">{t.aerialSub}</span></span>
                     </Link>
                     <Link href="/transfers" className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 group transition-colors">
                       <span className="mt-0.5 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0"><Clock className="w-4 h-4 text-gray-600" /></span>
@@ -273,17 +273,17 @@ export function Header() {
 
             {/* PACKAGES dropdown */}
             <DesktopDropdown label={t.packages} isHero={isHero}>
-              <div className={cn(dropdownBase, "w-56")}>
+              <div className={cn(dropdownBase, "w-60")}>
                 <div className="p-2">
                   {[
-                    { href: "/packages", label: t.allPkgs, icon: "🇧🇷" },
-                    { href: "/packages?type=rio", label: t.rioPkgs, icon: "🏖️" },
-                    { href: "/packages?type=luxury", label: t.luxuryPkgs, icon: "✨" },
-                    { href: "/packages?type=family", label: t.familyPkgs, icon: "👨‍👩‍👧" },
-                    { href: "/packages?type=cruise", label: t.cruisePkgs, icon: "🚢" },
-                  ].map(({ href, label, icon }) => (
+                    { href: "/packages", label: t.allPkgs, icon: <Package className="w-4 h-4" />, color: "bg-primary/10 text-primary" },
+                    { href: "/packages?type=rio", label: t.rioPkgs, icon: <MapPin className="w-4 h-4" />, color: "bg-emerald-100 text-emerald-700" },
+                    { href: "/packages?type=luxury", label: t.luxuryPkgs, icon: <Gem className="w-4 h-4" />, color: "bg-amber-100 text-amber-700" },
+                    { href: "/packages?type=family", label: t.familyPkgs, icon: <Users className="w-4 h-4" />, color: "bg-orange-100 text-orange-700" },
+                    { href: "/packages?type=cruise", label: t.cruisePkgs, icon: <Anchor className="w-4 h-4" />, color: "bg-gray-100 text-gray-600" },
+                  ].map(({ href, label, icon, color }) => (
                     <Link key={href} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
-                      <span className="text-base">{icon}</span>
+                      <span className={cn("w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0", color)}>{icon}</span>
                       <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">{label}</span>
                     </Link>
                   ))}
@@ -543,7 +543,7 @@ export function Header() {
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-base">🇧🇷</span>
+                    <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"><Package className="w-4 h-4 text-primary" /></span>
                     {t.packages}
                   </span>
                   <ChevronDown className={cn("w-5 h-5 text-gray-400 transition-transform", mobileSection === "packages" && "rotate-180")} />
