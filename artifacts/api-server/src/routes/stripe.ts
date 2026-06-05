@@ -209,7 +209,6 @@ router.post("/stripe/checkout", async (req, res) => {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -319,7 +318,6 @@ router.post("/stripe/package-checkout", async (req, res) => {
     const effectiveArrivalDate = customer.arrivalFlightDate || arrivalDate;
     const dateLabel = effectiveArrivalDate ? ` · Arrival ${effectiveArrivalDate}` : "";
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
