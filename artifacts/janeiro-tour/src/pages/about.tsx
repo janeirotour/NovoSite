@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { type LucideIcon, Heart, Globe, Shield, Star, Users, Leaf, MapPin, Award, Landmark, CheckCircle2 } from "lucide-react";
+import { SeoHead } from "@/components/seo/SeoHead";
 
 const TX = {
   eyebrow:    { en: "Janeiro Tour & Travel",          es: "Janeiro Tour & Travel",              pt: "Janeiro Tour & Travel",              fr: "Janeiro Tour & Travel",               de: "Janeiro Tour & Travel",               no: "Janeiro Tour & Travel" },
@@ -141,6 +142,15 @@ export default function AboutPage() {
 
   return (
     <div className="w-full">
+      <SeoHead
+        title="About Us — Black-Owned Afrotourism Agency in Rio de Janeiro"
+        description="Janeiro Tour & Travel was founded in 2014 by Dandara, an Afro-Brazilian entrepreneur. We are Rio de Janeiro's premier Black-owned Afrotourism agency offering authentic cultural experiences."
+        canonical="/about"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "About", url: "/about" },
+        ]}
+      />
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[480px] w-full overflow-hidden">
         <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&q=80" alt="Rio de Janeiro — Janeiro Tour & Travel" className="absolute inset-0 w-full h-full object-cover" />

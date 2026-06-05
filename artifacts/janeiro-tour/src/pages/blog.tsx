@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useListBlogPosts } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { Clock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,6 +38,16 @@ export default function BlogPage() {
 
   return (
     <>
+      <SeoHead
+        title="Rio de Janeiro Travel Blog — Tips, Stories & Afrotourism Insights"
+        description="Explore the Janeiro Tour & Travel blog for Rio de Janeiro travel tips, Afro-Brazilian culture insights, tour stories and expert advice for planning your Brazil adventure."
+        canonical="/blog"
+        ogType="article"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Blog", url: "/blog" },
+        ]}
+      />
       {/* Hero */}
       <section className="relative bg-neutral-900 py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/10" />

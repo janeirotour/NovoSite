@@ -1,5 +1,6 @@
 import { useListPackages } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
@@ -122,6 +123,15 @@ export default function PackagesPage() {
 
   return (
     <>
+      <SeoHead
+        title="Rio de Janeiro Tour Packages — Multi-Day Experience Bundles"
+        description="Discover curated Rio de Janeiro tour packages from Janeiro Tour & Travel. Afro-Brazilian culture, iconic landmarks and VIP experiences bundled for better value. Save up to 27%."
+        canonical="/packages"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Packages", url: "/packages" },
+        ]}
+      />
       {/* Hero */}
       <section className="relative bg-neutral-900 py-28 overflow-hidden">
         <img

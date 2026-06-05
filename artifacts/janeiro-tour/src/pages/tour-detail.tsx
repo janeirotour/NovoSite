@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "wouter";
 import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourExtras, useListTourAvailability } from "@workspace/api-client-react";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { useCart } from "@/contexts/CartContext";
@@ -220,8 +221,44 @@ export default function TourDetailPage() {
   const avgRating = reviews?.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : "5.0";
   const hasRegionodo = !!(tour.regiondoWidget as string | null | undefined)?.trim();
 
+  const tourSchema = {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: title,
+    description: overview ?? "",
+    url: `https://www.janeirotour.com/tours/${param}`,
+    image: images[0],
+    provider: {
+      "@type": "TouristInformationCenter",
+      name: "Janeiro Tour & Travel",
+      url: "https://www.janeirotour.com",
+    },
+    touristType: tour.category ?? "Cultural",
+    itinerary: tour.destination ? { "@type": "Place", name: tour.destination } : undefined,
+    ...(reviews?.length ? {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: avgRating,
+        reviewCount: reviews.length,
+        bestRating: "5",
+      },
+    } : {}),
+  };
+
   return (
     <MainLayout>
+      <SeoHead
+        title={`${title} — Rio de Janeiro Tour`}
+        description={`${(overview ?? "").slice(0, 155)}...`}
+        canonical={`/tours/${param}`}
+        ogImage={images[0]}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Tours", url: "/tours" },
+          { name: title, url: `/tours/${param}` },
+        ]}
+        schemas={[tourSchema]}
+      />
       {/* Hero */}
       <section className="relative h-[55vh] min-h-[420px] bg-neutral-900 overflow-hidden">
         <img src={images[0]} alt={title} className="w-full h-full object-cover opacity-90" />

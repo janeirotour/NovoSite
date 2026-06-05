@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { ChevronDown, MessageCircle, Award } from "lucide-react";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -129,6 +130,15 @@ export default function FaqPage() {
 
   return (
     <div>
+      <SeoHead
+        title="Frequently Asked Questions — Janeiro Tour & Travel"
+        description="Find answers to common questions about our Rio de Janeiro tours, booking process, safety, group sizes, languages, cancellation policy and more."
+        canonical="/faq"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "FAQ", url: "/faq" },
+        ]}
+      />
       {/* Hero */}
       <section className="bg-neutral-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFB600]/15 to-[#009743]/10" />

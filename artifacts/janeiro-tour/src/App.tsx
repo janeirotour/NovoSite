@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -9,6 +10,16 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CartSidebar } from "@/components/ui/CartSidebar";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
+import RioDeJaneiroToursPage from "@/pages/seo/rio-de-janeiro-tours";
+import PrivateToursRioPage from "@/pages/seo/private-tours-rio";
+import ChristTheRedeemerTourPage from "@/pages/seo/christ-the-redeemer-tour";
+import SugarloafMountainTourPage from "@/pages/seo/sugarloaf-mountain-tour";
+import FavelaTourRioPage from "@/pages/seo/favela-tour-rio";
+import RioTravelGuidePage from "@/pages/seo/rio-travel-guide";
+import ThingsToDoInRioPage from "@/pages/seo/things-to-do-in-rio";
+import RioTourPackagesPage from "@/pages/seo/rio-tour-packages";
+import BrazilTravelExperiencesPage from "@/pages/seo/brazil-travel-experiences";
+import RioLocalGuidePage from "@/pages/seo/rio-local-guide";
 import ToursPage from "@/pages/tours";
 import DestinationsPage from "@/pages/destinations";
 import TourDetailPage from "@/pages/tour-detail";
@@ -44,6 +55,38 @@ function Router() {
       {/* Admin Routes */}
       <Route path="/admin" component={AdminLoginPage} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+
+      {/* SEO Landing Pages */}
+      <Route path="/rio-de-janeiro-tours">
+        <MainLayout><RioDeJaneiroToursPage /></MainLayout>
+      </Route>
+      <Route path="/private-tours-rio">
+        <MainLayout><PrivateToursRioPage /></MainLayout>
+      </Route>
+      <Route path="/christ-the-redeemer-tour">
+        <MainLayout><ChristTheRedeemerTourPage /></MainLayout>
+      </Route>
+      <Route path="/sugarloaf-mountain-tour">
+        <MainLayout><SugarloafMountainTourPage /></MainLayout>
+      </Route>
+      <Route path="/favela-tour-rio">
+        <MainLayout><FavelaTourRioPage /></MainLayout>
+      </Route>
+      <Route path="/rio-travel-guide">
+        <MainLayout><RioTravelGuidePage /></MainLayout>
+      </Route>
+      <Route path="/things-to-do-in-rio">
+        <MainLayout><ThingsToDoInRioPage /></MainLayout>
+      </Route>
+      <Route path="/rio-tour-packages">
+        <MainLayout><RioTourPackagesPage /></MainLayout>
+      </Route>
+      <Route path="/brazil-travel-experiences">
+        <MainLayout><BrazilTravelExperiencesPage /></MainLayout>
+      </Route>
+      <Route path="/rio-local-guide">
+        <MainLayout><RioLocalGuidePage /></MainLayout>
+      </Route>
 
       {/* Public Routes */}
       <Route path="/">
@@ -107,21 +150,23 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LanguageProvider>
-        <CurrencyProvider>
-          <CartProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-              <CartSidebar />
-            </WouterRouter>
-            <Toaster />
-          </CartProvider>
-        </CurrencyProvider>
-        </LanguageProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <LanguageProvider>
+            <CurrencyProvider>
+              <CartProvider>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                  <Router />
+                  <CartSidebar />
+                </WouterRouter>
+                <Toaster />
+              </CartProvider>
+            </CurrencyProvider>
+          </LanguageProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

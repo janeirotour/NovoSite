@@ -1,5 +1,6 @@
 import { useListFeaturedTours, useListDestinations, useListPackages } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { HeroSection } from "@/components/home/hero-section";
 import { TourCard } from "@/components/ui/tour-card";
 import { DestinationCard } from "@/components/ui/destination-card";
@@ -388,12 +389,14 @@ export default function Home() {
   const { data: destinations, isLoading: destLoading } = useListDestinations({ featured: true });
   const { data: packages, isLoading: pkgsLoading } = useListPackages();
 
-  useEffect(() => {
-    document.title = "Janeiro Tour | Brazil Travel Experiences";
-  }, []);
-
   return (
     <div className="w-full">
+      <SeoHead
+        title="Premium Afrotourism Tours in Rio de Janeiro, Brazil"
+        description="Janeiro Tour & Travel — Black-owned Afrotourism agency offering premium cultural tours, private experiences, airport transfers and travel packages in Rio de Janeiro, Brazil. Rated 5 stars on Tripadvisor."
+        canonical="/"
+        breadcrumbs={[{ name: "Home", url: "/" }]}
+      />
       <HeroSection />
 
       {/* ── 1. Trust Strip ─────────────────────────────────────────────────────── */}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useListTours } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { TourCard } from "@/components/ui/tour-card";
 import { Button } from "@/components/ui/button";
 import { Filter, Search, X } from "lucide-react";
@@ -160,9 +161,7 @@ export default function ToursPage() {
     type: (applied.tourType || "all") as "private" | "group" | "all" | "shared",
   });
 
-  useEffect(() => {
-    document.title = "All Experiences | Janeiro Tour";
-  }, []);
+  useEffect(() => {}, []);
 
   const apply = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -184,6 +183,15 @@ export default function ToursPage() {
 
   return (
     <div className="pt-24 pb-20">
+      <SeoHead
+        title="All Tours & Experiences in Rio de Janeiro — Browse & Book"
+        description="Browse all tours and cultural experiences in Rio de Janeiro with Janeiro Tour & Travel. Christ the Redeemer, Sugarloaf Mountain, favela tours, Afro-Brazilian history and more."
+        canonical="/tours"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Tours", url: "/tours" },
+        ]}
+      />
       <div className="bg-primary text-primary-foreground py-16 mb-12">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-serif font-bold text-4xl md:text-5xl mb-4">{tx.heroTitle}</h1>

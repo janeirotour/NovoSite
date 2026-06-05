@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/hooks/use-language";
 import { Button } from "@/components/ui/button";
+import { SeoHead } from "@/components/seo/SeoHead";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -51,6 +52,15 @@ export default function ContactPage() {
 
   return (
     <div>
+      <SeoHead
+        title="Contact Us — Janeiro Tour & Travel Rio de Janeiro"
+        description="Get in touch with Janeiro Tour & Travel. Book a Rio de Janeiro tour, request a custom itinerary or ask any question. Contact us via WhatsApp, email or the form below."
+        canonical="/contact"
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Contact", url: "/contact" },
+        ]}
+      />
       {/* Hero */}
       <section className="bg-neutral-900 py-28 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[url('/images/hero-rio.png')] bg-cover bg-center" />
