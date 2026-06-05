@@ -84,8 +84,8 @@ export default function PackagesPage() {
       {/* Hero */}
       <section className="relative bg-neutral-900 py-28 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1618826411640-d6df44dd3f7a?w=1600&q=80"
-          alt="Rio de Janeiro Packages"
+          src="/images/bonde_santa_teresa.jpg"
+          alt="Bonde de Santa Teresa, Rio de Janeiro"
           className="absolute inset-0 w-full h-full object-cover opacity-40"
         />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
