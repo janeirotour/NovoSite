@@ -32,6 +32,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
     CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
+    Sparkles, Search,
   } from "lucide-react";
   import { Calendar } from "@/components/ui/calendar";
   import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
@@ -74,6 +75,131 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
   function SectionLabel({ children }: { children: React.ReactNode }) {
     return <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-5 mb-2 border-t pt-4 first:border-t-0 first:pt-0 first:mt-0">{children}</p>;
+  }
+
+  // ─── AI text assist ──────────────────────────────────────────────────────
+
+  function AiAssistButton({ field, context, onResult, label = "Gerar com IA" }: {
+    field: string; context: Record<string, string>; onResult: (text: string) => void; label?: string;
+  }) {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const generate = async () => {
+      setLoading(true); setError(null);
+      try {
+        const res = await fetch("/api/ai/generate-text", {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ field, context }),
+        });
+        const data = await res.json() as { text?: string; error?: string };
+        if (data.text) { onResult(data.text); }
+        else { setError(data.error ?? "Falhou"); }
+      } catch { setError("Erro de rede"); }
+      finally { setLoading(false); }
+    };
+
+    return (
+      <div className="flex items-center gap-2">
+        <Button type="button" size="sm" variant="outline"
+          className="gap-1.5 text-violet-700 border-violet-200 hover:bg-violet-50 hover:border-violet-400 text-xs h-7 px-2"
+          disabled={loading} onClick={generate}>
+          {loading ? <RefreshCw size={11} className="animate-spin" /> : <Sparkles size={11} />}
+          {loading ? "Gerando…" : label}
+        </Button>
+        {error && <span className="text-xs text-red-500">{error}</span>}
+      </div>
+    );
+  }
+
+  // ─── SEO analyzer (Rank Math-style) ─────────────────────────────────────
+
+  function SeoAnalyzer({ title, description, content = "", keyword = "" }: {
+    title: string; description: string; content?: string; keyword?: string;
+  }) {
+    type Check = { ok: boolean; label: string; detail: string };
+    const checks: Check[] = [];
+    const kw = keyword.toLowerCase().trim();
+
+    const titleLen = title.length;
+    const descLen = description.length;
+
+    if (titleLen === 0) {
+      checks.push({ ok: false, label: "SEO Title", detail: "Título SEO está vazio." });
+    } else if (titleLen < 30) {
+      checks.push({ ok: false, label: "SEO Title curto", detail: `Título tem ${titleLen} chars. Ideal: 50–60.` });
+    } else if (titleLen > 60) {
+      checks.push({ ok: false, label: "SEO Title longo", detail: `Título tem ${titleLen} chars. Ideal: 50–60.` });
+    } else {
+      checks.push({ ok: true, label: "SEO Title", detail: `${titleLen} chars — perfeito.` });
+    }
+
+    if (descLen === 0) {
+      checks.push({ ok: false, label: "Meta Description", detail: "Meta description está vazia." });
+    } else if (descLen < 100) {
+      checks.push({ ok: false, label: "Meta Description curta", detail: `${descLen} chars. Ideal: 120–155.` });
+    } else if (descLen > 160) {
+      checks.push({ ok: false, label: "Meta Description longa", detail: `${descLen} chars. Ideal: 120–155.` });
+    } else {
+      checks.push({ ok: true, label: "Meta Description", detail: `${descLen} chars — ótimo.` });
+    }
+
+    if (kw) {
+      const inTitle = title.toLowerCase().includes(kw);
+      checks.push({ ok: inTitle, label: "Keyword no título", detail: inTitle ? `"${keyword}" encontrada no título.` : `"${keyword}" ausente no título.` });
+
+      const inDesc = description.toLowerCase().includes(kw);
+      checks.push({ ok: inDesc, label: "Keyword na descrição", detail: inDesc ? `"${keyword}" encontrada na descrição.` : `"${keyword}" ausente na descrição.` });
+
+      if (content) {
+        const inContent = content.toLowerCase().includes(kw);
+        checks.push({ ok: inContent, label: "Keyword no conteúdo", detail: inContent ? "Keyword encontrada no conteúdo." : "Keyword ausente no conteúdo." });
+      }
+    }
+
+    if (content) {
+      const wordCount = content.trim().split(/\s+/).length;
+      if (wordCount < 100) {
+        checks.push({ ok: false, label: "Conteúdo curto", detail: `${wordCount} palavras. Mínimo recomendado: 300.` });
+      } else {
+        checks.push({ ok: true, label: "Comprimento do conteúdo", detail: `${wordCount} palavras — bem.` });
+      }
+    }
+
+    const score = checks.length === 0 ? 0 : Math.round((checks.filter(c => c.ok).length / checks.length) * 100);
+    const scoreColor = score >= 80 ? "text-green-600" : score >= 50 ? "text-amber-600" : "text-red-500";
+    const barColor = score >= 80 ? "bg-green-500" : score >= 50 ? "bg-amber-500" : "bg-red-500";
+    const scoreLabel = score >= 80 ? "Bom" : score >= 50 ? "Pode melhorar" : "Fraco";
+
+    return (
+      <div className="rounded-xl border bg-muted/30 p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Search size={14} className="text-muted-foreground" />
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Análise SEO</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`text-sm font-bold ${scoreColor}`}>{score}/100</span>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${score >= 80 ? "bg-green-100 text-green-700" : score >= 50 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-600"}`}>{scoreLabel}</span>
+          </div>
+        </div>
+        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className={`h-full rounded-full transition-all duration-500 ${barColor}`} style={{ width: `${score}%` }} />
+        </div>
+        <div className="space-y-1.5">
+          {checks.map((c, i) => (
+            <div key={i} className="flex items-start gap-2 text-xs">
+              {c.ok
+                ? <CheckCircle2 size={13} className="text-green-500 mt-0.5 shrink-0" />
+                : <AlertCircle size={13} className="text-amber-500 mt-0.5 shrink-0" />}
+              <span className={c.ok ? "text-muted-foreground" : "text-foreground"}>{c.detail}</span>
+            </div>
+          ))}
+          {checks.length === 0 && <p className="text-xs text-muted-foreground">Preencha o título e a descrição SEO para ver a análise.</p>}
+        </div>
+      </div>
+    );
   }
 
   // ─── image upload helper ──────────────────────────────────────────────────
@@ -341,13 +467,20 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
         <SectionLabel>SEO Settings</SectionLabel>
         <div className="space-y-1">
-          <div className="flex justify-between"><Label>SEO Title</Label><span className="text-xs text-muted-foreground">{(form.seoTitle as string)?.length ?? 0}/60</span></div>
-          <Input value={form.seoTitle as string} onChange={e => set("seoTitle", e.target.value)} maxLength={60} />
+          <div className="flex items-center justify-between">
+            <div className="flex justify-between w-full"><Label>SEO Title</Label><span className="text-xs text-muted-foreground">{(form.seoTitle as string)?.length ?? 0}/60</span></div>
+          </div>
+          <Input value={form.seoTitle as string} onChange={e => set("seoTitle", e.target.value)} maxLength={60} placeholder="Ex: Cristo Redentor & Rio City Tour — Janeiro Tour & Travel" />
+          <AiAssistButton field="seoTitle" context={{ title: form.title as string, destination: form.destination as string, overview: form.overview as string }} onResult={v => set("seoTitle", v.slice(0, 60))} />
         </div>
         <div className="space-y-1">
-          <div className="flex justify-between"><Label>SEO Meta Description</Label><span className="text-xs text-muted-foreground">{(form.seoDescription as string)?.length ?? 0}/160</span></div>
-          <Textarea rows={2} value={form.seoDescription as string} onChange={e => set("seoDescription", e.target.value)} maxLength={160} />
+          <div className="flex items-center justify-between">
+            <div className="flex justify-between w-full"><Label>SEO Meta Description</Label><span className="text-xs text-muted-foreground">{(form.seoDescription as string)?.length ?? 0}/160</span></div>
+          </div>
+          <Textarea rows={2} value={form.seoDescription as string} onChange={e => set("seoDescription", e.target.value)} maxLength={160} placeholder="Ex: Join our expert local guide for a 7-hour Rio tour..." />
+          <AiAssistButton field="seoDescription" context={{ title: form.title as string, destination: form.destination as string, overview: form.overview as string }} onResult={v => set("seoDescription", v.slice(0, 160))} />
         </div>
+        <SeoAnalyzer title={form.seoTitle as string} description={form.seoDescription as string} content={form.overview as string} keyword={form.destination as string} />
 
         <SectionLabel>Regiondo Booking Widget</SectionLabel>
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 flex gap-2">
@@ -1605,47 +1738,59 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <div className="p-4 space-y-3">
             {lang === "en" && (<>
               <div className="space-y-1"><Label>Title — English *</Label><Input value={str("title")} onChange={e => onChange("title", e.target.value)} placeholder="Article title" /></div>
-              <div className="space-y-1"><Label>Excerpt — English *</Label><Textarea rows={2} value={str("excerpt")} onChange={e => onChange("excerpt", e.target.value)} placeholder="Short description for blog listing" /></div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between"><Label>Excerpt — English *</Label><AiAssistButton field="excerpt" context={{ title: str("title"), content: str("content").slice(0, 300) }} onResult={v => onChange("excerpt", v.slice(0, 200))} /></div>
+                <Textarea rows={2} value={str("excerpt")} onChange={e => onChange("excerpt", e.target.value)} placeholder="Short description for blog listing" />
+              </div>
               <div className="space-y-1"><Label>Content — English *</Label><MarkdownEditor value={str("content")} onChange={v => onChange("content", v)} placeholder="Write in Markdown… **bold**, *italic*, ![alt](url), [link text](url)" /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2 mt-1">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Title — EN</Label><span className="text-xs text-muted-foreground">{str("seoTitle").length}/60</span></div>
-                  <Input value={str("seoTitle")} onChange={e => onChange("seoTitle", e.target.value)} maxLength={60} />
+                  <Input value={str("seoTitle")} onChange={e => onChange("seoTitle", e.target.value)} maxLength={60} placeholder="Ex: Best Places in Brazil — Janeiro Travel Guide" />
+                  <AiAssistButton field="seoTitle" context={{ title: str("title"), excerpt: str("excerpt") }} onResult={v => onChange("seoTitle", v.slice(0, 60))} />
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Description — EN</Label><span className="text-xs text-muted-foreground">{str("seoDescription").length}/160</span></div>
-                  <Textarea rows={2} value={str("seoDescription")} onChange={e => onChange("seoDescription", e.target.value)} maxLength={160} />
+                  <Textarea rows={2} value={str("seoDescription")} onChange={e => onChange("seoDescription", e.target.value)} maxLength={160} placeholder="Ex: Discover the best travel spots in Brazil with our local experts..." />
+                  <AiAssistButton field="seoDescription" context={{ title: str("title"), excerpt: str("excerpt") }} onResult={v => onChange("seoDescription", v.slice(0, 160))} />
                 </div>
+                <SeoAnalyzer title={str("seoTitle")} description={str("seoDescription")} content={str("content")} keyword={str("title").split(" ").slice(0, 3).join(" ")} />
               </div>
             </>)}
             {lang === "es" && (<>
               <div className="space-y-1"><Label>Título — Español</Label><Input value={str("titleEs")} onChange={e => onChange("titleEs", e.target.value)} placeholder="Título del artículo" /></div>
               <div className="space-y-1"><Label>Extracto — Español</Label><Textarea rows={2} value={str("excerptEs")} onChange={e => onChange("excerptEs", e.target.value)} placeholder="Descripción corta" /></div>
               <div className="space-y-1"><Label>Contenido — Español</Label><MarkdownEditor value={str("contentEs")} onChange={v => onChange("contentEs", v)} placeholder="Escribe en Markdown… **negrita**, *cursiva*, ![alt](url), [texto](url)" /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2 mt-1">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Título — ES</Label><span className="text-xs text-muted-foreground">{str("seoTitleEs").length}/60</span></div>
                   <Input value={str("seoTitleEs")} onChange={e => onChange("seoTitleEs", e.target.value)} maxLength={60} />
+                  <AiAssistButton field="seoTitle" context={{ title: str("titleEs") || str("title"), excerpt: str("excerptEs") || str("excerpt"), lang: "Spanish" }} onResult={v => onChange("seoTitleEs", v.slice(0, 60))} />
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Descripción — ES</Label><span className="text-xs text-muted-foreground">{str("seoDescriptionEs").length}/160</span></div>
                   <Textarea rows={2} value={str("seoDescriptionEs")} onChange={e => onChange("seoDescriptionEs", e.target.value)} maxLength={160} />
+                  <AiAssistButton field="seoDescription" context={{ title: str("titleEs") || str("title"), excerpt: str("excerptEs") || str("excerpt"), lang: "Spanish" }} onResult={v => onChange("seoDescriptionEs", v.slice(0, 160))} />
                 </div>
+                <SeoAnalyzer title={str("seoTitleEs")} description={str("seoDescriptionEs")} content={str("contentEs")} />
               </div>
             </>)}
             {lang === "pt" && (<>
               <div className="space-y-1"><Label>Título — Português</Label><Input value={str("titlePt")} onChange={e => onChange("titlePt", e.target.value)} placeholder="Título do artigo" /></div>
               <div className="space-y-1"><Label>Excerto — Português</Label><Textarea rows={2} value={str("excerptPt")} onChange={e => onChange("excerptPt", e.target.value)} placeholder="Descrição curta" /></div>
               <div className="space-y-1"><Label>Conteúdo — Português</Label><MarkdownEditor value={str("contentPt")} onChange={v => onChange("contentPt", v)} placeholder="Escreva em Markdown… **negrito**, *itálico*, ![alt](url), [texto](url)" /></div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2 mt-1">
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Título — PT</Label><span className="text-xs text-muted-foreground">{str("seoTitlePt").length}/60</span></div>
                   <Input value={str("seoTitlePt")} onChange={e => onChange("seoTitlePt", e.target.value)} maxLength={60} />
+                  <AiAssistButton field="seoTitle" context={{ title: str("titlePt") || str("title"), excerpt: str("excerptPt") || str("excerpt"), lang: "Brazilian Portuguese" }} onResult={v => onChange("seoTitlePt", v.slice(0, 60))} />
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between"><Label>SEO Descrição — PT</Label><span className="text-xs text-muted-foreground">{str("seoDescriptionPt").length}/160</span></div>
                   <Textarea rows={2} value={str("seoDescriptionPt")} onChange={e => onChange("seoDescriptionPt", e.target.value)} maxLength={160} />
+                  <AiAssistButton field="seoDescription" context={{ title: str("titlePt") || str("title"), excerpt: str("excerptPt") || str("excerpt"), lang: "Brazilian Portuguese" }} onResult={v => onChange("seoDescriptionPt", v.slice(0, 160))} />
                 </div>
+                <SeoAnalyzer title={str("seoTitlePt")} description={str("seoDescriptionPt")} content={str("contentPt")} />
               </div>
             </>)}
           </div>
