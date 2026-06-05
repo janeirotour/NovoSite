@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { ArrowRight } from "lucide-react";
+import { useListDestinations } from "@workspace/api-client-react";
 
 type Lang = "en" | "es" | "pt" | "fr" | "de" | "no";
 
@@ -154,6 +155,11 @@ export default function DestinationsPage() {
   const l = lang as Lang;
   const tx = t[l] ?? t.en;
 
+  const { data: dbDestinations } = useListDestinations();
+  const dbImageMap = Object.fromEntries(
+    (dbDestinations ?? []).map((d) => [d.id, d.imageUrl]).filter(([, url]) => url)
+  );
+
   useEffect(() => {
     document.title = l === "en"
       ? "Destinations | Janeiro Tour & Travel"
@@ -194,7 +200,7 @@ export default function DestinationsPage() {
                 className={`group relative overflow-hidden rounded-3xl flex flex-col ${isReversed ? "lg:flex-row-reverse" : "lg:flex-row"} min-h-[420px] border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-500`}
               >
                 <div className="relative w-full lg:w-3/5 overflow-hidden min-h-[280px] lg:min-h-0">
-                  <img src={dest.image} alt={info.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={(dbImageMap[dest.id] as string | undefined) ?? dest.image} alt={info.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
                   <div className={`absolute bottom-5 ${isReversed ? "right-5" : "left-5"}`}>
                     <span className="bg-[#FFB600] text-black text-xs font-bold tracking-[0.06em] px-3 py-1.5 rounded-full">
