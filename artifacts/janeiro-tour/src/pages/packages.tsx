@@ -7,7 +7,6 @@ import {
   Check, Star, ArrowRight, Clock, Users, Award, Tag,
   Layers, Heart, MessageCircle, Plane, Search, X, SlidersHorizontal,
 } from "lucide-react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { useState, useMemo } from "react";
 
 const BADGE_STYLES: Record<string, string> = {
@@ -80,7 +79,7 @@ export default function PackagesPage() {
   const l = lang as "en" | "es" | "pt";
 
   return (
-    <MainLayout>
+    <>
       {/* Hero */}
       <section className="relative bg-neutral-900 py-28 overflow-hidden">
         <img
@@ -348,6 +347,6 @@ export default function PackagesPage() {
           </div>
         </div>
       </section>
-    </MainLayout>
+    </>
   );
 }

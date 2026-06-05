@@ -1,5 +1,4 @@
 import { useListTours } from "@workspace/api-client-react";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { useLanguage } from "@/hooks/use-language";
 import { TourCard } from "@/components/ui/tour-card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,7 +18,7 @@ export default function TransfersPage() {
   const { data: tours, isLoading } = useListTours({ category: "transfer" });
 
   return (
-    <MainLayout>
+    <>
       {/* Hero */}
       <section className="relative bg-neutral-900 py-32 overflow-hidden">
         <img
@@ -88,6 +87,6 @@ export default function TransfersPage() {
           </Link>
         </div>
       </section>
-    </MainLayout>
+    </>
   );
 }
