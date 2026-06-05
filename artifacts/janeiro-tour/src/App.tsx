@@ -37,6 +37,7 @@ import PackagesPage from "@/pages/packages";
 import PackageDetailPage from "@/pages/package-detail";
 import AdminLoginPage from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
+import { AdminLayout } from "@/components/layout/AdminLayout";
 import CheckoutSuccessPage from "@/pages/checkout-success";
 import CheckoutCancelPage from "@/pages/checkout-cancel";
 
@@ -54,7 +55,9 @@ function Router() {
     <Switch>
       {/* Admin Routes */}
       <Route path="/admin" component={AdminLoginPage} />
-      <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/dashboard">
+        <AdminLayout><AdminDashboard /></AdminLayout>
+      </Route>
 
       {/* SEO Landing Pages */}
       <Route path="/rio-de-janeiro-tours">

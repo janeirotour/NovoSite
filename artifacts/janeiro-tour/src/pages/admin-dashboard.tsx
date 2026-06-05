@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-  import { useLocation } from "wouter";
+  import { useLocation, useSearch } from "wouter";
   import {
     useGetAdminMe, useAdminLogout, useGetAdminStats,
     useListTours, useCreateTour, useUpdateTour, useDeleteTour,
@@ -738,104 +738,185 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
   export default function AdminDashboard() {
     const [, setLocation] = useLocation();
-    const queryClient = useQueryClient();
+    const search = useSearch();
+    const activeTab = new URLSearchParams(search).get("tab") ?? "overview";
     const { data: me, isLoading: loadingMe } = useGetAdminMe();
     const { data: stats } = useGetAdminStats();
+    const { data: reservationsData } = useListReservations();
 
-    const logout = useAdminLogout({
-      mutation: {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetAdminMeQueryKey() });
-          setLocation("/admin");
-        },
-      },
-    });
+    if (loadingMe) return (
+      <div className="flex items-center justify-center py-32">
+        <Skeleton className="w-96 h-24 rounded-2xl" />
+      </div>
+    );
+    if (!me) return null;
 
-    if (loadingMe) return <div className="min-h-screen flex items-center justify-center"><Skeleton className="w-96 h-24 rounded-2xl" /></div>;
-    if (!me) { setLocation("/admin"); return null; }
+    const reservations = reservationsData ?? [];
+    const recentReservations = [...reservations]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 5);
+    const totalRevenue = reservations
+      .filter(r => r.paymentStatus === "paid")
+      .reduce((s, r) => s + Number(r.totalAmount), 0);
+
+    const paymentBadge = (s: string) => {
+      if (s === "paid") return "bg-green-100 text-green-700";
+      if (s === "pending") return "bg-amber-100 text-amber-700";
+      if (s === "failed") return "bg-red-100 text-red-700";
+      return "bg-gray-100 text-gray-600";
+    };
+
+    const nav = (tab: string) => setLocation(`/admin/dashboard?tab=${tab}`);
+
+    const PageHeader = ({ title, description }: { title: string; description?: string }) => (
+      <div className="mb-7">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{title}</h1>
+        {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
+      </div>
+    );
+
+    const renderContent = () => {
+      switch (activeTab) {
+        case "overview":
+          return (
+            <div className="space-y-7">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
+                <p className="text-sm text-gray-500 mt-1">Welcome back, <span className="font-medium text-gray-700">{me.username}</span>. Here's your business overview.</p>
+              </div>
+
+              {/* Primary KPI cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  { label: "Total Revenue", value: `$${totalRevenue.toLocaleString("en-US", { maximumFractionDigits: 0 })}`, icon: DollarSign, iconColor: "text-emerald-600", iconBg: "bg-emerald-50" },
+                  { label: "Reservations", value: reservations.length, icon: ClipboardList, iconColor: "text-blue-600", iconBg: "bg-blue-50" },
+                  { label: "Published Tours", value: stats?.publishedTours ?? 0, icon: Globe, iconColor: "text-violet-600", iconBg: "bg-violet-50" },
+                  { label: "Avg Rating", value: stats ? `${Number(stats.averageRating).toFixed(1)} ★` : "—", icon: Star, iconColor: "text-amber-600", iconBg: "bg-amber-50" },
+                ].map(({ label, value, icon: Icon, iconColor, iconBg }) => (
+                  <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-start gap-4">
+                    <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}>
+                      <Icon className={`w-5 h-5 ${iconColor}`} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[12px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">{label}</p>
+                      <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Secondary stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { label: "Total Tours", value: stats?.totalTours ?? 0, icon: Package },
+                  { label: "Destinations", value: stats?.totalDestinations ?? 0, icon: MapPin },
+                  { label: "Reviews", value: stats?.totalReviews ?? 0, icon: Star },
+                  { label: "Blog Posts", value: stats?.totalBlogPosts ?? 0, icon: FileText },
+                ].map(({ label, value, icon: Icon }) => (
+                  <div key={label} className="bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3 flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-gray-300 shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-400">{label}</p>
+                      <p className="text-lg font-bold text-gray-800">{value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Recent reservations */}
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">
+                  <h2 className="font-semibold text-gray-900">Recent Reservations</h2>
+                  <button
+                    onClick={() => nav("reservations")}
+                    className="text-sm text-primary font-medium hover:underline flex items-center gap-1"
+                  >
+                    View all <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                {recentReservations.length === 0 ? (
+                  <div className="py-14 text-center text-gray-400 text-sm">No reservations yet</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-gray-50">
+                          <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Customer</th>
+                          <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Tour</th>
+                          <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Amount</th>
+                          <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Payment</th>
+                          <th className="px-6 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recentReservations.map((r, i) => (
+                          <tr key={r.id} className={`hover:bg-gray-50/70 transition-colors ${i < recentReservations.length - 1 ? "border-b border-gray-50" : ""}`}>
+                            <td className="px-6 py-3.5">
+                              <p className="font-medium text-gray-900">{r.customerName}</p>
+                              <p className="text-xs text-gray-400">{r.customerEmail}</p>
+                            </td>
+                            <td className="px-6 py-3.5 text-gray-600 max-w-[180px] truncate">{r.tourTitle}</td>
+                            <td className="px-6 py-3.5 font-semibold text-gray-900">${Number(r.totalAmount).toFixed(0)}</td>
+                            <td className="px-6 py-3.5">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${paymentBadge(r.paymentStatus)}`}>
+                                {r.paymentStatus}
+                              </span>
+                            </td>
+                            <td className="px-6 py-3.5 text-gray-400 text-xs">{new Date(r.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Quick navigation */}
+              <div>
+                <h2 className="font-semibold text-gray-900 mb-3">Quick Actions</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { tab: "tours", label: "Manage Tours", icon: Package, desc: "Add & edit tour listings" },
+                    { tab: "reservations", label: "View Bookings", icon: ClipboardList, desc: "All reservations" },
+                    { tab: "blog", label: "Travel Guide", icon: FileText, desc: "Blog posts & articles" },
+                    { tab: "settings", label: "SEO Settings", icon: Settings, desc: "Site SEO & meta tags" },
+                  ].map(({ tab, label, icon: Icon, desc }) => (
+                    <button
+                      key={tab}
+                      onClick={() => nav(tab)}
+                      className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-left hover:border-primary/40 hover:shadow-md transition-all group"
+                    >
+                      <div className="w-9 h-9 rounded-lg bg-primary/8 flex items-center justify-center mb-3">
+                        <Icon className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                      </div>
+                      <p className="font-semibold text-sm text-gray-900">{label}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+
+        case "tours":         return <><PageHeader title="Tours" description="Manage your tour listings, pricing, and availability." /><ToursTab /></>;
+        case "destinations":  return <><PageHeader title="Destinations" description="Manage destination pages and content." /><DestinationsTab /></>;
+        case "blog":          return <><PageHeader title="Travel Guide" description="Manage blog posts and travel articles." /><BlogTab /></>;
+        case "reviews":       return <><PageHeader title="Reviews & Ratings" description="Manage customer reviews and testimonials." /><ReviewsTab /></>;
+        case "faqs":          return <><PageHeader title="FAQs" description="Manage frequently asked questions." /><FaqsTab /></>;
+        case "homepage":      return <><PageHeader title="Homepage Content" description="Edit hero text, CTAs and contact information." /><HomepageTab /></>;
+        case "settings":      return <><PageHeader title="Settings & SEO" description="Global site settings, SEO metadata and social links." /><SettingsTab /></>;
+        case "reservations":  return <><PageHeader title="Reservations" description="View and manage all tour bookings." /><ReservationsTab /></>;
+        case "packages":      return <><PageHeader title="Packages" description="Manage multi-tour travel packages." /><PackagesTab /></>;
+        case "extras":        return <><PageHeader title="Tour Extras" description="Manage add-ons and optional upgrades." /><ExtrasTab /></>;
+        case "availability":  return <><PageHeader title="Availability" description="Manage tour schedules and available dates." /><AvailabilityTab /></>;
+        case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
+        default:              return null;
+      }
+    };
 
     return (
-      <div className="min-h-screen bg-muted/20">
-        <header className="bg-card border-b px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-          <div className="flex items-center gap-3">
-            <img src="/janeiro-logo.png" alt="Janeiro Tour" className="h-8 w-auto" onError={e => (e.target as HTMLImageElement).style.display = "none"} />
-            <div>
-              <p className="font-bold text-sm">Admin Dashboard</p>
-              <p className="text-xs text-muted-foreground">Logged in as {me.username}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="gap-1" onClick={() => window.open("/", "_blank")}>
-              <ExternalLink size={14} /> View Site
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => logout.mutate(undefined)} className="gap-1">
-              <LogOut size={14} /> Sign Out
-            </Button>
-          </div>
-        </header>
-
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <Tabs defaultValue="overview">
-            <TabsList className="flex-wrap h-auto gap-1 mb-8 bg-card border p-1 rounded-xl w-full justify-start">
-              {[
-                { value: "overview", icon: BarChart3, label: "Overview" },
-                { value: "editor", icon: Monitor, label: "Page Editor" },
-                { value: "tours", icon: Package, label: "Tours" },
-                { value: "destinations", icon: MapPin, label: "Destinations" },
-                { value: "blog", icon: FileText, label: "Travel Guide" },
-                { value: "reviews", icon: Star, label: "Reviews" },
-                { value: "faqs", icon: HelpCircle, label: "FAQs" },
-                { value: "homepage", icon: Image, label: "Homepage" },
-                { value: "settings", icon: Settings, label: "Settings & SEO" },
-                { value: "reservations", icon: ClipboardList, label: "Reservations" },
-                { value: "packages", icon: Boxes, label: "Packages" },
-                { value: "extras", icon: Tag, label: "Tour Extras" },
-                { value: "availability", icon: CalendarDays, label: "Availability" },
-              ].map(({ value, icon: Icon, label }) => (
-                <TabsTrigger key={value} value={value} className="gap-1.5 text-sm">
-                  <Icon size={14} />{label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            <TabsContent value="overview">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <StatCard label="Total Tours" value={stats?.totalTours ?? 0} icon={Package} color="bg-primary" />
-                <StatCard label="Destinations" value={stats?.totalDestinations ?? 0} icon={MapPin} color="bg-accent" />
-                <StatCard label="Reviews" value={stats?.totalReviews ?? 0} icon={Star} color="bg-orange-500" />
-                <StatCard label="Blog Posts" value={stats?.totalBlogPosts ?? 0} icon={FileText} color="bg-purple-500" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <StatCard label="Published Tours" value={stats?.publishedTours ?? 0} icon={Globe} color="bg-blue-500" />
-                <StatCard label="Featured Tours" value={stats?.featuredTours ?? 0} icon={BarChart3} color="bg-indigo-500" />
-                <StatCard label="Avg Rating" value={stats ? `${Number(stats.averageRating).toFixed(1)}/5` : "—"} icon={Star} color="bg-yellow-500" />
-              </div>
-              <div className="bg-card border rounded-xl p-6">
-                <h3 className="font-semibold mb-3">Quick Start Guide</h3>
-                <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
-                  <li>Go to <strong>Page Editor</strong> to visually preview and edit any page with a live side-by-side view</li>
-                  <li>Go to <strong>Tours</strong> → click <strong>Add Tour</strong> to create or edit tours — includes image upload, highlights, itinerary, inclusions, SEO and Regiondo widget</li>
-                  <li>Go to <strong>Travel Guide</strong> to add and manage blog posts</li>
-                  <li>Go to <strong>Homepage</strong> to edit hero text, CTAs and contact information</li>
-                  <li>Go to <strong>Settings & SEO</strong> to manage global SEO and social media links</li>
-                </ol>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="editor"><PageEditorTab /></TabsContent>
-            <TabsContent value="tours"><ToursTab /></TabsContent>
-            <TabsContent value="destinations"><DestinationsTab /></TabsContent>
-            <TabsContent value="blog"><BlogTab /></TabsContent>
-            <TabsContent value="reviews"><ReviewsTab /></TabsContent>
-            <TabsContent value="faqs"><FaqsTab /></TabsContent>
-            <TabsContent value="homepage"><HomepageTab /></TabsContent>
-            <TabsContent value="settings"><SettingsTab /></TabsContent>
-            <TabsContent value="reservations"><ReservationsTab /></TabsContent>
-            <TabsContent value="packages"><PackagesTab /></TabsContent>
-            <TabsContent value="extras"><ExtrasTab /></TabsContent>
-            <TabsContent value="availability"><AvailabilityTab /></TabsContent>
-          </Tabs>
-        </div>
+      <div className="max-w-7xl mx-auto">
+        {renderContent()}
       </div>
     );
   }

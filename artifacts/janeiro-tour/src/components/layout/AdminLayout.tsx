@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
 import {
@@ -58,12 +58,13 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   const logout = useAdminLogout();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  if (!isLoading && (isError || !admin)) {
-    setLocation("/admin");
-    return null;
-  }
+  useEffect(() => {
+    if (!isLoading && (isError || !admin)) {
+      setLocation("/admin");
+    }
+  }, [isLoading, isError, admin, setLocation]);
 
-  if (isLoading) {
+  if (isLoading || !admin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F5F3EE]">
         <div className="flex flex-col items-center gap-3">

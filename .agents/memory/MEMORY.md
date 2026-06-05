@@ -1,5 +1,6 @@
 - [Janeiro Tour stack](janeiro-tour-stack.md) — pnpm monorepo; api-server port 8080 at /api; janeiro-tour Vite/React at /; PostgreSQL via DATABASE_URL
 - [Admin auth](admin-auth.md) — session-based; credentials admin/admin123 (bcrypt in DB); login at /admin, dashboard at /admin/dashboard
+- [Admin dashboard architecture](admin-dashboard-arch.md) — sidebar nav in AdminLayout; tab routing via ?tab=xxx URL param (useSearch from wouter); AdminLayout owns auth guard + logout; AdminDashboard renders sections by switch on activeTab
 - [Nav & Regiondo design](nav-regiondo.md) — premium dropdown nav with NavigationMenu (shadcn), logo at /janeiro-logo.png; Regiondo widget uses useEffect+useRef script injection on tour-detail.tsx
 - [Blog schema multilingual](blog-multilingual.md) — blog_posts table has excerptEs/Pt, contentEs/Pt, seoTitleEs/Pt, seoDescriptionEs/Pt, galleryImages (JSONB); settings has siteName, seoTitle, seoDescription, ogImageUrl, heroImageUrl; always run push+codegen after schema changes.
 - [Currency conversion](currency-conversion.md) — display-only conversion via CurrencyContext; backend GET /api/currency/rates fetches open.er-api.com with 1hr cache + static fallback; Stripe charges always USD.
