@@ -203,14 +203,14 @@ export function Header() {
   return (
     <>
       <header className={headerClass}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[68px] flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 lg:h-[68px] flex items-center gap-2">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center mr-2" onClick={closeMobile}>
             <img
               src="/janeiro-logo.png"
               alt="Janeiro Tour & Travel"
-              className={cn("h-11 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
+              className={cn("h-8 lg:h-11 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
                 const next = (e.target as HTMLImageElement).nextElementSibling as HTMLElement | null;
