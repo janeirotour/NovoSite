@@ -382,13 +382,13 @@ export function Header() {
               )}
             </div>
 
-            {/* WhatsApp icon */}
+            {/* WhatsApp icon — desktop only (mobile has bottom nav + floating button) */}
             <a
               href="https://wa.me/5521965297618"
               target="_blank" rel="noopener noreferrer"
               title="WhatsApp"
               className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
+                "hidden lg:flex w-8 h-8 rounded-full items-center justify-center transition-colors",
                 isHero ? "text-white/80 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-green-600 hover:bg-green-50"
               )}
             >
@@ -675,17 +675,8 @@ export function Header() {
           </div>
 
           {/* Sticky bottom CTA bar */}
-          <div className="border-t border-gray-100 px-4 py-3 bg-white flex gap-2.5 flex-shrink-0">
-            <a
-              href="https://wa.me/5521965297618"
-              target="_blank" rel="noopener noreferrer"
-              style={{ touchAction: "manipulation" }}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-green-200 bg-green-50 text-green-700 text-sm font-semibold active:bg-green-100 transition-colors"
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
-            </a>
-            <Link href="/tours" onClick={closeMobile} className="flex-[2]" style={{ touchAction: "manipulation" }}>
+          <div className="border-t border-gray-100 px-4 py-3 bg-white flex-shrink-0">
+            <Link href="/tours" onClick={closeMobile} className="block" style={{ touchAction: "manipulation" }}>
               <span className="flex items-center justify-center py-3 rounded-xl bg-primary text-primary-foreground text-sm font-bold active:bg-primary/90 transition-colors">
                 {t.book} →
               </span>
