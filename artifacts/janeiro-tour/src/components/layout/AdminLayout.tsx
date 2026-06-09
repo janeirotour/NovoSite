@@ -4,7 +4,7 @@ import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
 import {
   BarChart3, Compass, Package2, MapPin, FileText, Monitor,
   ClipboardList, CalendarDays, Star, HelpCircle, Tag, Home, Settings,
-  LogOut, ExternalLink, Menu, X, Globe, ChevronDown, ChevronRight,
+  LogOut, ExternalLink, Menu, X, Globe, ChevronDown, ChevronRight, TrendingUp,
 } from "lucide-react";
 
 type NavItem = { tab: string; label: string; icon: React.ElementType };
@@ -35,6 +35,7 @@ const NAV: NavGroup[] = [
     items: [
       { tab: "reviews", label: "Reviews & Ratings", icon: Star },
       { tab: "faqs", label: "FAQs", icon: HelpCircle },
+      { tab: "blog-monetization", label: "Blog Monetization", icon: TrendingUp },
     ],
   },
   {

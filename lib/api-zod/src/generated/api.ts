@@ -1026,7 +1026,8 @@ export const GetSettingsResponse = zod.object({
   "googleReviewsUrl": zod.string().nullish(),
   "seoTitle": zod.string().nullish(),
   "seoDescription": zod.string().nullish(),
-  "ogImageUrl": zod.string().nullish()
+  "ogImageUrl": zod.string().nullish(),
+  "blogConversionData": zod.record(zod.string(), zod.unknown()).nullish()
 })
 
 
@@ -1054,7 +1055,8 @@ export const UpdateSettingsBody = zod.object({
   "googleReviewsUrl": zod.string().optional(),
   "seoTitle": zod.string().optional(),
   "seoDescription": zod.string().optional(),
-  "ogImageUrl": zod.string().optional()
+  "ogImageUrl": zod.string().optional(),
+  "blogConversionData": zod.record(zod.string(), zod.unknown()).optional()
 })
 
 export const UpdateSettingsResponse = zod.object({
@@ -1079,7 +1081,8 @@ export const UpdateSettingsResponse = zod.object({
   "googleReviewsUrl": zod.string().nullish(),
   "seoTitle": zod.string().nullish(),
   "seoDescription": zod.string().nullish(),
-  "ogImageUrl": zod.string().nullish()
+  "ogImageUrl": zod.string().nullish(),
+  "blogConversionData": zod.record(zod.string(), zod.unknown()).nullish()
 })
 
 

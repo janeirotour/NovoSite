@@ -5,6 +5,7 @@
  * Janeiro Tour API - Premium Brazil Travel Platform
  * OpenAPI spec version: 0.1.0
  */
+import type { SiteSettingsUpdateBlogConversionData } from './siteSettingsUpdateBlogConversionData';
 
 export interface SiteSettingsUpdate {
   siteName?: string;
@@ -28,4 +29,5 @@ export interface SiteSettingsUpdate {
   seoTitle?: string;
   seoDescription?: string;
   ogImageUrl?: string;
+  blogConversionData?: SiteSettingsUpdateBlogConversionData;
 }

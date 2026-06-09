@@ -1,4 +1,4 @@
-import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { json, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -25,6 +25,7 @@ export const siteSettingsTable = pgTable("site_settings", {
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
   ogImageUrl: text("og_image_url"),
+  blogConversionData: json("blog_conversion_data"),
 });
 
 export const insertSiteSettingsSchema = createInsertSchema(siteSettingsTable).omit({ id: true });

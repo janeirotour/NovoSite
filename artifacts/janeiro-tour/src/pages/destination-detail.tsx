@@ -5,6 +5,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TourCard } from "@/components/ui/tour-card";
+import { BlogConversionSection } from "@/components/blog/BlogConversionSection";
 
 const TX = {
   loading:     { en: "Loading destination...",  es: "Cargando destino...",     pt: "Carregando destino...",  fr: "Chargement...",              de: "Wird geladen..." },
@@ -92,6 +93,9 @@ export default function DestinationDetailPage() {
           </div>
         </section>
       )}
+
+      {/* Blog Conversion Section */}
+      <BlogConversionSection />
 
       {/* CTA */}
       <section className="bg-primary py-20 text-center">

@@ -1787,6 +1787,9 @@ components:
           type: ["string", "null"]
         ogImageUrl:
           type: ["string", "null"]
+        blogConversionData:
+          type: ["object", "null"]
+          additionalProperties: true
 
     SiteSettingsUpdate:
       type: object
@@ -1833,6 +1836,9 @@ components:
           type: string
         ogImageUrl:
           type: string
+        blogConversionData:
+          type: object
+          additionalProperties: true
 
     AdminLoginInput:
       type: object

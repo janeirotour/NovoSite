@@ -447,6 +447,11 @@ export interface ReviewUpdate {
   featured?: boolean;
 }
 
+/**
+ * @nullable
+ */
+export type SiteSettingsBlogConversionData = { [key: string]: unknown } | null;
+
 export interface SiteSettings {
   id: number;
   /** @nullable */
@@ -483,7 +488,11 @@ export interface SiteSettings {
   seoDescription?: string | null;
   /** @nullable */
   ogImageUrl?: string | null;
+  /** @nullable */
+  blogConversionData?: SiteSettingsBlogConversionData;
 }
+
+export type SiteSettingsUpdateBlogConversionData = { [key: string]: unknown };
 
 export interface SiteSettingsUpdate {
   siteName?: string;
@@ -507,6 +516,7 @@ export interface SiteSettingsUpdate {
   seoTitle?: string;
   seoDescription?: string;
   ogImageUrl?: string;
+  blogConversionData?: SiteSettingsUpdateBlogConversionData;
 }
 
 export interface AdminLoginInput {

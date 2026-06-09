@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { BlogConversionSection } from "@/components/blog/BlogConversionSection";
 
 const TX = {
   loading:    { en: "Loading article...",             es: "Cargando artículo...",              pt: "Carregando artigo...",              fr: "Chargement de l'article...",           de: "Artikel wird geladen..." },
@@ -110,6 +111,9 @@ export default function BlogDetailPage() {
           </Link>
         </div>
       </article>
+
+      {/* Blog Conversion Section */}
+      <BlogConversionSection />
     </MainLayout>
   );
 }

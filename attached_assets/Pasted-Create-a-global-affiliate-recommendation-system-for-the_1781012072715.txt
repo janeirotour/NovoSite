@@ -1,0 +1,121 @@
+Create a global affiliate recommendation system for the Travel Guide / Blog section.
+
+Do not redesign the website.
+
+Do not change the current structure.
+
+The goal is to automatically display travel resources and affiliate recommendations on all existing and future blog posts without manually adding them to each article.
+
+GLOBAL BLOG AFFILIATE SECTION
+
+Create a reusable section that automatically appears at the end of every Travel Guide and Blog article.
+
+Section Title:
+
+Travel Resources for Your Trip to Brazil
+
+Description:
+
+Planning your trip to Brazil? Here are our recommended travel resources for flights, hotels, car rentals and international payments.
+
+AFFILIATE CARDS
+
+1. Car Rental
+
+Title:
+Car Rental in Brazil
+
+Description:
+Compare prices from major car rental companies and find the best option for your trip.
+
+Button:
+Compare Car Rentals
+
+Link:
+https://www.rentcars.com/en/?requestorid=2308&utm_source=janeirotour.com&utm_medium=afiliado-link
+
+Open in new tab.
+
+2. Flights & Hotels
+
+Title:
+Flights & Hotels
+
+Description:
+Search for flights, hotels and travel deals for your trip to Brazil.
+
+Button:
+Search Flights & Hotels
+
+Link:
+https://expedia.com/affiliates/expedia-home.SKrg7Z1
+
+Open in new tab.
+
+3. International Travel Card
+
+Title:
+International Travel Card
+
+Description:
+Save money on international payments and currency exchange while traveling.
+
+Button:
+Get Wise
+
+Link:
+https://wise.com/invite/ilpc/dandarad12
+
+Open in new tab.
+
+AUTOMATION
+
+Apply this section automatically to:
+
+* All current blog posts
+* All future blog posts
+* All Travel Guide articles
+* All destination guides
+
+Do not require manual insertion for each article.
+
+The section should automatically appear before the article footer or author section.
+
+ADMIN DASHBOARD
+
+Create a global Affiliate Resources settings page.
+
+Allow editing:
+
+* Affiliate title
+* Affiliate description
+* Button text
+* Affiliate URL
+* Active / inactive status
+
+Future affiliate links should be manageable from one central location without editing individual articles.
+
+DESIGN
+
+* Match existing Janeiro Tour & Travel branding.
+* Clean premium layout.
+* Mobile responsive.
+* Three affiliate cards displayed consistently.
+* No intrusive popups.
+* No aggressive advertising.
+
+SEO
+
+Affiliate links should use:
+
+rel="sponsored noopener noreferrer"
+
+Open in new tab.
+
+IMPORTANT
+
+Do not redesign the website.
+
+Do not modify article content.
+
+Create one reusable affiliate resources block that automatically appears across all existing and future blog content.

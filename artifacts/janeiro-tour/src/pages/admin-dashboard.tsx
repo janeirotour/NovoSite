@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
   import { useLocation, useSearch } from "wouter";
+  import { BlogConversionData, DEFAULT_BLOG_CONVERSION } from "@/components/blog/BlogConversionSection";
   import {
     useGetAdminMe, useAdminLogout, useGetAdminStats,
     useListTours, useCreateTour, useUpdateTour, useDeleteTour,
@@ -1043,6 +1044,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
         case "extras":        return <><PageHeader title="Tour Extras" description="Manage add-ons and optional upgrades." /><ExtrasTab /></>;
         case "availability":  return <><PageHeader title="Availability" description="Manage tour schedules and available dates." /><AvailabilityTab /></>;
         case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
+        case "blog-monetization": return <><PageHeader title="Blog Monetization" description="Manage conversion sections and affiliate links shown on all blog and travel guide pages." /><BlogMonetizationTab /></>;
         default:              return null;
       }
     };
@@ -2781,6 +2783,199 @@ import { useState, useRef, useCallback, useEffect } from "react";
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  // ─── blog monetization tab ──────────────────────────────────────────────
+
+  function BlogMonetizationTab() {
+    const qc = useQueryClient();
+    const { data: settings } = useGetSettings();
+    const updateSettings = useUpdateSettings();
+
+    const getConversionData = (): BlogConversionData => {
+      const raw = (settings as { blogConversionData?: unknown } | undefined)?.blogConversionData;
+      if (raw && typeof raw === "object") {
+        return { ...DEFAULT_BLOG_CONVERSION, ...(raw as Partial<BlogConversionData>) };
+      }
+      return { ...DEFAULT_BLOG_CONVERSION };
+    };
+
+    const [form, setForm] = useState<BlogConversionData>(getConversionData);
+    const [saved, setSaved] = useState(false);
+
+    useEffect(() => {
+      if (settings) setForm(getConversionData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [settings]);
+
+    const save = () => {
+      updateSettings.mutate(
+        { data: { blogConversionData: form as unknown as Record<string, unknown> } as Parameters<typeof updateSettings.mutate>[0]["data"] },
+        {
+          onSuccess: () => {
+            qc.invalidateQueries({ queryKey: getGetSettingsQueryKey() });
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2500);
+          },
+        }
+      );
+    };
+
+    const setPromo = (key: keyof BlogConversionData, value: unknown) =>
+      setForm((f) => ({ ...f, [key]: value }));
+
+    const updateService = (i: number, field: string, value: string) =>
+      setForm((f) => {
+        const services = [...f.promoServices];
+        services[i] = { ...services[i], [field]: value };
+        return { ...f, promoServices: services };
+      });
+
+    const updateCta = (i: number, field: string, value: string) =>
+      setForm((f) => {
+        const ctas = [...f.promoCtas];
+        ctas[i] = { ...ctas[i], [field]: value };
+        return { ...f, promoCtas: ctas };
+      });
+
+    const updateAffiliate = (i: number, field: string, value: unknown) =>
+      setForm((f) => {
+        const cards = [...f.affiliateCards];
+        cards[i] = { ...cards[i], [field]: value };
+        return { ...f, affiliateCards: cards };
+      });
+
+    const SectionCard = ({ title, children }: { title: string; children: React.ReactNode }) => (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+        <h3 className="font-semibold text-gray-900 text-base">{title}</h3>
+        {children}
+      </div>
+    );
+
+    const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium text-gray-600 uppercase tracking-wide">{label}</Label>
+        {children}
+      </div>
+    );
+
+    return (
+      <div className="space-y-6 max-w-4xl">
+        {/* Save bar */}
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-500">Changes apply globally to all blog posts and travel guide articles.</p>
+          <Button
+            onClick={save}
+            disabled={updateSettings.isPending}
+            className="bg-[#009743] hover:bg-[#007a36] text-white"
+          >
+            {saved ? "✓ Saved" : updateSettings.isPending ? "Saving…" : "Save Changes"}
+          </Button>
+        </div>
+
+        {/* ── Promo Section ─── */}
+        <SectionCard title="Section 1 — Janeiro Tour & Travel Promo">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Show promo section</span>
+            <Switch
+              checked={form.promoEnabled}
+              onCheckedChange={(v) => setPromo("promoEnabled", v)}
+            />
+          </div>
+
+          <Field label="Section Title">
+            <Input value={form.promoTitle} onChange={(e) => setPromo("promoTitle", e.target.value)} />
+          </Field>
+
+          <Field label="Description">
+            <Textarea rows={3} value={form.promoDescription} onChange={(e) => setPromo("promoDescription", e.target.value)} />
+          </Field>
+
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-3 block">Featured Services</Label>
+            <div className="space-y-3">
+              {form.promoServices.map((svc, i) => (
+                <div key={i} className="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-xl">
+                  <Input placeholder="Title" value={svc.title} onChange={(e) => updateService(i, "title", e.target.value)} />
+                  <Input placeholder="Link (e.g. /tours)" value={svc.href} onChange={(e) => updateService(i, "href", e.target.value)} />
+                  <Input placeholder="Description" value={svc.description} onChange={(e) => updateService(i, "description", e.target.value)} className="col-span-2" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Field label="Featured Destinations (one per line)">
+            <Textarea
+              rows={4}
+              value={form.promoDestinations.join("\n")}
+              onChange={(e) => setPromo("promoDestinations", e.target.value.split("\n").map((s) => s.trim()).filter(Boolean))}
+            />
+          </Field>
+
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-3 block">CTA Buttons</Label>
+            <div className="space-y-3">
+              {form.promoCtas.map((cta, i) => (
+                <div key={i} className="grid grid-cols-2 gap-2 p-3 bg-gray-50 rounded-xl">
+                  <Input placeholder="Button Label" value={cta.label} onChange={(e) => updateCta(i, "label", e.target.value)} />
+                  <Input placeholder="Link (e.g. /tours)" value={cta.href} onChange={(e) => updateCta(i, "href", e.target.value)} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* ── Affiliate Section ─── */}
+        <SectionCard title="Section 2 — Affiliate Travel Resources">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Show affiliate resources section</span>
+            <Switch
+              checked={form.affiliatesEnabled}
+              onCheckedChange={(v) => setPromo("affiliatesEnabled", v)}
+            />
+          </div>
+
+          <Field label="Section Title">
+            <Input value={form.affiliatesTitle} onChange={(e) => setPromo("affiliatesTitle", e.target.value)} />
+          </Field>
+
+          <Field label="Description">
+            <Textarea rows={2} value={form.affiliatesDescription} onChange={(e) => setPromo("affiliatesDescription", e.target.value)} />
+          </Field>
+
+          <div>
+            <Label className="text-xs font-medium text-gray-600 uppercase tracking-wide mb-3 block">Affiliate Cards</Label>
+            <div className="space-y-4">
+              {form.affiliateCards.map((card, i) => (
+                <div key={card.id} className="p-4 bg-gray-50 rounded-xl space-y-3 border border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold text-gray-800">{card.title || `Card ${i + 1}`}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500">{card.enabled ? "Visible" : "Hidden"}</span>
+                      <Switch
+                        checked={card.enabled}
+                        onCheckedChange={(v) => updateAffiliate(i, "enabled", v)}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input placeholder="Card Title" value={card.title} onChange={(e) => updateAffiliate(i, "title", e.target.value)} />
+                    <Input placeholder="Button Label" value={card.buttonLabel} onChange={(e) => updateAffiliate(i, "buttonLabel", e.target.value)} />
+                  </div>
+                  <Textarea placeholder="Card Description" rows={2} value={card.description} onChange={(e) => updateAffiliate(i, "description", e.target.value)} />
+                  <Input placeholder="Affiliate URL (https://...)" value={card.url} onChange={(e) => updateAffiliate(i, "url", e.target.value)} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* Preview note */}
+        <div className="rounded-xl bg-[#009743]/5 border border-[#009743]/20 px-4 py-3 text-sm text-[#009743]">
+          💡 These sections appear automatically on all existing and future blog posts, travel guide articles, and destination pages.
+        </div>
       </div>
     );
   }

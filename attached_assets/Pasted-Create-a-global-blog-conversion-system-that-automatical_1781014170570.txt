@@ -1,0 +1,167 @@
+Create a global blog conversion system that automatically appears on all Travel Guide and Blog articles.
+
+Do not redesign the website.
+Do not change the current structure.
+Do not modify article content.
+
+The goal is to convert blog readers into Janeiro Tour & Travel customers while also showing helpful affiliate travel resources.
+
+This system must automatically appear on:
+
+* All existing blog posts
+* All future blog posts
+* All Travel Guide articles
+* All Destination Guides
+
+Do not require manual insertion into each article.
+
+SECTION 1: Janeiro Tour & Travel Promotion
+
+Place this section before the affiliate resources section.
+
+Title:
+Plan Your Trip with Janeiro Tour & Travel
+
+Description:
+Looking for unforgettable experiences in Brazil? Janeiro Tour & Travel offers carefully curated tours, private experiences, airport transfers, travel packages and customized itineraries designed for international travelers seeking authentic experiences across Brazil.
+
+Featured Services:
+
+Private Tours
+Personalized experiences with expert local guides and flexible itineraries.
+
+Airport Transfers
+Reliable private transportation between airports, hotels and destinations.
+
+Travel Packages
+Multi-day itineraries designed to help travelers discover the best of Brazil.
+
+Cultural Experiences
+Authentic local experiences, walking tours and immersive cultural activities.
+
+Featured Destinations:
+
+* Rio de Janeiro
+* São Paulo
+* Bahia
+* Recife
+* Foz do Iguaçu
+* Amazon Rainforest
+
+CTA Buttons:
+
+Button 1:
+Explore Experiences
+Link to the internal Experiences page.
+
+Button 2:
+View Travel Packages
+Link to the internal Packages page.
+
+Button 3:
+Contact Our Team
+Link to WhatsApp or the Contact page.
+
+SECTION 2: Affiliate Travel Resources
+
+Place this section immediately after the Janeiro Tour & Travel promotion section.
+
+Title:
+Travel Resources for Your Trip to Brazil
+
+Description:
+Planning your trip to Brazil? Here are our recommended travel resources for flights, hotels, car rentals and international payments.
+
+Affiliate Cards:
+
+1. Car Rental
+
+Title:
+Car Rental in Brazil
+
+Description:
+Compare prices from major car rental companies and find the best option for your trip.
+
+Button:
+Compare Car Rentals
+
+Link:
+https://www.rentcars.com/en/?requestorid=2308&utm_source=janeirotour.com&utm_medium=afiliado-link
+
+2. Flights & Hotels
+
+Title:
+Flights & Hotels
+
+Description:
+Search for flights, hotels and travel deals for your trip to Brazil.
+
+Button:
+Search Flights & Hotels
+
+Link:
+https://expedia.com/affiliates/expedia-home.SKrg7Z1
+
+3. International Travel Card
+
+Title:
+International Travel Card
+
+Description:
+Save money on international payments and currency exchange while traveling.
+
+Button:
+Get Wise
+
+Link:
+https://wise.com/invite/ilpc/dandarad12
+
+Affiliate Link Requirements:
+
+* Open all affiliate links in a new tab.
+* Add rel="sponsored noopener noreferrer" to affiliate links.
+* Do not use popups.
+* Do not make the affiliate section intrusive.
+
+ADMIN DASHBOARD REQUIREMENTS
+
+Create a global Blog Monetization / Blog Conversion settings page.
+
+Allow editing:
+
+Janeiro Tour & Travel Promotion:
+
+* Section title
+* Description
+* Featured services
+* Featured destinations
+* CTA button labels
+* CTA button links
+* Active / inactive status
+
+Affiliate Resources:
+
+* Section title
+* Description
+* Affiliate card titles
+* Affiliate card descriptions
+* Button labels
+* Affiliate URLs
+* Active / inactive status for each card
+
+DESIGN REQUIREMENTS
+
+* Match Janeiro Tour & Travel branding.
+* Premium travel brand appearance.
+* Mobile responsive.
+* Clean and elegant layout.
+* No aggressive advertising style.
+* Use cards, icons and subtle visual hierarchy.
+* Keep it trustworthy and useful for travelers.
+
+IMPORTANT
+
+Do not redesign the website.
+Do not modify article content.
+Do not change the overall layout structure.
+Create one reusable global system that automatically appears across all existing and future blog content.
