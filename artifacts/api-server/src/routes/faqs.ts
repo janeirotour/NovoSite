@@ -21,6 +21,10 @@ router.get("/faqs", async (req, res): Promise<void> => {
   } else {
     conditions.push(isNull(faqsTable.tourId));
   }
+  const includeDisabled = params.success && (params.data as { includeDisabled?: boolean }).includeDisabled === true;
+  if (!includeDisabled) {
+    conditions.push(eq(faqsTable.isEnabled, true));
+  }
   const faqs = await db
     .select()
     .from(faqsTable)

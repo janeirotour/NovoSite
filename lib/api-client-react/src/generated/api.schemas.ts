@@ -383,6 +383,7 @@ export interface Faq {
   /** @nullable */
   answerPt?: string | null;
   sortOrder: number;
+  isEnabled: boolean;
 }
 
 export interface FaqInput {
@@ -394,6 +395,7 @@ export interface FaqInput {
   answerEs?: string;
   answerPt?: string;
   sortOrder?: number;
+  isEnabled?: boolean;
 }
 
 export interface FaqUpdate {
@@ -404,6 +406,7 @@ export interface FaqUpdate {
   answerEs?: string;
   answerPt?: string;
   sortOrder?: number;
+  isEnabled?: boolean;
 }
 
 export interface Review {
@@ -692,6 +695,7 @@ featured?: boolean;
 
 export type ListFaqsParams = {
 tourId?: number;
+includeDisabled?: boolean;
 };
 
 export type ListReviewsParams = {

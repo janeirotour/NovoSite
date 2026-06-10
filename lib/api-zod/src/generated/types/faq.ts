@@ -21,4 +21,5 @@ export interface Faq {
   /** @nullable */
   answerPt?: string | null;
   sortOrder: number;
+  isEnabled: boolean;
 }

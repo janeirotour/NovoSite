@@ -850,7 +850,8 @@ export const GetPackageResponse = zod.object({
  * @summary List FAQs
  */
 export const ListFaqsQueryParams = zod.object({
-  "tourId": zod.coerce.number().optional()
+  "tourId": zod.coerce.number().optional(),
+  "includeDisabled": zod.coerce.boolean().optional()
 })
 
 export const ListFaqsResponseItem = zod.object({
@@ -862,7 +863,8 @@ export const ListFaqsResponseItem = zod.object({
   "answer": zod.string(),
   "answerEs": zod.string().nullish(),
   "answerPt": zod.string().nullish(),
-  "sortOrder": zod.number()
+  "sortOrder": zod.number(),
+  "isEnabled": zod.boolean()
 })
 export const ListFaqsResponse = zod.array(ListFaqsResponseItem)
 
@@ -878,7 +880,8 @@ export const CreateFaqBody = zod.object({
   "answer": zod.string(),
   "answerEs": zod.string().optional(),
   "answerPt": zod.string().optional(),
-  "sortOrder": zod.number().optional()
+  "sortOrder": zod.number().optional(),
+  "isEnabled": zod.boolean().optional()
 })
 
 
@@ -896,7 +899,8 @@ export const UpdateFaqBody = zod.object({
   "answer": zod.string().optional(),
   "answerEs": zod.string().optional(),
   "answerPt": zod.string().optional(),
-  "sortOrder": zod.number().optional()
+  "sortOrder": zod.number().optional(),
+  "isEnabled": zod.boolean().optional()
 })
 
 export const UpdateFaqResponse = zod.object({
@@ -908,7 +912,8 @@ export const UpdateFaqResponse = zod.object({
   "answer": zod.string(),
   "answerEs": zod.string().nullish(),
   "answerPt": zod.string().nullish(),
-  "sortOrder": zod.number()
+  "sortOrder": zod.number(),
+  "isEnabled": zod.boolean()
 })
 
 

@@ -15,4 +15,5 @@ export interface FaqInput {
   answerEs?: string;
   answerPt?: string;
   sortOrder?: number;
+  isEnabled?: boolean;
 }

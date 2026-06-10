@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -12,6 +12,7 @@ export const faqsTable = pgTable("faqs", {
   answerEs: text("answer_es"),
   answerPt: text("answer_pt"),
   sortOrder: integer("sort_order").notNull().default(0),
+  isEnabled: boolean("is_enabled").notNull().default(true),
 });
 
 export const insertFaqSchema = createInsertSchema(faqsTable).omit({ id: true });

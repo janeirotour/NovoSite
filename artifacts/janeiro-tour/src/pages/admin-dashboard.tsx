@@ -2029,19 +2029,23 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
   function FaqsTab() {
     const queryClient = useQueryClient();
-    const { data: faqs, isLoading } = useListFaqs();
-    const deleteFaq = useDeleteFaq({ mutation: { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFaqsQueryKey() }) } });
-    const updateFaq = useUpdateFaq({ mutation: { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFaqsQueryKey() }) } });
-    const createFaq = useCreateFaq({ mutation: { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFaqsQueryKey() }) } });
+    const invalidate = () => queryClient.invalidateQueries({ queryKey: getListFaqsQueryKey() });
+    const { data: faqs, isLoading } = useListFaqs({ includeDisabled: true });
+    const deleteFaq = useDeleteFaq({ mutation: { onSuccess: invalidate } });
+    const updateFaq = useUpdateFaq({ mutation: { onSuccess: invalidate } });
+    const createFaq = useCreateFaq({ mutation: { onSuccess: invalidate } });
     type Faq = NonNullable<typeof faqs>[number];
     const [editFaq, setEditFaq] = useState<Faq | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
-    const [form, setForm] = useState({ question:"", answer:"", questionEs:"", answerEs:"", questionPt:"", answerPt:"", sortOrder: 10 });
+    const blankForm = { question:"", answer:"", questionEs:"", answerEs:"", questionPt:"", answerPt:"", sortOrder: 10, isEnabled: true };
+    const [form, setForm] = useState(blankForm);
+
+    const allFaqs = faqs ?? [];
 
     return (
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">FAQs ({faqs?.length ?? 0})</h2>
+          <h2 className="text-2xl font-bold">FAQs ({allFaqs.length})</h2>
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild><Button className="gap-1"><Plus size={15} /> Add FAQ</Button></DialogTrigger>
             <DialogContent className="max-w-lg">
@@ -2053,11 +2057,14 @@ import { useState, useRef, useCallback, useEffect } from "react";
                 <div className="space-y-1"><Label>Answer — Español</Label><Textarea rows={2} value={form.answerEs} onChange={e => setForm(f => ({...f,answerEs:e.target.value}))} /></div>
                 <div className="space-y-1"><Label>Question — Português</Label><Input value={form.questionPt} onChange={e => setForm(f => ({...f,questionPt:e.target.value}))} /></div>
                 <div className="space-y-1"><Label>Answer — Português</Label><Textarea rows={2} value={form.answerPt} onChange={e => setForm(f => ({...f,answerPt:e.target.value}))} /></div>
-                <div className="space-y-1"><Label>Sort Order</Label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({...f,sortOrder:parseInt(e.target.value)}))} className="w-28" /></div>
+                <div className="flex items-center gap-4">
+                  <div className="space-y-1 flex-1"><Label>Sort Order</Label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({...f,sortOrder:parseInt(e.target.value)||0}))} className="w-28" /></div>
+                  <div className="space-y-1 flex items-center gap-2 pt-5"><Switch checked={form.isEnabled} onCheckedChange={v => setForm(f => ({...f,isEnabled:v}))} /><Label>{form.isEnabled ? "Enabled" : "Disabled"}</Label></div>
+                </div>
               </div>
               <div className="flex gap-3 justify-end pt-3 border-t">
                 <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
-                <Button onClick={() => { createFaq.mutate({ data: form }); setCreateOpen(false); setForm({question:"",answer:"",questionEs:"",answerEs:"",questionPt:"",answerPt:"",sortOrder:10}); }}>Save FAQ</Button>
+                <Button onClick={() => { createFaq.mutate({ data: form }); setCreateOpen(false); setForm(blankForm); }}>Save FAQ</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -2065,16 +2072,29 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="bg-card border rounded-xl overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow><TableHead>Question</TableHead><TableHead className="text-right">Actions</TableHead></TableRow>
+              <TableRow>
+                <TableHead>Question</TableHead>
+                <TableHead className="w-24 text-center">Enabled</TableHead>
+                <TableHead className="w-20 text-center">Order</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading ? [...Array(5)].map((_,i) => <TableRow key={i}><TableCell colSpan={2}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
-                : faqs?.map(faq => (
-                  <TableRow key={faq.id}>
-                    <TableCell className="max-w-[500px]">
+              {isLoading
+                ? [...Array(5)].map((_,i) => <TableRow key={i}><TableCell colSpan={4}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
+                : allFaqs.map(faq => (
+                  <TableRow key={faq.id} className={faq.isEnabled ? "" : "opacity-50"}>
+                    <TableCell className="max-w-[420px]">
                       <p className="font-medium text-sm">{faq.question}</p>
                       <p className="text-xs text-muted-foreground mt-0.5 truncate">{faq.answer}</p>
                     </TableCell>
+                    <TableCell className="text-center">
+                      <Switch
+                        checked={faq.isEnabled}
+                        onCheckedChange={v => updateFaq.mutate({ id: faq.id, data: { isEnabled: v } })}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center text-sm text-muted-foreground">{faq.sortOrder}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" onClick={() => setEditFaq(faq)}><Pencil size={15} /></Button>
@@ -2097,6 +2117,10 @@ import { useState, useRef, useCallback, useEffect } from "react";
                 <div className="space-y-1"><Label>Answer (EN)</Label><Textarea rows={3} defaultValue={editFaq.answer} onChange={e => setEditFaq(f => f ? {...f,answer:e.target.value} : null)} /></div>
                 <div className="space-y-1"><Label>Answer — Español</Label><Textarea rows={2} defaultValue={editFaq.answerEs ?? ""} onChange={e => setEditFaq(f => f ? {...f,answerEs:e.target.value} : null)} /></div>
                 <div className="space-y-1"><Label>Answer — Português</Label><Textarea rows={2} defaultValue={editFaq.answerPt ?? ""} onChange={e => setEditFaq(f => f ? {...f,answerPt:e.target.value} : null)} /></div>
+                <div className="flex items-center gap-4">
+                  <div className="space-y-1 flex-1"><Label>Sort Order</Label><Input type="number" defaultValue={editFaq.sortOrder} onChange={e => setEditFaq(f => f ? {...f,sortOrder:parseInt(e.target.value)||0} : null)} className="w-28" /></div>
+                  <div className="space-y-1 flex items-center gap-2 pt-5"><Switch checked={editFaq.isEnabled} onCheckedChange={v => setEditFaq(f => f ? {...f,isEnabled:v} : null)} /><Label>{editFaq.isEnabled ? "Enabled" : "Disabled"}</Label></div>
+                </div>
               </div>
               <div className="flex gap-3 justify-end pt-3 border-t">
                 <Button variant="outline" onClick={() => setEditFaq(null)}>Cancel</Button>

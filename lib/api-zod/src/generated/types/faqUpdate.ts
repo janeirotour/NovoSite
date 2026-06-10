@@ -14,4 +14,5 @@ export interface FaqUpdate {
   answerEs?: string;
   answerPt?: string;
   sortOrder?: number;
+  isEnabled?: boolean;
 }

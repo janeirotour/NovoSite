@@ -8,4 +8,5 @@
 
 export type ListFaqsParams = {
 tourId?: number;
+includeDisabled?: boolean;
 };

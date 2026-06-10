@@ -1,0 +1,102 @@
+Update the FAQ section of the website.
+
+Do not redesign the website.
+Do not change the current structure.
+Do not remove existing FAQ items.
+Only add new FAQ items and update existing matching questions when they already exist.
+
+Apply this update across the entire FAQ system.
+
+Multilingual Requirement:
+
+The FAQ must be available in all website languages:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Requirements:
+
+* Translate all FAQ questions and answers correctly into Spanish and Brazilian Portuguese.
+* Do not leave mixed-language content.
+* Do not leave untranslated text.
+* Store each language version separately so it can be edited from the admin dashboard.
+* Make sure the FAQ displays the correct language when the visitor changes the site language.
+* Apply translations to all FAQ pages, FAQ sections and FAQ blocks across the website.
+
+English FAQ Content:
+
+1. How do I book a tour?
+
+You can book directly through our website using our secure booking system, or contact us via WhatsApp or email. Once your booking request is received, our team will confirm all details and availability.
+
+2. What payment methods do you accept?
+
+We accept major international credit and debit cards through our secure online payment system. Some products may also offer deposit payment options.
+
+3. Can I book now and pay later?
+
+For selected experiences and packages, a deposit option may be available. Full payment requirements vary depending on the product and travel dates.
+
+4. What is your cancellation policy?
+
+Most day tours offer free cancellation up to 72 hours before departure.
+
+Multi-day tours, packages and customized itineraries generally require at least 10 days' notice for cancellations.
+
+Specific cancellation terms may vary by product and will always be displayed on the tour page before booking.
+
+No refunds are available for no-shows or cancellations made after the applicable cancellation period.
+
+5. Do I need travel insurance?
+
+Travel insurance is not included in our tours or services. We strongly recommend that all travelers purchase comprehensive travel insurance covering medical expenses, trip interruptions, cancellations and personal belongings.
+
+6. What should I wear and bring?
+
+We recommend dressing according to the destination, activities and season of the year.
+
+In general, comfortable walking shoes, lightweight clothing, sunscreen, sunglasses, insect repellent and a reusable water bottle are recommended.
+
+For nature and rainforest experiences, long sleeves and long pants may be advisable during the evening hours.
+
+7. How do I know my booking is confirmed?
+
+After submitting your booking and completing payment, you will receive a confirmation email. Our team may contact you if additional information is required before final confirmation.
+
+8. Can I customize my trip?
+
+Yes. Janeiro Tour & Travel specializes in customized itineraries, private tours, airport transfers and personalized travel planning throughout Brazil. Contact our team to create a tailor-made experience.
+
+9. Do you offer airport transfers?
+
+Yes. We offer private airport transfers in several destinations throughout Brazil. Transfer services can often be added during the booking process as an optional service.
+
+10. What languages do you support?
+
+Our team provides assistance in English, Portuguese and Spanish. Additional language support may be available depending on the service requested.
+
+11. What happens if weather conditions affect my tour?
+
+Certain activities may be modified, rescheduled or canceled due to weather conditions or circumstances beyond our control. When applicable, alternative arrangements or available refund options will be provided.
+
+12. Who operates the tours?
+
+Janeiro Tour & Travel carefully selects reputable local partners, guides and transportation providers to deliver safe, authentic and high-quality travel experiences throughout Brazil.
+
+Admin Dashboard Requirements:
+
+* Allow each FAQ question and answer to be edited in English, Spanish and Brazilian Portuguese.
+* Allow adding new FAQ items.
+* Allow editing existing FAQ items.
+* Allow deleting FAQ items.
+* Allow reordering FAQ items.
+* Allow enabling or disabling FAQ items.
+* Apply FAQ updates to all relevant FAQ sections across the website.
+
+Important:
+
+Do not remove existing FAQs unless they are exact duplicates.
+Do not change the visual design.
+Do not change layout or branding.
+Only update the FAQ content and multilingual FAQ management.
