@@ -547,6 +547,17 @@ export interface AdminStats {
   averageRating: number;
 }
 
+export interface AdminUser {
+  id: number;
+  username: string;
+  role: string;
+}
+
+export interface ChangePasswordInput {
+  /** @minLength 6 */
+  newPassword: string;
+}
+
 export interface TourExtra {
   id: number;
   tourId: number;

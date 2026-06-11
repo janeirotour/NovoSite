@@ -7,6 +7,8 @@ import {
   AdminLoginBody,
   GetAdminMeResponse,
   GetAdminStatsResponse,
+  ListAdminUsersResponse,
+  ChangeAdminPasswordBody,
 } from "@workspace/api-zod";
 import { logger } from "../lib/logger";
 
@@ -66,6 +68,34 @@ router.get("/admin/stats", async (req, res): Promise<void> => {
     publishedTours: publishedTours.count,
     averageRating: parseFloat(avgRating.avg ?? "0"),
   }));
+});
+
+router.get("/admin/users", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
+  const admins = await db
+    .select({ id: adminsTable.id, username: adminsTable.username, role: adminsTable.role })
+    .from(adminsTable)
+    .orderBy(adminsTable.id);
+  res.json(ListAdminUsersResponse.parse(admins));
+});
+
+router.patch("/admin/users/:id/password", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
+
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid user ID" }); return; }
+
+  const parsed = ChangeAdminPasswordBody.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
+
+  const [target] = await db.select({ id: adminsTable.id }).from(adminsTable).where(eq(adminsTable.id, id));
+  if (!target) { res.status(404).json({ error: "User not found" }); return; }
+
+  const passwordHash = await bcrypt.hash(parsed.data.newPassword, 10);
+  await db.update(adminsTable).set({ passwordHash }).where(eq(adminsTable.id, id));
+
+  logger.info({ adminId: req.session.adminId, targetId: id }, "Admin password changed");
+  res.json({ success: true, message: "Password updated successfully" });
 });
 
 export default router;

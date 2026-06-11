@@ -12,9 +12,10 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useListReservations, useUpdateReservationStatus,
     useListAllExtras, useCreateTourExtra, useUpdateTourExtra, useDeleteTourExtra,
     useListAdminTourAvailability, useCreateAvailabilityEntry, useUpdateAvailabilityEntry, useDeleteAvailabilityEntry,
+    useListAdminUsers, useChangeAdminPassword,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
-    getGetSettingsQueryKey, getGetAdminStatsQueryKey,
+    getGetSettingsQueryKey, getGetAdminStatsQueryKey, getListAdminUsersQueryKey,
   } from "@workspace/api-client-react";
   import { useQueryClient } from "@tanstack/react-query";
   import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
     CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
-    Sparkles, Search,
+    Sparkles, Search, KeyRound, ShieldCheck,
   } from "lucide-react";
   import { Calendar } from "@/components/ui/calendar";
   import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
@@ -1045,6 +1046,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
         case "availability":  return <><PageHeader title="Availability" description="Manage tour schedules and available dates." /><AvailabilityTab /></>;
         case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
         case "blog-monetization": return <><PageHeader title="Blog Monetization" description="Manage conversion sections and affiliate links shown on all blog and travel guide pages." /><BlogMonetizationTab /></>;
+        case "users":         return <><PageHeader title="Admin Users" description="Manage admin accounts and change passwords." /><UsersTab /></>;
         default:              return null;
       }
     };
@@ -3000,6 +3002,183 @@ import { useState, useRef, useCallback, useEffect } from "react";
         <div className="rounded-xl bg-[#009743]/5 border border-[#009743]/20 px-4 py-3 text-sm text-[#009743]">
           💡 These sections appear automatically on all existing and future blog posts, travel guide articles, and destination pages.
         </div>
+      </div>
+    );
+  }
+
+  // ─── users tab ───────────────────────────────────────────────────────────
+
+  function UsersTab() {
+    const queryClient = useQueryClient();
+    const invalidate = () => queryClient.invalidateQueries({ queryKey: getListAdminUsersQueryKey() });
+    const { data: users, isLoading } = useListAdminUsers();
+    const changePassword = useChangeAdminPassword({ mutation: { onSuccess: invalidate } });
+
+    const [dialogUser, setDialogUser] = useState<{ id: number; username: string } | null>(null);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [showNew, setShowNew] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [error, setError] = useState("");
+
+    const openDialog = (user: { id: number; username: string }) => {
+      setDialogUser(user);
+      setNewPassword("");
+      setConfirmPassword("");
+      setError("");
+      setShowNew(false);
+      setShowConfirm(false);
+    };
+
+    const handleSave = async () => {
+      if (newPassword.length < 6) { setError("Password must be at least 6 characters."); return; }
+      if (newPassword !== confirmPassword) { setError("Passwords do not match."); return; }
+      if (!dialogUser) return;
+      setError("");
+      try {
+        await changePassword.mutateAsync({ id: dialogUser.id, data: { newPassword } });
+        setDialogUser(null);
+      } catch {
+        setError("Failed to change password. Please try again.");
+      }
+    };
+
+    return (
+      <div className="space-y-6">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-50 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4 text-amber-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm">Admin Accounts</p>
+              <p className="text-xs text-gray-400">Only admins logged in to this panel can change passwords.</p>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="p-6 space-y-3">
+              {[1, 2].map(i => <Skeleton key={i} className="h-14 rounded-xl" />)}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-10">ID</TableHead>
+                  <TableHead>Username</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(users ?? []).map(user => (
+                  <TableRow key={user.id}>
+                    <TableCell className="text-gray-400 text-xs font-mono">#{user.id}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center">
+                          <Users className="w-3.5 h-3.5 text-gray-500" />
+                        </div>
+                        <span className="font-medium text-gray-900">{user.username}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium bg-amber-50 text-amber-700 rounded-full px-2.5 py-0.5">
+                        <ShieldCheck className="w-3 h-3" /> {user.role}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-1.5 text-xs"
+                        onClick={() => openDialog(user)}
+                      >
+                        <KeyRound className="w-3.5 h-3.5" />
+                        Change Password
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
+
+        <Dialog open={!!dialogUser} onOpenChange={(open) => { if (!open) setDialogUser(null); }}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <KeyRound className="w-4 h-4 text-amber-600" />
+                Change Password — <span className="text-amber-700">{dialogUser?.username}</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="new-pw">New Password</Label>
+                <div className="relative">
+                  <Input
+                    id="new-pw"
+                    type={showNew ? "text" : "password"}
+                    placeholder="Minimum 6 characters"
+                    value={newPassword}
+                    onChange={e => { setNewPassword(e.target.value); setError(""); }}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowNew(v => !v)}
+                  >
+                    {showNew ? <Eye className="w-4 h-4" /> : <Eye className="w-4 h-4 opacity-40" />}
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="confirm-pw">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirm-pw"
+                    type={showConfirm ? "text" : "password"}
+                    placeholder="Repeat the password"
+                    value={confirmPassword}
+                    onChange={e => { setConfirmPassword(e.target.value); setError(""); }}
+                    className="pr-10"
+                    onKeyDown={e => e.key === "Enter" && handleSave()}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowConfirm(v => !v)}
+                  >
+                    {showConfirm ? <Eye className="w-4 h-4" /> : <Eye className="w-4 h-4 opacity-40" />}
+                  </button>
+                </div>
+              </div>
+              {error && (
+                <p className="text-sm text-red-600 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" /> {error}
+                </p>
+              )}
+              {changePassword.isSuccess && !error && (
+                <p className="text-sm text-green-600 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Password changed successfully.
+                </p>
+              )}
+              <div className="flex gap-2 justify-end pt-1">
+                <Button variant="outline" onClick={() => setDialogUser(null)}>Cancel</Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={changePassword.isPending || !newPassword || !confirmPassword}
+                  className="gap-1.5"
+                >
+                  {changePassword.isPending ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <KeyRound className="w-3.5 h-3.5" />}
+                  Save Password
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

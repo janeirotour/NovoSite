@@ -1129,6 +1129,38 @@ export const GetAdminStatsResponse = zod.object({
 
 
 /**
+ * @summary List all admin users (no passwords)
+ */
+export const ListAdminUsersResponseItem = zod.object({
+  "id": zod.number(),
+  "username": zod.string(),
+  "role": zod.string()
+})
+export const ListAdminUsersResponse = zod.array(ListAdminUsersResponseItem)
+
+
+/**
+ * @summary Change password for an admin user
+ */
+export const ChangeAdminPasswordParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const changeAdminPasswordBodyNewPasswordMin = 6;
+
+
+
+export const ChangeAdminPasswordBody = zod.object({
+  "newPassword": zod.string().min(changeAdminPasswordBodyNewPasswordMin)
+})
+
+export const ChangeAdminPasswordResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string()
+})
+
+
+/**
  * @summary List active extras for a tour
  */
 export const ListTourExtrasParams = zod.object({
