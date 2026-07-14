@@ -678,6 +678,84 @@ export interface ReservationStatusUpdate {
   notes?: string;
 }
 
+export interface GroupPricingTier {
+  minPax: number;
+  maxPax: number;
+  pricePerPerson: number;
+}
+
+export interface GroupItineraryDay {
+  day: number;
+  title: string;
+  description: string;
+}
+
+export interface GroupOptionalExperience {
+  name: string;
+  description?: string | null;
+  price: number;
+}
+
+export interface GroupAccommodationOption {
+  name: string;
+  description?: string | null;
+  category: string;
+}
+
+export interface GroupProgram {
+  id: number;
+  slug: string;
+  title: string;
+  subtitle?: string | null;
+  duration: string;
+  heroImageUrl: string;
+  overview: string;
+  targetAudience: string;
+  highlights: string[];
+  suggestedItinerary: GroupItineraryDay[];
+  whatsIncluded: string[];
+  whatsNotIncluded: string[];
+  accommodationOptions: GroupAccommodationOption[];
+  transportation: string;
+  optionalExperiences: GroupOptionalExperience[];
+  pricingLandOnly: GroupPricingTier[];
+  pricingComplete: GroupPricingTier[];
+  landOnlyFromPrice: number;
+  completeFromPrice: number;
+  currency: string;
+  pdfUrl?: string | null;
+  whatsappNumber?: string | null;
+  published: boolean;
+  sortOrder: number;
+  createdAt?: string | null;
+}
+
+export interface GroupProgramInput {
+  slug: string;
+  title: string;
+  subtitle?: string | null;
+  duration: string;
+  heroImageUrl: string;
+  overview: string;
+  targetAudience: string;
+  highlights?: string[];
+  suggestedItinerary?: GroupItineraryDay[];
+  whatsIncluded?: string[];
+  whatsNotIncluded?: string[];
+  accommodationOptions?: GroupAccommodationOption[];
+  transportation?: string;
+  optionalExperiences?: GroupOptionalExperience[];
+  pricingLandOnly?: GroupPricingTier[];
+  pricingComplete?: GroupPricingTier[];
+  landOnlyFromPrice: number;
+  completeFromPrice: number;
+  currency?: string;
+  pdfUrl?: string | null;
+  whatsappNumber?: string | null;
+  published?: boolean;
+  sortOrder?: number;
+}
+
 export type ListToursParams = {
 destination?: string;
 category?: string;
@@ -702,6 +780,10 @@ featured?: boolean;
 
 export type ListBlogPostsParams = {
 featured?: boolean;
+};
+
+export type ListGroupProgramsParams = {
+includeUnpublished?: boolean;
 };
 
 export type ListFaqsParams = {

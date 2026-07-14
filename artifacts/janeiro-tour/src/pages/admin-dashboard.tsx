@@ -13,9 +13,11 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useListAllExtras, useCreateTourExtra, useUpdateTourExtra, useDeleteTourExtra,
     useListAdminTourAvailability, useCreateAvailabilityEntry, useUpdateAvailabilityEntry, useDeleteAvailabilityEntry,
     useListAdminUsers, useChangeAdminPassword,
+    useListGroupPrograms, useCreateGroupProgram, useUpdateGroupProgram, useDeleteGroupProgram,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
     getGetSettingsQueryKey, getGetAdminStatsQueryKey, getListAdminUsersQueryKey,
+    getListGroupProgramsQueryKey,
   } from "@workspace/api-client-react";
   import { useQueryClient } from "@tanstack/react-query";
   import { Button } from "@/components/ui/button";
@@ -1041,7 +1043,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
         case "homepage":      return <><PageHeader title="Homepage Content" description="Edit hero text, CTAs and contact information." /><HomepageTab /></>;
         case "settings":      return <><PageHeader title="Settings & SEO" description="Global site settings, SEO metadata and social links." /><SettingsTab /></>;
         case "reservations":  return <><PageHeader title="Reservations" description="View and manage all tour bookings." /><ReservationsTab /></>;
-        case "packages":      return <><PageHeader title="Packages" description="Manage multi-tour travel packages." /><PackagesTab /></>;
+        case "packages":        return <><PageHeader title="Packages" description="Manage multi-tour travel packages." /><PackagesTab /></>;
+        case "group-programs":  return <><PageHeader title="Group Programs" description="Manage B2B group travel programs." /><GroupProgramsTab /></>;
         case "extras":        return <><PageHeader title="Tour Extras" description="Manage add-ons and optional upgrades." /><ExtrasTab /></>;
         case "availability":  return <><PageHeader title="Availability" description="Manage tour schedules and available dates." /><AvailabilityTab /></>;
         case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
@@ -1380,6 +1383,273 @@ import { useState, useRef, useCallback, useEffect } from "react";
             </TableBody>
           </Table>
         </div>
+      </div>
+    );
+  }
+
+  // ─── group programs tab ──────────────────────────────────────────────────
+
+  function GroupProgramsTab() {
+    const queryClient = useQueryClient();
+    const { data: programs, isLoading } = useListGroupPrograms();
+    const createProgram = useCreateGroupProgram();
+    const updateProgram = useUpdateGroupProgram();
+    const deleteProgram = useDeleteGroupProgram();
+
+    type GPForm = {
+      slug: string; title: string; subtitle: string; duration: string;
+      heroImageUrl: string; overview: string; targetAudience: string;
+      highlights: string; whatsIncluded: string; whatsNotIncluded: string;
+      transportation: string; pdfUrl: string; whatsappNumber: string;
+      landOnlyFromPrice: string; completeFromPrice: string;
+      currency: string; published: boolean; sortOrder: string;
+    };
+
+    const EMPTY: GPForm = {
+      slug: "", title: "", subtitle: "", duration: "5 days / 4 nights",
+      heroImageUrl: "", overview: "", targetAudience: "",
+      highlights: "", whatsIncluded: "", whatsNotIncluded: "",
+      transportation: "", pdfUrl: "", whatsappNumber: "",
+      landOnlyFromPrice: "", completeFromPrice: "",
+      currency: "USD", published: false, sortOrder: "0",
+    };
+
+    const [editId, setEditId] = useState<number | null>(null);
+    const [form, setForm] = useState<GPForm>(EMPTY);
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const invalidate = () => queryClient.invalidateQueries({ queryKey: getListGroupProgramsQueryKey() });
+
+    function openCreate() { setEditId(null); setForm(EMPTY); setDialogOpen(true); }
+    function openEdit(p: typeof programs extends (infer T)[] | undefined ? T : never) {
+      if (!p) return;
+      setEditId(p.id);
+      setForm({
+        slug: p.slug, title: p.title, subtitle: p.subtitle ?? "",
+        duration: p.duration, heroImageUrl: p.heroImageUrl, overview: p.overview,
+        targetAudience: p.targetAudience,
+        highlights: (p.highlights ?? []).join("\n"),
+        whatsIncluded: (p.whatsIncluded ?? []).join("\n"),
+        whatsNotIncluded: (p.whatsNotIncluded ?? []).join("\n"),
+        transportation: p.transportation ?? "",
+        pdfUrl: p.pdfUrl ?? "", whatsappNumber: p.whatsappNumber ?? "",
+        landOnlyFromPrice: String(p.landOnlyFromPrice),
+        completeFromPrice: String(p.completeFromPrice),
+        currency: p.currency ?? "USD",
+        published: p.published ?? false,
+        sortOrder: String(p.sortOrder ?? 0),
+      });
+      setDialogOpen(true);
+    }
+
+    function handleSubmit() {
+      const payload = {
+        slug: form.slug, title: form.title, subtitle: form.subtitle || undefined,
+        duration: form.duration, heroImageUrl: form.heroImageUrl, overview: form.overview,
+        targetAudience: form.targetAudience,
+        highlights: form.highlights.split("\n").map(s => s.trim()).filter(Boolean),
+        whatsIncluded: form.whatsIncluded.split("\n").map(s => s.trim()).filter(Boolean),
+        whatsNotIncluded: form.whatsNotIncluded.split("\n").map(s => s.trim()).filter(Boolean),
+        transportation: form.transportation || undefined,
+        pdfUrl: form.pdfUrl || undefined, whatsappNumber: form.whatsappNumber || undefined,
+        landOnlyFromPrice: parseFloat(form.landOnlyFromPrice),
+        completeFromPrice: parseFloat(form.completeFromPrice),
+        currency: form.currency, published: form.published,
+        sortOrder: parseInt(form.sortOrder) || 0,
+        suggestedItinerary: [], accommodationOptions: [], optionalExperiences: [],
+        pricingLandOnly: [], pricingComplete: [],
+      };
+      if (editId) {
+        updateProgram.mutate({ id: editId, data: payload }, { onSuccess: () => { setDialogOpen(false); invalidate(); } });
+      } else {
+        createProgram.mutate({ data: payload }, { onSuccess: () => { setDialogOpen(false); invalidate(); } });
+      }
+    }
+
+    const F = (field: keyof GPForm) => ({
+      value: form[field] as string,
+      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        setForm(f => ({ ...f, [field]: e.target.value })),
+    });
+
+    return (
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-muted-foreground">B2B multi-day programs for incentive groups, corporates, and affinity travel.</p>
+          </div>
+          <Button onClick={openCreate} size="sm" className="gap-1.5">
+            <Plus className="w-4 h-4" /> New Program
+          </Button>
+        </div>
+
+        {isLoading ? (
+          <div className="space-y-2">{[...Array(3)].map((_, i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+        ) : !programs?.length ? (
+          <div className="text-center py-16 text-muted-foreground text-sm border-2 border-dashed border-gray-200 rounded-2xl">
+            No group programs yet. Click "New Program" to create one.
+          </div>
+        ) : (
+          <div className="rounded-xl border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead>Land Only</TableHead>
+                  <TableHead>Complete</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-24" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {programs.map(p => (
+                  <TableRow key={p.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-sm">{p.title}</p>
+                        <p className="text-xs text-gray-400">{p.slug}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">{p.duration}</TableCell>
+                    <TableCell className="text-sm font-semibold">${p.landOnlyFromPrice}</TableCell>
+                    <TableCell className="text-sm font-semibold text-primary">${p.completeFromPrice}</TableCell>
+                    <TableCell>
+                      <Badge variant={p.published ? "default" : "secondary"} className="text-xs">
+                        {p.published ? "Published" : "Draft"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => openEdit(p)}>
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Button>
+                        <ConfirmDelete
+                          label={p.title}
+                          onConfirm={() => deleteProgram.mutate({ id: p.id }, { onSuccess: invalidate })}
+                        />
+                        <a href={`/group-travel/${p.slug}`} target="_blank" rel="noopener noreferrer">
+                          <Button size="icon" variant="ghost" className="h-7 w-7">
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </Button>
+                        </a>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editId ? "Edit Group Program" : "New Group Program"}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Title *</Label>
+                  <Input placeholder="Black Heritage Rio Experience" {...F("title")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Slug *</Label>
+                  <Input placeholder="black-heritage-rio" {...F("slug")} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Subtitle</Label>
+                <Input placeholder="Short tagline" {...F("subtitle")} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Duration *</Label>
+                  <Input placeholder="5 days / 4 nights" {...F("duration")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Currency</Label>
+                  <Input placeholder="USD" {...F("currency")} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Hero Image URL *</Label>
+                <Input placeholder="https://..." {...F("heroImageUrl")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Overview *</Label>
+                <Textarea rows={3} placeholder="Program overview…" {...F("overview")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Target Audience *</Label>
+                <Input placeholder="Incentive groups, corporate travel, affinity groups" {...F("targetAudience")} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Land Only From (USD) *</Label>
+                  <Input type="number" placeholder="990" {...F("landOnlyFromPrice")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Complete From (USD) *</Label>
+                  <Input type="number" placeholder="1690" {...F("completeFromPrice")} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Highlights (one per line)</Label>
+                <Textarea rows={4} placeholder="Afro-Brazilian cultural immersion&#10;Private Christ the Redeemer visit&#10;Favela community partnership" {...F("highlights")} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>What's Included (one per line)</Label>
+                  <Textarea rows={4} {...F("whatsIncluded")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>What's Not Included (one per line)</Label>
+                  <Textarea rows={4} {...F("whatsNotIncluded")} />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Transportation</Label>
+                <Textarea rows={2} placeholder="Private A/C coach for all transfers…" {...F("transportation")} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>PDF Brochure URL</Label>
+                  <Input placeholder="https://..." {...F("pdfUrl")} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>WhatsApp Number</Label>
+                  <Input placeholder="+5521999999999" {...F("whatsappNumber")} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Sort Order</Label>
+                  <Input type="number" {...F("sortOrder")} />
+                </div>
+                <div className="flex items-center gap-2 pt-6">
+                  <Switch
+                    checked={form.published}
+                    onCheckedChange={v => setForm(f => ({ ...f, published: v }))}
+                    id="gp-published"
+                  />
+                  <Label htmlFor="gp-published">Published</Label>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end pt-2">
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={createProgram.isPending || updateProgram.isPending}
+                  className="gap-1.5"
+                >
+                  {(createProgram.isPending || updateProgram.isPending) ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                  {editId ? "Save Changes" : "Create Program"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

@@ -35,12 +35,15 @@ import type {
   Faq,
   FaqInput,
   FaqUpdate,
+  GroupProgram,
+  GroupProgramInput,
   HealthStatus,
   ListAdminTourAvailabilityParams,
   ListAllExtrasParams,
   ListBlogPostsParams,
   ListDestinationsParams,
   ListFaqsParams,
+  ListGroupProgramsParams,
   ListReservationsParams,
   ListReviewsParams,
   ListTourAvailabilityParams,
@@ -1583,6 +1586,380 @@ export function useGetPackage<TData = Awaited<ReturnType<typeof getPackage>>, TE
 
 
 
+
+export const getListGroupProgramsUrl = (params?: ListGroupProgramsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/group-programs?${stringifiedParams}` : `/api/group-programs`
+}
+
+/**
+ * @summary List published group programs
+ */
+export const listGroupPrograms = async (params?: ListGroupProgramsParams, options?: RequestInit): Promise<GroupProgram[]> => {
+
+  return customFetch<GroupProgram[]>(getListGroupProgramsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListGroupProgramsQueryKey = (params?: ListGroupProgramsParams,) => {
+    return [
+    `/api/group-programs`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListGroupProgramsQueryOptions = <TData = Awaited<ReturnType<typeof listGroupPrograms>>, TError = ErrorType<unknown>>(params?: ListGroupProgramsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listGroupPrograms>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListGroupProgramsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listGroupPrograms>>> = ({ signal }) => listGroupPrograms(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listGroupPrograms>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListGroupProgramsQueryResult = NonNullable<Awaited<ReturnType<typeof listGroupPrograms>>>
+export type ListGroupProgramsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List published group programs
+ */
+
+export function useListGroupPrograms<TData = Awaited<ReturnType<typeof listGroupPrograms>>, TError = ErrorType<unknown>>(
+ params?: ListGroupProgramsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listGroupPrograms>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListGroupProgramsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateGroupProgramUrl = () => {
+
+
+
+
+  return `/api/group-programs`
+}
+
+/**
+ * @summary Create a group program (admin)
+ */
+export const createGroupProgram = async (groupProgramInput: GroupProgramInput, options?: RequestInit): Promise<GroupProgram> => {
+
+  return customFetch<GroupProgram>(getCreateGroupProgramUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      groupProgramInput,)
+  }
+);}
+
+
+
+
+export const getCreateGroupProgramMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGroupProgram>>, TError,{data: BodyType<GroupProgramInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createGroupProgram>>, TError,{data: BodyType<GroupProgramInput>}, TContext> => {
+
+const mutationKey = ['createGroupProgram'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createGroupProgram>>, {data: BodyType<GroupProgramInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createGroupProgram(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateGroupProgramMutationResult = NonNullable<Awaited<ReturnType<typeof createGroupProgram>>>
+    export type CreateGroupProgramMutationBody = BodyType<GroupProgramInput>
+    export type CreateGroupProgramMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a group program (admin)
+ */
+export const useCreateGroupProgram = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createGroupProgram>>, TError,{data: BodyType<GroupProgramInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createGroupProgram>>,
+        TError,
+        {data: BodyType<GroupProgramInput>},
+        TContext
+      > => {
+      return useMutation(getCreateGroupProgramMutationOptions(options));
+    }
+
+export const getGetGroupProgramUrl = (slug: string,) => {
+
+
+
+
+  return `/api/group-programs/${slug}`
+}
+
+/**
+ * @summary Get group program by slug
+ */
+export const getGroupProgram = async (slug: string, options?: RequestInit): Promise<GroupProgram> => {
+
+  return customFetch<GroupProgram>(getGetGroupProgramUrl(slug),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetGroupProgramQueryKey = (slug: string,) => {
+    return [
+    `/api/group-programs/${slug}`
+    ] as const;
+    }
+
+
+export const getGetGroupProgramQueryOptions = <TData = Awaited<ReturnType<typeof getGroupProgram>>, TError = ErrorType<void>>(slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getGroupProgram>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetGroupProgramQueryKey(slug);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGroupProgram>>> = ({ signal }) => getGroupProgram(slug, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(slug), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getGroupProgram>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetGroupProgramQueryResult = NonNullable<Awaited<ReturnType<typeof getGroupProgram>>>
+export type GetGroupProgramQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get group program by slug
+ */
+
+export function useGetGroupProgram<TData = Awaited<ReturnType<typeof getGroupProgram>>, TError = ErrorType<void>>(
+ slug: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getGroupProgram>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetGroupProgramQueryOptions(slug,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateGroupProgramUrl = (id: number,) => {
+
+
+
+
+  return `/api/group-programs/id/${id}`
+}
+
+/**
+ * @summary Update a group program (admin)
+ */
+export const updateGroupProgram = async (id: number,
+    groupProgramInput: GroupProgramInput, options?: RequestInit): Promise<GroupProgram> => {
+
+  return customFetch<GroupProgram>(getUpdateGroupProgramUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      groupProgramInput,)
+  }
+);}
+
+
+
+
+export const getUpdateGroupProgramMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGroupProgram>>, TError,{id: number;data: BodyType<GroupProgramInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateGroupProgram>>, TError,{id: number;data: BodyType<GroupProgramInput>}, TContext> => {
+
+const mutationKey = ['updateGroupProgram'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGroupProgram>>, {id: number;data: BodyType<GroupProgramInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateGroupProgram(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateGroupProgramMutationResult = NonNullable<Awaited<ReturnType<typeof updateGroupProgram>>>
+    export type UpdateGroupProgramMutationBody = BodyType<GroupProgramInput>
+    export type UpdateGroupProgramMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a group program (admin)
+ */
+export const useUpdateGroupProgram = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGroupProgram>>, TError,{id: number;data: BodyType<GroupProgramInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateGroupProgram>>,
+        TError,
+        {id: number;data: BodyType<GroupProgramInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateGroupProgramMutationOptions(options));
+    }
+
+export const getDeleteGroupProgramUrl = (id: number,) => {
+
+
+
+
+  return `/api/group-programs/id/${id}`
+}
+
+/**
+ * @summary Delete a group program (admin)
+ */
+export const deleteGroupProgram = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteGroupProgramUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteGroupProgramMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGroupProgram>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteGroupProgram>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteGroupProgram'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteGroupProgram>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteGroupProgram(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteGroupProgramMutationResult = NonNullable<Awaited<ReturnType<typeof deleteGroupProgram>>>
+
+    export type DeleteGroupProgramMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a group program (admin)
+ */
+export const useDeleteGroupProgram = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteGroupProgram>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteGroupProgram>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteGroupProgramMutationOptions(options));
+    }
 
 export const getListFaqsUrl = (params?: ListFaqsParams,) => {
   const normalizedParams = new URLSearchParams();

@@ -847,6 +847,279 @@ export const GetPackageResponse = zod.object({
 
 
 /**
+ * @summary List published group programs
+ */
+export const ListGroupProgramsQueryParams = zod.object({
+  "includeUnpublished": zod.coerce.boolean().optional()
+})
+
+export const ListGroupProgramsResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "duration": zod.string(),
+  "heroImageUrl": zod.string(),
+  "overview": zod.string(),
+  "targetAudience": zod.string(),
+  "highlights": zod.array(zod.string()),
+  "suggestedItinerary": zod.array(zod.object({
+  "day": zod.number(),
+  "title": zod.string(),
+  "description": zod.string()
+})),
+  "whatsIncluded": zod.array(zod.string()),
+  "whatsNotIncluded": zod.array(zod.string()),
+  "accommodationOptions": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "category": zod.string()
+})),
+  "transportation": zod.string(),
+  "optionalExperiences": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number()
+})),
+  "pricingLandOnly": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "pricingComplete": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "landOnlyFromPrice": zod.number(),
+  "completeFromPrice": zod.number(),
+  "currency": zod.string(),
+  "pdfUrl": zod.string().nullish(),
+  "whatsappNumber": zod.string().nullish(),
+  "published": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.string().nullish()
+})
+export const ListGroupProgramsResponse = zod.array(ListGroupProgramsResponseItem)
+
+
+/**
+ * @summary Create a group program (admin)
+ */
+export const CreateGroupProgramBody = zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "duration": zod.string(),
+  "heroImageUrl": zod.string(),
+  "overview": zod.string(),
+  "targetAudience": zod.string(),
+  "highlights": zod.array(zod.string()).optional(),
+  "suggestedItinerary": zod.array(zod.object({
+  "day": zod.number(),
+  "title": zod.string(),
+  "description": zod.string()
+})).optional(),
+  "whatsIncluded": zod.array(zod.string()).optional(),
+  "whatsNotIncluded": zod.array(zod.string()).optional(),
+  "accommodationOptions": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "category": zod.string()
+})).optional(),
+  "transportation": zod.string().optional(),
+  "optionalExperiences": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number()
+})).optional(),
+  "pricingLandOnly": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})).optional(),
+  "pricingComplete": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})).optional(),
+  "landOnlyFromPrice": zod.number(),
+  "completeFromPrice": zod.number(),
+  "currency": zod.string().optional(),
+  "pdfUrl": zod.string().nullish(),
+  "whatsappNumber": zod.string().nullish(),
+  "published": zod.boolean().optional(),
+  "sortOrder": zod.number().optional()
+})
+
+
+/**
+ * @summary Get group program by slug
+ */
+export const GetGroupProgramParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+export const GetGroupProgramResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "duration": zod.string(),
+  "heroImageUrl": zod.string(),
+  "overview": zod.string(),
+  "targetAudience": zod.string(),
+  "highlights": zod.array(zod.string()),
+  "suggestedItinerary": zod.array(zod.object({
+  "day": zod.number(),
+  "title": zod.string(),
+  "description": zod.string()
+})),
+  "whatsIncluded": zod.array(zod.string()),
+  "whatsNotIncluded": zod.array(zod.string()),
+  "accommodationOptions": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "category": zod.string()
+})),
+  "transportation": zod.string(),
+  "optionalExperiences": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number()
+})),
+  "pricingLandOnly": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "pricingComplete": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "landOnlyFromPrice": zod.number(),
+  "completeFromPrice": zod.number(),
+  "currency": zod.string(),
+  "pdfUrl": zod.string().nullish(),
+  "whatsappNumber": zod.string().nullish(),
+  "published": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a group program (admin)
+ */
+export const UpdateGroupProgramParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateGroupProgramBody = zod.object({
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "duration": zod.string(),
+  "heroImageUrl": zod.string(),
+  "overview": zod.string(),
+  "targetAudience": zod.string(),
+  "highlights": zod.array(zod.string()).optional(),
+  "suggestedItinerary": zod.array(zod.object({
+  "day": zod.number(),
+  "title": zod.string(),
+  "description": zod.string()
+})).optional(),
+  "whatsIncluded": zod.array(zod.string()).optional(),
+  "whatsNotIncluded": zod.array(zod.string()).optional(),
+  "accommodationOptions": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "category": zod.string()
+})).optional(),
+  "transportation": zod.string().optional(),
+  "optionalExperiences": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number()
+})).optional(),
+  "pricingLandOnly": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})).optional(),
+  "pricingComplete": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})).optional(),
+  "landOnlyFromPrice": zod.number(),
+  "completeFromPrice": zod.number(),
+  "currency": zod.string().optional(),
+  "pdfUrl": zod.string().nullish(),
+  "whatsappNumber": zod.string().nullish(),
+  "published": zod.boolean().optional(),
+  "sortOrder": zod.number().optional()
+})
+
+export const UpdateGroupProgramResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "title": zod.string(),
+  "subtitle": zod.string().nullish(),
+  "duration": zod.string(),
+  "heroImageUrl": zod.string(),
+  "overview": zod.string(),
+  "targetAudience": zod.string(),
+  "highlights": zod.array(zod.string()),
+  "suggestedItinerary": zod.array(zod.object({
+  "day": zod.number(),
+  "title": zod.string(),
+  "description": zod.string()
+})),
+  "whatsIncluded": zod.array(zod.string()),
+  "whatsNotIncluded": zod.array(zod.string()),
+  "accommodationOptions": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "category": zod.string()
+})),
+  "transportation": zod.string(),
+  "optionalExperiences": zod.array(zod.object({
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number()
+})),
+  "pricingLandOnly": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "pricingComplete": zod.array(zod.object({
+  "minPax": zod.number(),
+  "maxPax": zod.number(),
+  "pricePerPerson": zod.number()
+})),
+  "landOnlyFromPrice": zod.number(),
+  "completeFromPrice": zod.number(),
+  "currency": zod.string(),
+  "pdfUrl": zod.string().nullish(),
+  "whatsappNumber": zod.string().nullish(),
+  "published": zod.boolean(),
+  "sortOrder": zod.number(),
+  "createdAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Delete a group program (admin)
+ */
+export const DeleteGroupProgramParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
  * @summary List FAQs
  */
 export const ListFaqsQueryParams = zod.object({

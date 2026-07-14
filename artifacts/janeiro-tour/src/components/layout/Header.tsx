@@ -19,7 +19,7 @@ const LANGS: [Lang, string, string, string][] = [
 
 const TX = {
   en: {
-    tours: "Tours", packages: "Packages", guide: "Travel Guide", about: "About", contact: "Contact", book: "Book Now",
+    tours: "Tours", packages: "Packages", guide: "Travel Guide", about: "About", contact: "Contact", book: "Book Now", groupTravel: "Group Travel",
     allTours: "All Tours", privateTours: "Private Tours", aerialTours: "Aerial Experiences", transfers: "Airport Transfers",
     allPkgs: "All Packages", rioPkgs: "Rio Packages", luxuryPkgs: "Luxury Packages", familyPkgs: "Family Packages", cruisePkgs: "Cruise Visitors",
     thingsToDo: "Things To Do", destinations: "Destinations", travelTips: "FAQs & Tips",
@@ -29,7 +29,7 @@ const TX = {
     whatsapp: "Chat on WhatsApp", trustMsg: "Trusted by 10,000+ travelers worldwide",
   },
   es: {
-    tours: "Tours", packages: "Paquetes", guide: "Guía de Viaje", about: "Nosotros", contact: "Contacto", book: "Reservar",
+    tours: "Tours", packages: "Paquetes", guide: "Guía de Viaje", about: "Nosotros", contact: "Contacto", book: "Reservar", groupTravel: "Viajes Grupales",
     allTours: "Todos los Tours", privateTours: "Tours Privados", aerialTours: "Experiencias Aéreas", transfers: "Traslados Aeropuerto",
     allPkgs: "Todos los Paquetes", rioPkgs: "Paquetes Río", luxuryPkgs: "Paquetes de Lujo", familyPkgs: "Paquetes Familiares", cruisePkgs: "Visitantes de Crucero",
     thingsToDo: "Qué Hacer", destinations: "Destinos", travelTips: "Preguntas y Consejos",
@@ -39,7 +39,7 @@ const TX = {
     whatsapp: "Chat en WhatsApp", trustMsg: "Confianza de más de 10.000 viajeros",
   },
   pt: {
-    tours: "Tours", packages: "Pacotes", guide: "Guia de Viagem", about: "Sobre Nós", contact: "Contato", book: "Reservar",
+    tours: "Tours", packages: "Pacotes", guide: "Guia de Viagem", about: "Sobre Nós", contact: "Contato", book: "Reservar", groupTravel: "Viagens em Grupo",
     allTours: "Todos os Tours", privateTours: "Tours Privativos", aerialTours: "Experiências Aéreas", transfers: "Transfers Aeroporto",
     allPkgs: "Todos os Pacotes", rioPkgs: "Pacotes Rio", luxuryPkgs: "Pacotes de Luxo", familyPkgs: "Pacotes Família", cruisePkgs: "Visitantes de Cruzeiro",
     thingsToDo: "O Que Fazer", destinations: "Destinos", travelTips: "Perguntas e Dicas",
@@ -49,7 +49,7 @@ const TX = {
     whatsapp: "Chat no WhatsApp", trustMsg: "Confiança de mais de 10.000 viajantes",
   },
   fr: {
-    tours: "Tours", packages: "Forfaits", guide: "Guide Voyage", about: "À Propos", contact: "Contact", book: "Réserver",
+    tours: "Tours", packages: "Forfaits", guide: "Guide Voyage", about: "À Propos", contact: "Contact", book: "Réserver", groupTravel: "Voyages de Groupe",
     allTours: "Tous les Tours", privateTours: "Tours Privés", aerialTours: "Expériences Aériennes", transfers: "Transferts Aéroport",
     allPkgs: "Tous les Forfaits", rioPkgs: "Forfaits Rio", luxuryPkgs: "Forfaits Luxe", familyPkgs: "Forfaits Famille", cruisePkgs: "Visiteurs de Croisière",
     thingsToDo: "Que Faire", destinations: "Destinations", travelTips: "FAQ & Conseils",
@@ -59,7 +59,7 @@ const TX = {
     whatsapp: "Chat sur WhatsApp", trustMsg: "Approuvé par plus de 10 000 voyageurs",
   },
   de: {
-    tours: "Touren", packages: "Pakete", guide: "Reiseführer", about: "Über Uns", contact: "Kontakt", book: "Jetzt buchen",
+    tours: "Touren", packages: "Pakete", guide: "Reiseführer", about: "Über Uns", contact: "Kontakt", book: "Jetzt buchen", groupTravel: "Gruppenreisen",
     allTours: "Alle Touren", privateTours: "Private Touren", aerialTours: "Lufterlebnisse", transfers: "Flughafentransfers",
     allPkgs: "Alle Pakete", rioPkgs: "Rio-Pakete", luxuryPkgs: "Luxuspakete", familyPkgs: "Familienpakete", cruisePkgs: "Kreuzfahrtgäste",
     thingsToDo: "Aktivitäten", destinations: "Reiseziele", travelTips: "FAQ & Tipps",
@@ -69,7 +69,7 @@ const TX = {
     whatsapp: "WhatsApp Chat", trustMsg: "Vertraut von über 10.000 Reisenden",
   },
   no: {
-    tours: "Turer", packages: "Pakker", guide: "Reiseguide", about: "Om oss", contact: "Kontakt", book: "Bestill nå",
+    tours: "Turer", packages: "Pakker", guide: "Reiseguide", about: "Om oss", contact: "Kontakt", book: "Bestill nå", groupTravel: "Gruppereiser",
     allTours: "Alle turer", privateTours: "Private turer", aerialTours: "Luftopplevelser", transfers: "Flyplasstransfer",
     allPkgs: "Alle pakker", rioPkgs: "Rio-pakker", luxuryPkgs: "Luksuspakker", familyPkgs: "Familiepakker", cruisePkgs: "Cruisegjester",
     thingsToDo: "Hva du kan gjøre", destinations: "Reisemål", travelTips: "FAQ og tips",
@@ -290,6 +290,19 @@ export function Header() {
                 </div>
               </div>
             </DesktopDropdown>
+
+            {/* GROUP TRAVEL link */}
+            <Link
+              href="/group-travel"
+              className={cn(
+                "flex items-center gap-1 px-3.5 py-2 text-sm font-medium transition-colors rounded-md h-full",
+                isHero
+                  ? "text-white/90 hover:text-white hover:bg-white/10"
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50",
+              )}
+            >
+              {t.groupTravel}
+            </Link>
 
             {/* TRAVEL GUIDE dropdown */}
             <DesktopDropdown label={t.guide} isHero={isHero}>
@@ -568,6 +581,18 @@ export function Header() {
                   </div>
                 )}
               </div>
+
+              <div className="h-px bg-gray-100" />
+
+              {/* GROUP TRAVEL direct link */}
+              <Link
+                href="/group-travel" onClick={closeMobile}
+                className="flex items-center gap-2.5 py-3.5 text-base font-semibold text-gray-900"
+                style={{ touchAction: "manipulation" }}
+              >
+                <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"><Users className="w-4 h-4 text-primary" /></span>
+                {t.groupTravel}
+              </Link>
 
               <div className="h-px bg-gray-100" />
 

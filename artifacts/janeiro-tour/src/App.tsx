@@ -35,6 +35,8 @@ import TransfersPage from "@/pages/transfers";
 import PrivateToursPage from "@/pages/private-tours";
 import PackagesPage from "@/pages/packages";
 import PackageDetailPage from "@/pages/package-detail";
+import GroupTravelPage from "@/pages/group-travel";
+import GroupTravelDetailPage from "@/pages/group-travel-detail";
 import AdminLoginPage from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -138,6 +140,12 @@ function Router() {
         <MainLayout><PackagesPage /></MainLayout>
       </Route>
       <Route path="/packages/:slug" component={PackageDetailPage} />
+      <Route path="/group-travel">
+        <MainLayout><GroupTravelPage /></MainLayout>
+      </Route>
+      <Route path="/group-travel/:slug">
+        <MainLayout><GroupTravelDetailPage /></MainLayout>
+      </Route>
 
       {/* Checkout Routes */}
       <Route path="/checkout/success" component={CheckoutSuccessPage} />

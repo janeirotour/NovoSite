@@ -28,6 +28,10 @@ tags:
     description: Tour optional extras / add-ons
   - name: reservations
     description: Booking reservations
+  - name: groupPrograms
+    description: Group travel B2B programs
+  - name: packages
+    description: Multi-tour packages
 
 paths:
   /healthz:
@@ -412,6 +416,103 @@ paths:
                 $ref: "#/components/schemas/Package"
         "404":
           description: Not found
+
+  # Group Travel Programs
+  /group-programs:
+    get:
+      operationId: listGroupPrograms
+      tags: [groupPrograms]
+      summary: List published group programs
+      parameters:
+        - name: includeUnpublished
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of group programs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GroupProgram"
+    post:
+      operationId: createGroupProgram
+      tags: [groupPrograms]
+      summary: Create a group program (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupProgramInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupProgram"
+
+  /group-programs/{slug}:
+    get:
+      operationId: getGroupProgram
+      tags: [groupPrograms]
+      summary: Get group program by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Program detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupProgram"
+        "404":
+          description: Not found
+
+  /group-programs/id/{id}:
+    patch:
+      operationId: updateGroupProgram
+      tags: [groupPrograms]
+      summary: Update a group program (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupProgramInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupProgram"
+    delete:
+      operationId: deleteGroupProgram
+      tags: [groupPrograms]
+      summary: Delete a group program (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
 
   /faqs:
     get:
@@ -2179,3 +2280,194 @@ components:
           enum: [pending, paid, failed, refunded]
         notes:
           type: string
+
+    GroupPricingTier:
+      type: object
+      required: [minPax, maxPax, pricePerPerson]
+      properties:
+        minPax:
+          type: integer
+        maxPax:
+          type: integer
+        pricePerPerson:
+          type: number
+
+    GroupItineraryDay:
+      type: object
+      required: [day, title, description]
+      properties:
+        day:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+
+    GroupOptionalExperience:
+      type: object
+      required: [name, price]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        price:
+          type: number
+
+    GroupAccommodationOption:
+      type: object
+      required: [name, category]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+
+    GroupProgram:
+      type: object
+      required: [id, slug, title, duration, heroImageUrl, overview, targetAudience, highlights, suggestedItinerary, whatsIncluded, whatsNotIncluded, accommodationOptions, transportation, optionalExperiences, pricingLandOnly, pricingComplete, landOnlyFromPrice, completeFromPrice, currency, published, sortOrder]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        duration:
+          type: string
+        heroImageUrl:
+          type: string
+        overview:
+          type: string
+        targetAudience:
+          type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        suggestedItinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupItineraryDay"
+        whatsIncluded:
+          type: array
+          items:
+            type: string
+        whatsNotIncluded:
+          type: array
+          items:
+            type: string
+        accommodationOptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupAccommodationOption"
+        transportation:
+          type: string
+        optionalExperiences:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupOptionalExperience"
+        pricingLandOnly:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupPricingTier"
+        pricingComplete:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupPricingTier"
+        landOnlyFromPrice:
+          type: number
+        completeFromPrice:
+          type: number
+        currency:
+          type: string
+        pdfUrl:
+          type: string
+          nullable: true
+        whatsappNumber:
+          type: string
+          nullable: true
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          nullable: true
+
+    GroupProgramInput:
+      type: object
+      required: [slug, title, duration, heroImageUrl, overview, targetAudience, landOnlyFromPrice, completeFromPrice]
+      properties:
+        slug:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+          nullable: true
+        duration:
+          type: string
+        heroImageUrl:
+          type: string
+        overview:
+          type: string
+        targetAudience:
+          type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        suggestedItinerary:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupItineraryDay"
+        whatsIncluded:
+          type: array
+          items:
+            type: string
+        whatsNotIncluded:
+          type: array
+          items:
+            type: string
+        accommodationOptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupAccommodationOption"
+        transportation:
+          type: string
+        optionalExperiences:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupOptionalExperience"
+        pricingLandOnly:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupPricingTier"
+        pricingComplete:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupPricingTier"
+        landOnlyFromPrice:
+          type: number
+        completeFromPrice:
+          type: number
+        currency:
+          type: string
+        pdfUrl:
+          type: string
+          nullable: true
+        whatsappNumber:
+          type: string
+          nullable: true
+        published:
+          type: boolean
+        sortOrder:
+          type: integer

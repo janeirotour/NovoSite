@@ -24,6 +24,7 @@ const NAV: NavGroup[] = [
     items: [
       { tab: "tours", label: "Tours", icon: Compass },
       { tab: "packages", label: "Packages", icon: Package2 },
+      { tab: "group-programs", label: "Group Programs", icon: Globe },
       { tab: "destinations", label: "Destinations", icon: MapPin },
       { tab: "blog", label: "Travel Guide", icon: FileText },
       { tab: "extras", label: "Tour Extras", icon: Tag },
