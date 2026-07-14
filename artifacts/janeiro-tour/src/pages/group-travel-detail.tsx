@@ -126,11 +126,16 @@ export default function GroupTravelDetailPage() {
             <Link href="/group-travel" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors">
               <ArrowLeft className="w-4 h-4" /> {t("back")}
             </Link>
-            <div className="flex items-center gap-2 text-white/70 text-sm mb-2">
-              <Clock className="w-4 h-4" />
-              <span>{prog.duration}</span>
-              <span className="text-white/30">·</span>
-              <Globe className="w-4 h-4" />
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="flex items-center gap-1.5 text-white/70 text-sm">
+                <Clock className="w-4 h-4" />{prog.duration}
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/25 border border-primary/40 text-primary text-xs font-bold uppercase tracking-wide">
+                Land Only · No accommodation included
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 text-white/60 text-xs mb-2">
+              <Globe className="w-3.5 h-3.5" />
               <span>{prog.targetAudience}</span>
             </div>
             <h1 className="text-3xl lg:text-5xl font-black text-white">{prog.title}</h1>

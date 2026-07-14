@@ -149,9 +149,13 @@ export default function GroupTravelPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-transparent" />
                     <div className="absolute bottom-0 left-0 p-5">
-                      <div className="flex items-center gap-2 text-white/80 text-xs mb-1">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{prog.duration}</span>
+                      <div className="flex items-center flex-wrap gap-2 mb-2">
+                        <span className="flex items-center gap-1 text-white/80 text-xs">
+                          <Clock className="w-3.5 h-3.5" />{prog.duration}
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/25 border border-primary/40 text-primary text-[10px] font-bold uppercase tracking-wide">
+                          Land Only · No accommodation
+                        </span>
                       </div>
                       <h2 className="text-white text-xl font-bold">{prog.title}</h2>
                       {prog.subtitle && <p className="text-white/70 text-sm mt-0.5">{prog.subtitle}</p>}
