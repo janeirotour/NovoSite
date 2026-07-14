@@ -514,6 +514,151 @@ paths:
         "200":
           description: Deleted
 
+  # Hotels
+  /hotels:
+    get:
+      operationId: listHotels
+      tags: [hotels]
+      summary: List hotels
+      parameters:
+        - name: activeOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of hotels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hotel"
+    post:
+      operationId: createHotel
+      tags: [hotels]
+      summary: Create hotel (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HotelInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hotel"
+  /hotels/{id}:
+    put:
+      operationId: updateHotel
+      tags: [hotels]
+      summary: Update hotel (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HotelInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hotel"
+    delete:
+      operationId: deleteHotel
+      tags: [hotels]
+      summary: Delete hotel (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
+  # Special Seasons
+  /special-seasons:
+    get:
+      operationId: listSpecialSeasons
+      tags: [specialSeasons]
+      summary: List special seasons
+      responses:
+        "200":
+          description: List of special seasons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SpecialSeason"
+    post:
+      operationId: createSpecialSeason
+      tags: [specialSeasons]
+      summary: Create special season (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpecialSeasonInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecialSeason"
+  /special-seasons/{id}:
+    put:
+      operationId: updateSpecialSeason
+      tags: [specialSeasons]
+      summary: Update special season (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpecialSeasonInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpecialSeason"
+    delete:
+      operationId: deleteSpecialSeason
+      tags: [specialSeasons]
+      summary: Delete special season (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+
   /faqs:
     get:
       operationId: listFaqs
@@ -2471,3 +2616,167 @@ components:
           type: boolean
         sortOrder:
           type: integer
+
+    Hotel:
+      type: object
+      required: [id, slug, name, neighborhood, category, starLevel, heroImageUrl, shortDescEn, shortDescEs, shortDescPt, bestForEn, bestForEs, bestForPt, regularRate, specialRate, currency, availabilityStatus, isActive, isPublished, sortOrder]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        neighborhood:
+          type: string
+        category:
+          type: string
+        starLevel:
+          type: integer
+        heroImageUrl:
+          type: string
+        galleryImages:
+          type: array
+          items:
+            type: string
+        shortDescEn:
+          type: string
+        shortDescEs:
+          type: string
+        shortDescPt:
+          type: string
+        bestForEn:
+          type: string
+        bestForEs:
+          type: string
+        bestForPt:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
+        roomType:
+          type: string
+        maxOccupancy:
+          type: integer
+        regularRate:
+          type: number
+        specialRate:
+          type: number
+        specialRateConditionsEn:
+          type: string
+        specialRateConditionsEs:
+          type: string
+        specialRateConditionsPt:
+          type: string
+        currency:
+          type: string
+        availabilityStatus:
+          type: string
+        isActive:
+          type: boolean
+        isPublished:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    HotelInput:
+      type: object
+      required: [slug, name, neighborhood, category, starLevel, regularRate, specialRate, currency]
+      properties:
+        slug:
+          type: string
+        name:
+          type: string
+        neighborhood:
+          type: string
+        category:
+          type: string
+        starLevel:
+          type: integer
+        heroImageUrl:
+          type: string
+        galleryImages:
+          type: array
+          items:
+            type: string
+        shortDescEn:
+          type: string
+        shortDescEs:
+          type: string
+        shortDescPt:
+          type: string
+        bestForEn:
+          type: string
+        bestForEs:
+          type: string
+        bestForPt:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
+        roomType:
+          type: string
+        maxOccupancy:
+          type: integer
+        regularRate:
+          type: number
+        specialRate:
+          type: number
+        specialRateConditionsEn:
+          type: string
+        specialRateConditionsEs:
+          type: string
+        specialRateConditionsPt:
+          type: string
+        currency:
+          type: string
+        availabilityStatus:
+          type: string
+        isActive:
+          type: boolean
+        isPublished:
+          type: boolean
+        sortOrder:
+          type: integer
+
+    SpecialSeason:
+      type: object
+      required: [id, name, startDate, endDate, isActive]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        descriptionEn:
+          type: string
+        descriptionEs:
+          type: string
+        descriptionPt:
+          type: string
+        isActive:
+          type: boolean
+
+    SpecialSeasonInput:
+      type: object
+      required: [name, startDate, endDate]
+      properties:
+        name:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        descriptionEn:
+          type: string
+        descriptionEs:
+          type: string
+        descriptionPt:
+          type: string
+        isActive:
+          type: boolean

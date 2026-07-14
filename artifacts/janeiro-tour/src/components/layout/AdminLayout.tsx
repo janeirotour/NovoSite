@@ -4,7 +4,7 @@ import { useGetAdminMe, useAdminLogout } from "@workspace/api-client-react";
 import {
   BarChart3, Compass, Package2, MapPin, FileText, Monitor,
   ClipboardList, CalendarDays, Star, HelpCircle, Tag, Home, Settings,
-  LogOut, ExternalLink, Menu, X, Globe, ChevronDown, ChevronRight, TrendingUp,
+  LogOut, ExternalLink, Menu, X, Globe, ChevronDown, ChevronRight, TrendingUp, BedDouble,
 } from "lucide-react";
 
 type NavItem = { tab: string; label: string; icon: React.ElementType };
@@ -25,6 +25,7 @@ const NAV: NavGroup[] = [
       { tab: "tours", label: "Tours", icon: Compass },
       { tab: "packages", label: "Packages", icon: Package2 },
       { tab: "group-programs", label: "Group Programs", icon: Globe },
+      { tab: "hotels", label: "Hotels & Accommodation", icon: BedDouble },
       { tab: "destinations", label: "Destinations", icon: MapPin },
       { tab: "blog", label: "Travel Guide", icon: FileText },
       { tab: "extras", label: "Tour Extras", icon: Tag },

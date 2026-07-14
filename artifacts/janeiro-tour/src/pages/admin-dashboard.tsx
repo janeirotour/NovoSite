@@ -14,10 +14,12 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useListAdminTourAvailability, useCreateAvailabilityEntry, useUpdateAvailabilityEntry, useDeleteAvailabilityEntry,
     useListAdminUsers, useChangeAdminPassword,
     useListGroupPrograms, useCreateGroupProgram, useUpdateGroupProgram, useDeleteGroupProgram,
+    useListHotels, useCreateHotel, useUpdateHotel, useDeleteHotel,
+    useListSpecialSeasons, useCreateSpecialSeason, useUpdateSpecialSeason, useDeleteSpecialSeason,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
     getGetSettingsQueryKey, getGetAdminStatsQueryKey, getListAdminUsersQueryKey,
-    getListGroupProgramsQueryKey,
+    getListGroupProgramsQueryKey, getListHotelsQueryKey, getListSpecialSeasonsQueryKey,
   } from "@workspace/api-client-react";
   import { useQueryClient } from "@tanstack/react-query";
   import { Button } from "@/components/ui/button";
@@ -1045,6 +1047,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
         case "reservations":  return <><PageHeader title="Reservations" description="View and manage all tour bookings." /><ReservationsTab /></>;
         case "packages":        return <><PageHeader title="Packages" description="Manage multi-tour travel packages." /><PackagesTab /></>;
         case "group-programs":  return <><PageHeader title="Group Programs" description="Manage B2B group travel programs." /><GroupProgramsTab /></>;
+        case "hotels":         return <><PageHeader title="Hotels & Accommodation" description="Manage the global hotel catalog. Active hotels appear automatically on all package pages." /><HotelsTab /></>;
         case "extras":        return <><PageHeader title="Tour Extras" description="Manage add-ons and optional upgrades." /><ExtrasTab /></>;
         case "availability":  return <><PageHeader title="Availability" description="Manage tour schedules and available dates." /><AvailabilityTab /></>;
         case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
@@ -3446,6 +3449,212 @@ import { useState, useRef, useCallback, useEffect } from "react";
                   Save Password
                 </Button>
               </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
+  // ─── Hotels Tab ─────────────────────────────────────────────────────────────
+  function HotelsTab() {
+    const qc = useQueryClient();
+    const { data: hotels = [], isLoading } = useListHotels({ activeOnly: false });
+    const { data: seasons = [], isLoading: loadingSeasons } = useListSpecialSeasons();
+    const createHotel = useCreateHotel({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListHotelsQueryKey() }) } });
+    const updateHotel = useUpdateHotel({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListHotelsQueryKey() }) } });
+    const deleteHotel = useDeleteHotel({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListHotelsQueryKey() }) } });
+    const createSeason = useCreateSpecialSeason({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListSpecialSeasonsQueryKey() }) } });
+    const updateSeason = useUpdateSpecialSeason({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListSpecialSeasonsQueryKey() }) } });
+    const deleteSeason = useDeleteSpecialSeason({ mutation: { onSuccess: () => qc.invalidateQueries({ queryKey: getListSpecialSeasonsQueryKey() }) } });
+
+    const EMPTY_HOTEL = { slug: "", name: "", neighborhood: "", category: "Upscale", starLevel: 4, heroImageUrl: "", shortDescEn: "", shortDescEs: "", shortDescPt: "", bestForEn: "", bestForEs: "", bestForPt: "", roomType: "Queen Double", maxOccupancy: 2, regularRate: 0, specialRate: 0, specialRateConditionsEn: "Holidays, New Year's Eve and Carnival. Final price must be confirmed before booking.", specialRateConditionsEs: "Feriados, Nochevieja y Carnaval. El precio final debe confirmarse antes de la reserva.", specialRateConditionsPt: "Feriados, Réveillon e Carnaval. O preço final deve ser confirmado antes da reserva.", currency: "BRL", availabilityStatus: "available", isActive: true, isPublished: true, sortOrder: 10 };
+    const EMPTY_SEASON = { name: "", startDate: "", endDate: "", descriptionEn: "", descriptionEs: "", descriptionPt: "", isActive: true };
+
+    const [editHotel, setEditHotel] = useState<typeof EMPTY_HOTEL & { id?: number } | null>(null);
+    const [editSeason, setEditSeason] = useState<typeof EMPTY_SEASON & { id?: number } | null>(null);
+    const [deleteConfirm, setDeleteConfirm] = useState<{ type: "hotel" | "season"; id: number; name: string } | null>(null);
+    const [hotelSubTab, setHotelSubTab] = useState<"hotels" | "seasons">("hotels");
+
+    const CATEGORIES = ["Comfortable", "Upscale", "Premium", "Luxury", "Airport Hotel", "Beachfront Hotel", "Business Hotel", "Group-Friendly Hotel"];
+    const STATUS_OPTIONS = [{ value: "available", label: "Available" }, { value: "on_request", label: "On Request" }, { value: "unavailable", label: "Unavailable" }];
+
+    function fmtBRL(n: number) { return `R$ ${Number(n).toLocaleString("pt-BR", { minimumFractionDigits: 0 })}`; }
+    function statusBadge(s: string) {
+      if (s === "unavailable") return <Badge variant="destructive" className="text-[10px]">Unavailable</Badge>;
+      if (s === "on_request") return <Badge variant="outline" className="border-amber-400 text-amber-600 text-[10px]">On Request</Badge>;
+      return <Badge className="bg-green-100 text-green-700 text-[10px]">Available</Badge>;
+    }
+
+    async function saveHotel() {
+      if (!editHotel) return;
+      const body = { ...editHotel, regularRate: Number(editHotel.regularRate), specialRate: Number(editHotel.specialRate) };
+      if (editHotel.id) { await updateHotel.mutateAsync({ id: editHotel.id, data: body as Parameters<typeof updateHotel.mutateAsync>[0]["data"] }); }
+      else { await createHotel.mutateAsync({ data: body as Parameters<typeof createHotel.mutateAsync>[0]["data"] }); }
+      setEditHotel(null);
+    }
+    async function saveSeason() {
+      if (!editSeason) return;
+      const body = { name: editSeason.name, startDate: editSeason.startDate, endDate: editSeason.endDate, descriptionEn: editSeason.descriptionEn, descriptionEs: editSeason.descriptionEs, descriptionPt: editSeason.descriptionPt, isActive: editSeason.isActive };
+      if (editSeason.id) { await updateSeason.mutateAsync({ id: editSeason.id, data: body }); }
+      else { await createSeason.mutateAsync({ data: body }); }
+      setEditSeason(null);
+    }
+    async function confirmDelete() {
+      if (!deleteConfirm) return;
+      if (deleteConfirm.type === "hotel") await deleteHotel.mutateAsync({ id: deleteConfirm.id });
+      else await deleteSeason.mutateAsync({ id: deleteConfirm.id });
+      setDeleteConfirm(null);
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex gap-0 border-b border-gray-200">
+          <button onClick={() => setHotelSubTab("hotels")} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${hotelSubTab === "hotels" ? "border-primary text-gray-900" : "border-transparent text-gray-500 hover:text-gray-700"}`}>Hotel Catalog ({hotels.length})</button>
+          <button onClick={() => setHotelSubTab("seasons")} className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${hotelSubTab === "seasons" ? "border-primary text-gray-900" : "border-transparent text-gray-500 hover:text-gray-700"}`}>Special Seasons ({seasons.length})</button>
+        </div>
+
+        {hotelSubTab === "hotels" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-gray-500">Active &amp; published hotels appear automatically on every package, tour and group travel page.</p>
+              <Button onClick={() => setEditHotel({ ...EMPTY_HOTEL })} className="gap-1.5"><Plus className="w-4 h-4" /> Add Hotel</Button>
+            </div>
+            {isLoading ? (<div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-16 bg-gray-100 rounded-lg animate-pulse" />)}</div>) : (
+              <div className="border rounded-xl overflow-hidden">
+                <Table>
+                  <TableHeader><TableRow><TableHead>Hotel</TableHead><TableHead>Neighborhood</TableHead><TableHead>Category</TableHead><TableHead>Regular Rate</TableHead><TableHead>Status</TableHead><TableHead>Active</TableHead><TableHead>Published</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                  <TableBody>
+                    {hotels.map(h => (
+                      <TableRow key={h.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            {h.heroImageUrl && <img src={h.heroImageUrl} alt={h.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />}
+                            <div><p className="font-semibold text-sm">{h.name}</p><div className="flex gap-0.5 mt-0.5">{Array.from({ length: h.starLevel }).map((_, i) => <Star key={i} className="w-3 h-3 fill-primary text-primary" />)}</div></div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-600">{h.neighborhood}</TableCell>
+                        <TableCell className="text-sm text-gray-600">{h.category}</TableCell>
+                        <TableCell className="text-sm font-medium">{fmtBRL(Number(h.regularRate))}<span className="text-xs text-gray-400 ml-1">/night</span></TableCell>
+                        <TableCell>{statusBadge(h.availabilityStatus)}</TableCell>
+                        <TableCell><Switch checked={h.isActive} onCheckedChange={async () => { await updateHotel.mutateAsync({ id: h.id, data: { isActive: !h.isActive } as Parameters<typeof updateHotel.mutateAsync>[0]["data"] }); }} /></TableCell>
+                        <TableCell><Switch checked={h.isPublished} onCheckedChange={async () => { await updateHotel.mutateAsync({ id: h.id, data: { isPublished: !h.isPublished } as Parameters<typeof updateHotel.mutateAsync>[0]["data"] }); }} /></TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-1 justify-end">
+                            <Button size="sm" variant="outline" onClick={() => setEditHotel({ ...EMPTY_HOTEL, ...h, regularRate: Number(h.regularRate), specialRate: Number(h.specialRate) })}><Pencil className="w-3.5 h-3.5" /></Button>
+                            <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => setDeleteConfirm({ type: "hotel", id: h.id, name: h.name })}><Trash2 className="w-3.5 h-3.5" /></Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {hotelSubTab === "seasons" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-gray-500">When booking dates fall within a special season, customers see a confirmation-required warning on hotel prices.</p>
+              <Button onClick={() => setEditSeason({ ...EMPTY_SEASON })} className="gap-1.5"><Plus className="w-4 h-4" /> Add Season</Button>
+            </div>
+            {loadingSeasons ? (<div className="space-y-2">{[1,2].map(i => <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse" />)}</div>) : (
+              <div className="border rounded-xl overflow-hidden">
+                <Table>
+                  <TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Start</TableHead><TableHead>End</TableHead><TableHead>Active</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+                  <TableBody>
+                    {seasons.map(s => (
+                      <TableRow key={s.id}>
+                        <TableCell className="font-medium text-sm">{s.name}</TableCell>
+                        <TableCell className="text-sm text-gray-600">{s.startDate}</TableCell>
+                        <TableCell className="text-sm text-gray-600">{s.endDate}</TableCell>
+                        <TableCell><Switch checked={s.isActive} onCheckedChange={async () => { await updateSeason.mutateAsync({ id: s.id, data: { name: s.name, startDate: s.startDate, endDate: s.endDate, isActive: !s.isActive } }); }} /></TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex gap-1 justify-end">
+                            <Button size="sm" variant="outline" onClick={() => setEditSeason({ ...EMPTY_SEASON, ...s })}><Pencil className="w-3.5 h-3.5" /></Button>
+                            <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => setDeleteConfirm({ type: "season", id: s.id, name: s.name })}><Trash2 className="w-3.5 h-3.5" /></Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Hotel Modal */}
+        <Dialog open={!!editHotel} onOpenChange={o => { if (!o) setEditHotel(null); }}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>{editHotel?.id ? "Edit Hotel" : "Add Hotel"}</DialogTitle></DialogHeader>
+            {editHotel && (
+              <div className="space-y-4 pt-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1"><Label>Name *</Label><Input value={editHotel.name} onChange={e => setEditHotel(p => ({ ...p!, name: e.target.value }))} /></div>
+                  <div className="space-y-1"><Label>Slug *</Label><Input value={editHotel.slug} onChange={e => setEditHotel(p => ({ ...p!, slug: e.target.value }))} /></div>
+                  <div className="space-y-1"><Label>Neighborhood</Label><Input value={editHotel.neighborhood} onChange={e => setEditHotel(p => ({ ...p!, neighborhood: e.target.value }))} /></div>
+                  <div className="space-y-1"><Label>Category</Label><select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editHotel.category} onChange={e => setEditHotel(p => ({ ...p!, category: e.target.value }))}>{CATEGORIES.map(c => <option key={c}>{c}</option>)}</select></div>
+                  <div className="space-y-1"><Label>Star Level (1–5)</Label><Input type="number" min={1} max={5} value={editHotel.starLevel} onChange={e => setEditHotel(p => ({ ...p!, starLevel: Number(e.target.value) }))} /></div>
+                  <div className="space-y-1"><Label>Availability</Label><select className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={editHotel.availabilityStatus} onChange={e => setEditHotel(p => ({ ...p!, availabilityStatus: e.target.value }))}>{STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}</select></div>
+                  <div className="space-y-1"><Label>Regular Rate (BRL/room/night)</Label><Input type="number" value={editHotel.regularRate} onChange={e => setEditHotel(p => ({ ...p!, regularRate: Number(e.target.value) }))} /></div>
+                  <div className="space-y-1"><Label>Special Season Rate (BRL reference)</Label><Input type="number" value={editHotel.specialRate} onChange={e => setEditHotel(p => ({ ...p!, specialRate: Number(e.target.value) }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Hero Image URL</Label><Input value={editHotel.heroImageUrl} onChange={e => setEditHotel(p => ({ ...p!, heroImageUrl: e.target.value }))} placeholder="https://..." /></div>
+                  <div className="space-y-1 col-span-2"><Label>Description (EN)</Label><Textarea rows={2} value={editHotel.shortDescEn} onChange={e => setEditHotel(p => ({ ...p!, shortDescEn: e.target.value }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Description (ES)</Label><Textarea rows={2} value={editHotel.shortDescEs} onChange={e => setEditHotel(p => ({ ...p!, shortDescEs: e.target.value }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Description (PT)</Label><Textarea rows={2} value={editHotel.shortDescPt} onChange={e => setEditHotel(p => ({ ...p!, shortDescPt: e.target.value }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Best For (EN)</Label><Input value={editHotel.bestForEn} onChange={e => setEditHotel(p => ({ ...p!, bestForEn: e.target.value }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Best For (ES)</Label><Input value={editHotel.bestForEs} onChange={e => setEditHotel(p => ({ ...p!, bestForEs: e.target.value }))} /></div>
+                  <div className="space-y-1 col-span-2"><Label>Best For (PT)</Label><Input value={editHotel.bestForPt} onChange={e => setEditHotel(p => ({ ...p!, bestForPt: e.target.value }))} /></div>
+                  <div className="space-y-1"><Label>Sort Order</Label><Input type="number" value={editHotel.sortOrder} onChange={e => setEditHotel(p => ({ ...p!, sortOrder: Number(e.target.value) }))} /></div>
+                  <div className="flex items-center gap-6 pt-4 col-span-2">
+                    <div className="flex items-center gap-2"><Switch checked={editHotel.isActive} onCheckedChange={v => setEditHotel(p => ({ ...p!, isActive: v }))} /><Label>Active</Label></div>
+                    <div className="flex items-center gap-2"><Switch checked={editHotel.isPublished} onCheckedChange={v => setEditHotel(p => ({ ...p!, isPublished: v }))} /><Label>Published</Label></div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-2 border-t">
+                  <Button variant="outline" onClick={() => setEditHotel(null)}>Cancel</Button>
+                  <Button onClick={saveHotel} disabled={createHotel.isPending || updateHotel.isPending} className="gap-1.5">{(createHotel.isPending || updateHotel.isPending) ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}Save Hotel</Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Season Modal */}
+        <Dialog open={!!editSeason} onOpenChange={o => { if (!o) setEditSeason(null); }}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader><DialogTitle>{editSeason?.id ? "Edit Special Season" : "Add Special Season"}</DialogTitle></DialogHeader>
+            {editSeason && (
+              <div className="space-y-3 pt-2">
+                <div className="space-y-1"><Label>Name *</Label><Input value={editSeason.name} onChange={e => setEditSeason(p => ({ ...p!, name: e.target.value }))} placeholder="e.g. Carnival 2027" /></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1"><Label>Start Date *</Label><Input type="date" value={editSeason.startDate} onChange={e => setEditSeason(p => ({ ...p!, startDate: e.target.value }))} /></div>
+                  <div className="space-y-1"><Label>End Date *</Label><Input type="date" value={editSeason.endDate} onChange={e => setEditSeason(p => ({ ...p!, endDate: e.target.value }))} /></div>
+                </div>
+                <div className="space-y-1"><Label>Description (EN)</Label><Textarea rows={2} value={editSeason.descriptionEn} onChange={e => setEditSeason(p => ({ ...p!, descriptionEn: e.target.value }))} /></div>
+                <div className="space-y-1"><Label>Description (ES)</Label><Textarea rows={2} value={editSeason.descriptionEs} onChange={e => setEditSeason(p => ({ ...p!, descriptionEs: e.target.value }))} /></div>
+                <div className="space-y-1"><Label>Description (PT)</Label><Textarea rows={2} value={editSeason.descriptionPt} onChange={e => setEditSeason(p => ({ ...p!, descriptionPt: e.target.value }))} /></div>
+                <div className="flex items-center gap-2"><Switch checked={editSeason.isActive} onCheckedChange={v => setEditSeason(p => ({ ...p!, isActive: v }))} /><Label>Active</Label></div>
+                <div className="flex justify-end gap-2 pt-2 border-t">
+                  <Button variant="outline" onClick={() => setEditSeason(null)}>Cancel</Button>
+                  <Button onClick={saveSeason} disabled={createSeason.isPending || updateSeason.isPending} className="gap-1.5">{(createSeason.isPending || updateSeason.isPending) ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}Save</Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirm */}
+        <Dialog open={!!deleteConfirm} onOpenChange={o => { if (!o) setDeleteConfirm(null); }}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader><DialogTitle>Confirm Delete</DialogTitle></DialogHeader>
+            <p className="text-sm text-gray-600">Delete <strong>{deleteConfirm?.name}</strong>? This cannot be undone.</p>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+              <Button variant="destructive" onClick={confirmDelete} disabled={deleteHotel.isPending || deleteSeason.isPending}>Delete</Button>
             </div>
           </DialogContent>
         </Dialog>

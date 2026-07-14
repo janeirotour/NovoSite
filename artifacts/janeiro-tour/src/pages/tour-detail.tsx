@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { AccommodationAddon } from "@/components/accommodation/AccommodationAddon";
 import { useParams, Link } from "wouter";
 import { useGetTour, useGetTourBySlug, useListReviews, useListFaqs, useListTourExtras, useListTourAvailability } from "@workspace/api-client-react";
 import { SeoHead } from "@/components/seo/SeoHead";
@@ -429,6 +430,9 @@ export default function TourDetailPage() {
               )}
             </section>
           )}
+
+          {/* Accommodation Add-On */}
+          <AccommodationAddon />
 
           <Separator />
 

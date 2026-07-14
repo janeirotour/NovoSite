@@ -1,0 +1,386 @@
+Create a global Hotel Accommodation Add-On system for all travel packages on the website.
+
+Do not redesign the website.
+Do not change the current structure, branding, colors or existing package layouts.
+Only add hotel accommodation management and package integration.
+
+MAIN GOAL
+
+Allow customers to add hotel accommodation to any current or future travel package.
+
+Create one centralized hotel catalog in the Admin Dashboard.
+
+All active hotels in this catalog must automatically become available as optional accommodation choices across every package on the website, without requiring manual configuration on each package page.
+
+CURRENCY
+
+All hotel prices listed below are in Brazilian Real:
+
+BRL / R$
+
+ROOM BASIS
+
+All listed prices are:
+
+* Per room
+* Per night
+* Based on double occupancy
+* Queen-bed room
+* Subject to availability and confirmation
+
+The hotel price must not be calculated per person unless manually configured otherwise by the administrator.
+
+HOTEL OPTIONS
+
+1. Novotel Rio de Janeiro Leme
+
+Neighborhood:
+Leme
+
+Category:
+Upscale 4-star hotel
+
+Best For:
+Couples, families, leisure travelers and guests who want to stay close to Copacabana Beach in a quieter neighborhood.
+
+Short Description:
+A modern beachfront-area hotel located in Leme, close to Copacabana, restaurants and major Rio attractions. A convenient option for travelers seeking comfort, good location and easy access to the city.
+
+Regular Season Rate:
+R$ 900 per room, per night
+
+Special Season Reference Rate:
+R$ 3,000 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+2. Arena Leme Hotel
+
+Neighborhood:
+Leme
+
+Category:
+Upscale beachfront 4-star hotel
+
+Best For:
+Couples, beach lovers and travelers seeking a premium beachfront location with easy access to Copacabana.
+
+Short Description:
+A contemporary beachfront hotel in Leme with direct access to the promenade and excellent views of Rio’s coastline. Ideal for travelers who prioritize location, comfort and a modern atmosphere.
+
+Regular Season Rate:
+R$ 1,000 per room, per night
+
+Special Season Reference Rate:
+R$ 4,000 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+3. Windsor Florida Hotel
+
+Neighborhood:
+Catete
+
+Category:
+Comfortable 4-star hotel
+
+Best For:
+Cultural travelers, business travelers, families and guests looking for convenient transportation and good value.
+
+Short Description:
+A well-located hotel in Catete, near Flamengo, museums, historic attractions and public transportation. A practical option for visitors who want easy access to downtown Rio and the South Zone.
+
+Regular Season Rate:
+R$ 800 per room, per night
+
+Special Season Reference Rate:
+R$ 1,500 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+4. Windsor Oceânico Hotel
+
+Neighborhood:
+Barra da Tijuca
+
+Category:
+Premium 4-star hotel
+
+Best For:
+Business travelers, families, groups, events and guests who prefer the modern Barra da Tijuca area.
+
+Short Description:
+A modern premium hotel in Barra da Tijuca, close to the beach, convention areas, shopping centers and entertainment. Ideal for travelers seeking spacious accommodations and a more contemporary side of Rio.
+
+Regular Season Rate:
+R$ 1,600 per room, per night
+
+Special Season Reference Rate:
+R$ 1,800 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+5. Hilton Rio de Janeiro Copacabana
+
+Neighborhood:
+Copacabana / Leme
+
+Category:
+Luxury 5-star beachfront hotel
+
+Best For:
+Luxury travelers, couples, honeymooners, executives and guests seeking premium beachfront service.
+
+Short Description:
+A luxury beachfront hotel overlooking Copacabana Beach, offering premium facilities, sophisticated accommodations and easy access to Rio’s main attractions. Ideal for travelers who want an upscale stay in an iconic location.
+
+Regular Season Rate:
+R$ 1,400 per room, per night
+
+Special Season Reference Rate:
+R$ 6,500 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+6. Prodigy Santos Dumont
+
+Neighborhood:
+Downtown Rio / Santos Dumont Airport
+
+Category:
+Upscale 4-star airport hotel
+
+Best For:
+Business travelers, short stays, travelers with early or late flights and guests who want easy airport access.
+
+Short Description:
+A modern hotel connected to the Santos Dumont Airport area, with convenient access to downtown Rio, Marina da Glória and major business districts. Ideal for practical stays and travelers using domestic flights.
+
+Regular Season Rate:
+R$ 1,100 per room, per night
+
+Special Season Reference Rate:
+R$ 1,450 per room, per night
+
+Special Season Conditions:
+Holidays, New Year’s Eve and Carnival.
+Final price must be confirmed before booking.
+
+PACKAGE PAGE INTEGRATION
+
+Add a reusable accommodation section to every current and future package page.
+
+Section Title:
+Add Accommodation to Your Package
+
+Section Description:
+Choose one of our recommended hotels in Rio de Janeiro. Rates are based on double occupancy and are subject to availability and final confirmation.
+
+Allow the customer to select:
+
+* No accommodation
+* Preferred hotel
+* Number of rooms
+* Number of nights
+* Check-in date
+* Check-out date
+* Number of adults
+* Number of children
+* Special requests
+
+Show for each hotel:
+
+* Hotel name
+* Featured image
+* Neighborhood
+* Hotel category
+* Short description
+* Best suited for
+* Regular nightly rate
+* Special-season notice
+* Room occupancy
+* Select button
+
+PRICE CALCULATION
+
+For regular dates:
+
+Hotel total =
+Nightly room price × Number of rooms × Number of nights
+
+Do not multiply the room rate by the number of guests when occupancy is within the configured room limit.
+
+Show separately:
+
+* Package price
+* Hotel price
+* Optional extras
+* Final estimated total
+
+SPECIAL DATES
+
+Create a Special Season pricing system.
+
+Special seasons should include:
+
+* Carnival
+* New Year’s Eve
+* National holidays
+* Major local events
+* Custom date ranges defined by the admin
+
+When selected dates fall within a special season:
+
+* Do not guarantee the displayed reference price.
+* Clearly show:
+  "Special-season rate — final price and availability require confirmation."
+* Allow the customer to submit the package as a booking request or quote request.
+* Do not finalize an automatic confirmed hotel reservation unless availability and price have been confirmed.
+
+HOTEL AVAILABILITY AND SUBSTITUTION
+
+Display this notice during selection and in the booking summary:
+
+"If the selected hotel is unavailable, Janeiro Tour & Travel may offer an alternative hotel of the same or a higher category in a comparable location. Any substitution and price difference will be presented to the customer for approval before confirmation."
+
+Do not replace the hotel automatically without customer approval.
+
+The admin must be able to:
+
+* Mark a hotel as available
+* Mark a hotel as unavailable
+* Mark a hotel as available on request
+* Suggest an equivalent hotel
+* Add a replacement hotel
+* Record any price difference
+* Request customer approval before confirming the substitution
+
+HOTEL CATEGORIES
+
+Create reusable hotel categories:
+
+* Comfortable
+* Upscale
+* Premium
+* Luxury
+* Airport Hotel
+* Beachfront Hotel
+* Business Hotel
+* Group-Friendly Hotel
+
+ADMIN DASHBOARD
+
+Create a Hotel Management section in the Admin Dashboard.
+
+Allow the admin to:
+
+* Add hotels
+* Edit hotels
+* Delete hotels
+* Duplicate hotels
+* Publish or unpublish hotels
+* Activate or deactivate hotels
+* Upload hotel images from the computer
+* Add image galleries
+* Edit neighborhood
+* Edit category
+* Edit star level
+* Edit descriptions
+* Edit ideal traveler profile
+* Edit amenities
+* Edit room type
+* Edit maximum occupancy
+* Edit regular nightly rate
+* Edit special-season reference rate
+* Edit currency
+* Edit availability status
+* Add blackout dates
+* Add special date ranges
+* Add equivalent replacement hotels
+* Reorder hotels
+* Control which hotels appear on package pages
+
+GLOBAL SETTINGS
+
+Create global hotel settings so hotels do not need to be added manually to every package.
+
+By default:
+
+* All active hotels should appear on all packages.
+* The admin may exclude a hotel from a specific package.
+* The admin may feature selected hotels on specific packages.
+* Future packages should automatically inherit the active hotel catalog.
+
+BOOKING AND ADMIN SUMMARY
+
+Store the following with each package request or reservation:
+
+* Selected package
+* Selected hotel
+* Hotel category
+* Check-in date
+* Check-out date
+* Number of nights
+* Number of rooms
+* Number of adults
+* Number of children
+* Applied nightly rate
+* Hotel subtotal
+* Special-season status
+* Availability status
+* Substitution status
+* Final estimated total
+* Customer approval status
+
+CUSTOMER-FACING NOTICE
+
+Add this message near hotel prices:
+
+"Hotel rates are estimates based on the selected dates, room type and double occupancy. All accommodations are subject to availability and final confirmation. Rates may change during holidays, Carnival, New Year’s Eve and major events."
+
+MULTILINGUAL REQUIREMENT
+
+Make the entire hotel accommodation system available in:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Translate:
+
+* Hotel descriptions
+* Neighborhood labels
+* Categories
+* Buttons
+* Notices
+* Availability messages
+* Booking summary
+* Substitution messages
+
+Do not leave mixed-language content.
+
+FUTURE STANDARD
+
+This hotel accommodation system must become the default standard for all future packages.
+
+Do not hardcode the hotel options directly into individual pages.
+
+Use one centralized and editable hotel database connected to all package pages.
+
+IMPORTANT
+
+Do not redesign the website.
+Do not change the original package structure.
+Do not remove existing functionality.
+Preserve the current Janeiro Tour & Travel visual identity.
+Only add the global hotel catalog, accommodation add-ons, price calculation, availability confirmation and hotel substitution workflow.

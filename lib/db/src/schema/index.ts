@@ -10,3 +10,5 @@ export * from "./admins";
 export * from "./extras";
 export * from "./reservations";
 export * from "./availability";
+export * from "./hotels";
+export * from "./special-seasons";

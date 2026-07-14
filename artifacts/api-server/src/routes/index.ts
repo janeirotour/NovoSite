@@ -16,6 +16,7 @@ import packagesRouter from "./packages";
 import currencyRouter from "./currency";
 import aiRouter from "./ai";
 import groupProgramsRouter from "./group-programs";
+import hotelsRouter from "./hotels";
 
 const router: IRouter = Router();
 
@@ -35,6 +36,7 @@ router.use(reservationsRouter);
 router.use(availabilityRouter);
 router.use(packagesRouter);
 router.use(groupProgramsRouter);
+router.use(hotelsRouter);
 router.use(aiRouter);
 
 export default router;

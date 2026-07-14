@@ -1,4 +1,5 @@
 import { useGetGroupProgram } from "@workspace/api-client-react";
+import { AccommodationAddon } from "@/components/accommodation/AccommodationAddon";
 import { useParams } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
 import { SeoHead } from "@/components/seo/SeoHead";
@@ -292,6 +293,9 @@ export default function GroupTravelDetailPage() {
                 </div>
               </section>
             )}
+
+            {/* Accommodation Add-On */}
+            <AccommodationAddon />
 
             {/* Pricing */}
             <section>

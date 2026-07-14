@@ -38,12 +38,15 @@ import type {
   GroupProgram,
   GroupProgramInput,
   HealthStatus,
+  Hotel,
+  HotelInput,
   ListAdminTourAvailabilityParams,
   ListAllExtrasParams,
   ListBlogPostsParams,
   ListDestinationsParams,
   ListFaqsParams,
   ListGroupProgramsParams,
+  ListHotelsParams,
   ListReservationsParams,
   ListReviewsParams,
   ListTourAvailabilityParams,
@@ -56,6 +59,8 @@ import type {
   ReviewUpdate,
   SiteSettings,
   SiteSettingsUpdate,
+  SpecialSeason,
+  SpecialSeasonInput,
   Tour,
   TourAvailabilityEntry,
   TourAvailabilityInput,
@@ -1959,6 +1964,593 @@ export const useDeleteGroupProgram = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getDeleteGroupProgramMutationOptions(options));
+    }
+
+export const getListHotelsUrl = (params?: ListHotelsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/hotels?${stringifiedParams}` : `/api/hotels`
+}
+
+/**
+ * @summary List hotels
+ */
+export const listHotels = async (params?: ListHotelsParams, options?: RequestInit): Promise<Hotel[]> => {
+
+  return customFetch<Hotel[]>(getListHotelsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListHotelsQueryKey = (params?: ListHotelsParams,) => {
+    return [
+    `/api/hotels`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListHotelsQueryOptions = <TData = Awaited<ReturnType<typeof listHotels>>, TError = ErrorType<unknown>>(params?: ListHotelsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listHotels>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListHotelsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listHotels>>> = ({ signal }) => listHotels(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listHotels>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListHotelsQueryResult = NonNullable<Awaited<ReturnType<typeof listHotels>>>
+export type ListHotelsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List hotels
+ */
+
+export function useListHotels<TData = Awaited<ReturnType<typeof listHotels>>, TError = ErrorType<unknown>>(
+ params?: ListHotelsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listHotels>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListHotelsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateHotelUrl = () => {
+
+
+
+
+  return `/api/hotels`
+}
+
+/**
+ * @summary Create hotel (admin)
+ */
+export const createHotel = async (hotelInput: HotelInput, options?: RequestInit): Promise<Hotel> => {
+
+  return customFetch<Hotel>(getCreateHotelUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      hotelInput,)
+  }
+);}
+
+
+
+
+export const getCreateHotelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createHotel>>, TError,{data: BodyType<HotelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createHotel>>, TError,{data: BodyType<HotelInput>}, TContext> => {
+
+const mutationKey = ['createHotel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createHotel>>, {data: BodyType<HotelInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createHotel(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateHotelMutationResult = NonNullable<Awaited<ReturnType<typeof createHotel>>>
+    export type CreateHotelMutationBody = BodyType<HotelInput>
+    export type CreateHotelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create hotel (admin)
+ */
+export const useCreateHotel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createHotel>>, TError,{data: BodyType<HotelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createHotel>>,
+        TError,
+        {data: BodyType<HotelInput>},
+        TContext
+      > => {
+      return useMutation(getCreateHotelMutationOptions(options));
+    }
+
+export const getUpdateHotelUrl = (id: number,) => {
+
+
+
+
+  return `/api/hotels/${id}`
+}
+
+/**
+ * @summary Update hotel (admin)
+ */
+export const updateHotel = async (id: number,
+    hotelInput: HotelInput, options?: RequestInit): Promise<Hotel> => {
+
+  return customFetch<Hotel>(getUpdateHotelUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      hotelInput,)
+  }
+);}
+
+
+
+
+export const getUpdateHotelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateHotel>>, TError,{id: number;data: BodyType<HotelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateHotel>>, TError,{id: number;data: BodyType<HotelInput>}, TContext> => {
+
+const mutationKey = ['updateHotel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateHotel>>, {id: number;data: BodyType<HotelInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateHotel(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateHotelMutationResult = NonNullable<Awaited<ReturnType<typeof updateHotel>>>
+    export type UpdateHotelMutationBody = BodyType<HotelInput>
+    export type UpdateHotelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update hotel (admin)
+ */
+export const useUpdateHotel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateHotel>>, TError,{id: number;data: BodyType<HotelInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateHotel>>,
+        TError,
+        {id: number;data: BodyType<HotelInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateHotelMutationOptions(options));
+    }
+
+export const getDeleteHotelUrl = (id: number,) => {
+
+
+
+
+  return `/api/hotels/${id}`
+}
+
+/**
+ * @summary Delete hotel (admin)
+ */
+export const deleteHotel = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteHotelUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteHotelMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteHotel>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteHotel>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteHotel'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteHotel>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteHotel(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteHotelMutationResult = NonNullable<Awaited<ReturnType<typeof deleteHotel>>>
+
+    export type DeleteHotelMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete hotel (admin)
+ */
+export const useDeleteHotel = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteHotel>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteHotel>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteHotelMutationOptions(options));
+    }
+
+export const getListSpecialSeasonsUrl = () => {
+
+
+
+
+  return `/api/special-seasons`
+}
+
+/**
+ * @summary List special seasons
+ */
+export const listSpecialSeasons = async ( options?: RequestInit): Promise<SpecialSeason[]> => {
+
+  return customFetch<SpecialSeason[]>(getListSpecialSeasonsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSpecialSeasonsQueryKey = () => {
+    return [
+    `/api/special-seasons`
+    ] as const;
+    }
+
+
+export const getListSpecialSeasonsQueryOptions = <TData = Awaited<ReturnType<typeof listSpecialSeasons>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSpecialSeasons>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSpecialSeasonsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSpecialSeasons>>> = ({ signal }) => listSpecialSeasons({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSpecialSeasons>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSpecialSeasonsQueryResult = NonNullable<Awaited<ReturnType<typeof listSpecialSeasons>>>
+export type ListSpecialSeasonsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List special seasons
+ */
+
+export function useListSpecialSeasons<TData = Awaited<ReturnType<typeof listSpecialSeasons>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSpecialSeasons>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSpecialSeasonsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateSpecialSeasonUrl = () => {
+
+
+
+
+  return `/api/special-seasons`
+}
+
+/**
+ * @summary Create special season (admin)
+ */
+export const createSpecialSeason = async (specialSeasonInput: SpecialSeasonInput, options?: RequestInit): Promise<SpecialSeason> => {
+
+  return customFetch<SpecialSeason>(getCreateSpecialSeasonUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      specialSeasonInput,)
+  }
+);}
+
+
+
+
+export const getCreateSpecialSeasonMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSpecialSeason>>, TError,{data: BodyType<SpecialSeasonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSpecialSeason>>, TError,{data: BodyType<SpecialSeasonInput>}, TContext> => {
+
+const mutationKey = ['createSpecialSeason'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSpecialSeason>>, {data: BodyType<SpecialSeasonInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createSpecialSeason(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateSpecialSeasonMutationResult = NonNullable<Awaited<ReturnType<typeof createSpecialSeason>>>
+    export type CreateSpecialSeasonMutationBody = BodyType<SpecialSeasonInput>
+    export type CreateSpecialSeasonMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create special season (admin)
+ */
+export const useCreateSpecialSeason = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSpecialSeason>>, TError,{data: BodyType<SpecialSeasonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createSpecialSeason>>,
+        TError,
+        {data: BodyType<SpecialSeasonInput>},
+        TContext
+      > => {
+      return useMutation(getCreateSpecialSeasonMutationOptions(options));
+    }
+
+export const getUpdateSpecialSeasonUrl = (id: number,) => {
+
+
+
+
+  return `/api/special-seasons/${id}`
+}
+
+/**
+ * @summary Update special season (admin)
+ */
+export const updateSpecialSeason = async (id: number,
+    specialSeasonInput: SpecialSeasonInput, options?: RequestInit): Promise<SpecialSeason> => {
+
+  return customFetch<SpecialSeason>(getUpdateSpecialSeasonUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      specialSeasonInput,)
+  }
+);}
+
+
+
+
+export const getUpdateSpecialSeasonMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSpecialSeason>>, TError,{id: number;data: BodyType<SpecialSeasonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateSpecialSeason>>, TError,{id: number;data: BodyType<SpecialSeasonInput>}, TContext> => {
+
+const mutationKey = ['updateSpecialSeason'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateSpecialSeason>>, {id: number;data: BodyType<SpecialSeasonInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateSpecialSeason(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateSpecialSeasonMutationResult = NonNullable<Awaited<ReturnType<typeof updateSpecialSeason>>>
+    export type UpdateSpecialSeasonMutationBody = BodyType<SpecialSeasonInput>
+    export type UpdateSpecialSeasonMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update special season (admin)
+ */
+export const useUpdateSpecialSeason = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateSpecialSeason>>, TError,{id: number;data: BodyType<SpecialSeasonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateSpecialSeason>>,
+        TError,
+        {id: number;data: BodyType<SpecialSeasonInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateSpecialSeasonMutationOptions(options));
+    }
+
+export const getDeleteSpecialSeasonUrl = (id: number,) => {
+
+
+
+
+  return `/api/special-seasons/${id}`
+}
+
+/**
+ * @summary Delete special season (admin)
+ */
+export const deleteSpecialSeason = async (id: number, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getDeleteSpecialSeasonUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteSpecialSeasonMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSpecialSeason>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteSpecialSeason>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteSpecialSeason'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteSpecialSeason>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteSpecialSeason(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteSpecialSeasonMutationResult = NonNullable<Awaited<ReturnType<typeof deleteSpecialSeason>>>
+
+    export type DeleteSpecialSeasonMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete special season (admin)
+ */
+export const useDeleteSpecialSeason = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteSpecialSeason>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteSpecialSeason>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteSpecialSeasonMutationOptions(options));
     }
 
 export const getListFaqsUrl = (params?: ListFaqsParams,) => {

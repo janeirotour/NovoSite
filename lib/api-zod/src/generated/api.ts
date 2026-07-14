@@ -1120,6 +1120,220 @@ export const DeleteGroupProgramParams = zod.object({
 
 
 /**
+ * @summary List hotels
+ */
+export const ListHotelsQueryParams = zod.object({
+  "activeOnly": zod.coerce.boolean().optional()
+})
+
+export const ListHotelsResponseItem = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "name": zod.string(),
+  "neighborhood": zod.string(),
+  "category": zod.string(),
+  "starLevel": zod.number(),
+  "heroImageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
+  "shortDescEn": zod.string(),
+  "shortDescEs": zod.string(),
+  "shortDescPt": zod.string(),
+  "bestForEn": zod.string(),
+  "bestForEs": zod.string(),
+  "bestForPt": zod.string(),
+  "amenities": zod.array(zod.string()).optional(),
+  "roomType": zod.string().optional(),
+  "maxOccupancy": zod.number().optional(),
+  "regularRate": zod.number(),
+  "specialRate": zod.number(),
+  "specialRateConditionsEn": zod.string().optional(),
+  "specialRateConditionsEs": zod.string().optional(),
+  "specialRateConditionsPt": zod.string().optional(),
+  "currency": zod.string(),
+  "availabilityStatus": zod.string(),
+  "isActive": zod.boolean(),
+  "isPublished": zod.boolean(),
+  "sortOrder": zod.number()
+})
+export const ListHotelsResponse = zod.array(ListHotelsResponseItem)
+
+
+/**
+ * @summary Create hotel (admin)
+ */
+export const CreateHotelBody = zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "neighborhood": zod.string(),
+  "category": zod.string(),
+  "starLevel": zod.number(),
+  "heroImageUrl": zod.string().optional(),
+  "galleryImages": zod.array(zod.string()).optional(),
+  "shortDescEn": zod.string().optional(),
+  "shortDescEs": zod.string().optional(),
+  "shortDescPt": zod.string().optional(),
+  "bestForEn": zod.string().optional(),
+  "bestForEs": zod.string().optional(),
+  "bestForPt": zod.string().optional(),
+  "amenities": zod.array(zod.string()).optional(),
+  "roomType": zod.string().optional(),
+  "maxOccupancy": zod.number().optional(),
+  "regularRate": zod.number(),
+  "specialRate": zod.number(),
+  "specialRateConditionsEn": zod.string().optional(),
+  "specialRateConditionsEs": zod.string().optional(),
+  "specialRateConditionsPt": zod.string().optional(),
+  "currency": zod.string(),
+  "availabilityStatus": zod.string().optional(),
+  "isActive": zod.boolean().optional(),
+  "isPublished": zod.boolean().optional(),
+  "sortOrder": zod.number().optional()
+})
+
+
+/**
+ * @summary Update hotel (admin)
+ */
+export const UpdateHotelParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateHotelBody = zod.object({
+  "slug": zod.string(),
+  "name": zod.string(),
+  "neighborhood": zod.string(),
+  "category": zod.string(),
+  "starLevel": zod.number(),
+  "heroImageUrl": zod.string().optional(),
+  "galleryImages": zod.array(zod.string()).optional(),
+  "shortDescEn": zod.string().optional(),
+  "shortDescEs": zod.string().optional(),
+  "shortDescPt": zod.string().optional(),
+  "bestForEn": zod.string().optional(),
+  "bestForEs": zod.string().optional(),
+  "bestForPt": zod.string().optional(),
+  "amenities": zod.array(zod.string()).optional(),
+  "roomType": zod.string().optional(),
+  "maxOccupancy": zod.number().optional(),
+  "regularRate": zod.number(),
+  "specialRate": zod.number(),
+  "specialRateConditionsEn": zod.string().optional(),
+  "specialRateConditionsEs": zod.string().optional(),
+  "specialRateConditionsPt": zod.string().optional(),
+  "currency": zod.string(),
+  "availabilityStatus": zod.string().optional(),
+  "isActive": zod.boolean().optional(),
+  "isPublished": zod.boolean().optional(),
+  "sortOrder": zod.number().optional()
+})
+
+export const UpdateHotelResponse = zod.object({
+  "id": zod.number(),
+  "slug": zod.string(),
+  "name": zod.string(),
+  "neighborhood": zod.string(),
+  "category": zod.string(),
+  "starLevel": zod.number(),
+  "heroImageUrl": zod.string(),
+  "galleryImages": zod.array(zod.string()).optional(),
+  "shortDescEn": zod.string(),
+  "shortDescEs": zod.string(),
+  "shortDescPt": zod.string(),
+  "bestForEn": zod.string(),
+  "bestForEs": zod.string(),
+  "bestForPt": zod.string(),
+  "amenities": zod.array(zod.string()).optional(),
+  "roomType": zod.string().optional(),
+  "maxOccupancy": zod.number().optional(),
+  "regularRate": zod.number(),
+  "specialRate": zod.number(),
+  "specialRateConditionsEn": zod.string().optional(),
+  "specialRateConditionsEs": zod.string().optional(),
+  "specialRateConditionsPt": zod.string().optional(),
+  "currency": zod.string(),
+  "availabilityStatus": zod.string(),
+  "isActive": zod.boolean(),
+  "isPublished": zod.boolean(),
+  "sortOrder": zod.number()
+})
+
+
+/**
+ * @summary Delete hotel (admin)
+ */
+export const DeleteHotelParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary List special seasons
+ */
+export const ListSpecialSeasonsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "descriptionEn": zod.string().optional(),
+  "descriptionEs": zod.string().optional(),
+  "descriptionPt": zod.string().optional(),
+  "isActive": zod.boolean()
+})
+export const ListSpecialSeasonsResponse = zod.array(ListSpecialSeasonsResponseItem)
+
+
+/**
+ * @summary Create special season (admin)
+ */
+export const CreateSpecialSeasonBody = zod.object({
+  "name": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "descriptionEn": zod.string().optional(),
+  "descriptionEs": zod.string().optional(),
+  "descriptionPt": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Update special season (admin)
+ */
+export const UpdateSpecialSeasonParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateSpecialSeasonBody = zod.object({
+  "name": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "descriptionEn": zod.string().optional(),
+  "descriptionEs": zod.string().optional(),
+  "descriptionPt": zod.string().optional(),
+  "isActive": zod.boolean().optional()
+})
+
+export const UpdateSpecialSeasonResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "startDate": zod.string(),
+  "endDate": zod.string(),
+  "descriptionEn": zod.string().optional(),
+  "descriptionEs": zod.string().optional(),
+  "descriptionPt": zod.string().optional(),
+  "isActive": zod.boolean()
+})
+
+
+/**
+ * @summary Delete special season (admin)
+ */
+export const DeleteSpecialSeasonParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
  * @summary List FAQs
  */
 export const ListFaqsQueryParams = zod.object({

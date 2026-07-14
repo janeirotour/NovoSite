@@ -1,4 +1,5 @@
 import { useGetPackage } from "@workspace/api-client-react";
+import { AccommodationAddon } from "@/components/accommodation/AccommodationAddon";
 import { useParams, Link } from "wouter";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
@@ -447,6 +448,11 @@ export default function PackageDetailPage() {
             * Transport assigned proportionally to group: 1–2 pax = Private Car ($120/trip), 3–11 pax = Minivan ($300/trip), 12–16 pax = Minibus ($500/trip), 17+ pax = Coach Bus ($700/trip).
           </p>
         </div>
+      </section>
+
+      {/* Accommodation Add-On */}
+      <section className="max-w-6xl mx-auto px-4 pb-16">
+        <AccommodationAddon />
       </section>
 
       <PackageBookingModal

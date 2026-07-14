@@ -756,6 +756,86 @@ export interface GroupProgramInput {
   sortOrder?: number;
 }
 
+export interface Hotel {
+  id: number;
+  slug: string;
+  name: string;
+  neighborhood: string;
+  category: string;
+  starLevel: number;
+  heroImageUrl: string;
+  galleryImages?: string[];
+  shortDescEn: string;
+  shortDescEs: string;
+  shortDescPt: string;
+  bestForEn: string;
+  bestForEs: string;
+  bestForPt: string;
+  amenities?: string[];
+  roomType?: string;
+  maxOccupancy?: number;
+  regularRate: number;
+  specialRate: number;
+  specialRateConditionsEn?: string;
+  specialRateConditionsEs?: string;
+  specialRateConditionsPt?: string;
+  currency: string;
+  availabilityStatus: string;
+  isActive: boolean;
+  isPublished: boolean;
+  sortOrder: number;
+}
+
+export interface HotelInput {
+  slug: string;
+  name: string;
+  neighborhood: string;
+  category: string;
+  starLevel: number;
+  heroImageUrl?: string;
+  galleryImages?: string[];
+  shortDescEn?: string;
+  shortDescEs?: string;
+  shortDescPt?: string;
+  bestForEn?: string;
+  bestForEs?: string;
+  bestForPt?: string;
+  amenities?: string[];
+  roomType?: string;
+  maxOccupancy?: number;
+  regularRate: number;
+  specialRate: number;
+  specialRateConditionsEn?: string;
+  specialRateConditionsEs?: string;
+  specialRateConditionsPt?: string;
+  currency: string;
+  availabilityStatus?: string;
+  isActive?: boolean;
+  isPublished?: boolean;
+  sortOrder?: number;
+}
+
+export interface SpecialSeason {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  descriptionEn?: string;
+  descriptionEs?: string;
+  descriptionPt?: string;
+  isActive: boolean;
+}
+
+export interface SpecialSeasonInput {
+  name: string;
+  startDate: string;
+  endDate: string;
+  descriptionEn?: string;
+  descriptionEs?: string;
+  descriptionPt?: string;
+  isActive?: boolean;
+}
+
 export type ListToursParams = {
 destination?: string;
 category?: string;
@@ -784,6 +864,10 @@ featured?: boolean;
 
 export type ListGroupProgramsParams = {
 includeUnpublished?: boolean;
+};
+
+export type ListHotelsParams = {
+activeOnly?: boolean;
 };
 
 export type ListFaqsParams = {
