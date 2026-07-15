@@ -81,10 +81,10 @@ export default function GroupTravelPage() {
       />
 
       {/* ── Hero ── */}
-      <section className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#051a0e] via-[#0a2a18] to-[#0f3a22] text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&q=80')", backgroundSize: "cover", backgroundPosition: "center" }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950/90 via-gray-900/75 to-gray-800/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#051a0e]/95 via-[#0a2a18]/80 to-[#0f3a22]/65" />
         <div className="relative max-w-6xl mx-auto px-4 py-24 lg:py-32">
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-5">
@@ -98,7 +98,7 @@ export default function GroupTravelPage() {
               {t("sub")}
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/contact">
+              <Link href="/group-travel/quote">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-black font-bold rounded-xl px-6">
                   {t("request")} <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -153,9 +153,6 @@ export default function GroupTravelPage() {
                         <span className="flex items-center gap-1 text-white/80 text-xs">
                           <Clock className="w-3.5 h-3.5" />{prog.duration}
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/25 border border-primary/40 text-primary text-[10px] font-bold uppercase tracking-wide">
-                          Land Only · No accommodation
-                        </span>
                       </div>
                       <h2 className="text-white text-xl font-bold">{prog.title}</h2>
                       {prog.subtitle && <p className="text-white/70 text-sm mt-0.5">{prog.subtitle}</p>}
@@ -195,7 +192,7 @@ export default function GroupTravelPage() {
                           {t("details")} <ArrowRight className="w-4 h-4 ml-1" />
                         </Button>
                       </Link>
-                      <Link href="/contact">
+                      <Link href={`/group-travel/quote?program=${encodeURIComponent(prog.slug ?? prog.title ?? "")}`}>
                         <Button variant="outline" className="rounded-xl border-primary text-primary hover:bg-primary/5 text-sm font-semibold px-4">
                           {t("request")}
                         </Button>
@@ -210,7 +207,7 @@ export default function GroupTravelPage() {
       </section>
 
       {/* ── B2B CTA banner ── */}
-      <section className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16 lg:py-20">
+      <section className="bg-gradient-to-r from-[#051a0e] to-[#0a2a18] text-white py-16 lg:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="flex justify-center mb-4">
             <Building2 className="w-10 h-10 text-primary" />

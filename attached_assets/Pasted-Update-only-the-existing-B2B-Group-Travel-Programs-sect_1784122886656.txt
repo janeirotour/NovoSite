@@ -1,0 +1,202 @@
+Update only the existing B2B Group Travel Programs section and proposal form.
+
+Do not redesign the website.
+Do not change the current structure.
+Do not change unrelated sections, pages or components.
+Preserve the existing Janeiro Tour & Travel branding and layout.
+
+1. Green Overlay
+
+Change the dark blue image overlays in the B2B Group Travel Programs sections to a premium dark green overlay that matches the Janeiro Tour & Travel visual identity.
+
+Requirements:
+
+* Use a deep, elegant green.
+* Keep text readable with strong contrast.
+* Preserve the background images.
+* Keep the current layout, spacing and typography.
+* Do not use bright or neon green.
+* Apply the same green overlay consistently to:
+
+  * The main Group Travel Programs hero section
+  * The final “Planning a group trip to Rio?” CTA section
+
+The result should feel premium, professional and aligned with the existing brand.
+
+2. Remove “Land Only · No Accommodation” From Cards
+
+Remove the visible text:
+
+“Land Only · No accommodation”
+
+from all B2B Group Travel Program cards.
+
+Requirements:
+
+* Do not show this text on the program cards.
+* Do not remove the Land Only option from the quotation form or pricing logic.
+* Keep Land Only available as an accommodation choice inside the form.
+* Only remove the label from the visual cards.
+
+3. Connect All Proposal Buttons to the Form
+
+Make every button labeled:
+
+“Request a Custom Proposal”
+
+open or navigate directly to the B2B Group Travel Quote Builder form.
+
+This must apply to:
+
+* The hero CTA
+* Program cards
+* The final CTA section
+* Any other “Request a Custom Proposal” button in the B2B area
+
+Requirements:
+
+* Scroll smoothly to the form if it is on the same page.
+* Navigate to the correct form page if the form is on a separate route.
+* Preserve the selected program when the user clicks from a specific program card.
+* Pre-fill the program name in the form whenever possible.
+* Do not send the user to WhatsApp unless they click the WhatsApp button.
+
+4. Expand Experience Selection in the Form
+
+Update the Experiences step of the B2B Group Travel Quote Builder.
+
+Add the following selectable options:
+
+* Helicopter Experience
+* Hang Gliding
+* Paragliding
+* Dinner Show
+* Group Dinner
+* Rio by Night
+* Samba Experience
+* Carnival Experience
+* Christ the Redeemer
+* Sugarloaf Mountain
+* Selarón Steps
+* Little Africa
+* Favela Cultural Tour
+* Afro-Brazilian Gastronomy
+* Welcome Dinner
+* Farewell Dinner
+* Capoeira Workshop
+* Cooking Class
+* Yacht Experience
+* Professional Photographer
+* Cultural Walking Tours
+* Adventure Experiences
+* Private Tours
+* Shared Tours
+* Custom Experience
+
+5. Automatically Include Existing Website Experiences
+
+Do not hardcode only the list above.
+
+The form must also dynamically load all active and published experiences already available on the website.
+
+Requirements:
+
+* Read experiences from the current experience/product database.
+* Display active experiences as selectable options.
+* Automatically include future published experiences.
+* Do not require manually updating the form every time a new experience is created.
+* Group options by category when possible.
+
+Suggested categories:
+
+* Iconic Attractions
+* Cultural Experiences
+* Adventure Experiences
+* Aerial Experiences
+* Night Experiences
+* Gastronomy
+* Premium Experiences
+* Private Tours
+* Shared Tours
+* Custom Experiences
+
+6. Experience Selection Design
+
+Use a clean multi-select interface.
+
+Each experience option may include:
+
+* Experience name
+* Category
+* Small image or icon
+* Short description
+* Optional estimated price
+* Selected / unselected state
+
+Allow the customer to:
+
+* Select multiple experiences
+* Remove selected experiences
+* Search experiences
+* Filter by category
+* Add a custom request
+
+7. Admin Dashboard
+
+Make the B2B experience selection manageable from the admin dashboard.
+
+Allow the admin to:
+
+* Include or exclude experiences from the B2B form
+* Reorder experiences
+* Edit categories
+* Mark experiences as recommended
+* Mark experiences as premium
+* Set estimated B2B pricing
+* Activate or deactivate options
+* Add new custom B2B experiences
+
+8. Quote Calculation
+
+When an experience is selected:
+
+* Add its configured estimated cost to the preliminary quote.
+* Show the selected experience in the quote summary.
+* Include it in the admin lead record.
+* Include it in the customer confirmation email.
+* Include it in the generated proposal.
+
+If an experience has no configured price, display:
+
+“Price to be confirmed”
+
+Do not create a false or estimated price when no rate exists.
+
+9. Multilingual Requirement
+
+Apply all updates in:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Translate:
+
+* Buttons
+* Categories
+* Experience names when translations exist
+* Form labels
+* Selection messages
+* Quote summary
+* Availability notices
+
+Do not leave mixed-language content.
+
+10. Important
+
+Do not redesign the website.
+Do not modify the desktop or mobile structure unnecessarily.
+Do not remove the Land Only option from the form.
+Only remove its text from the program cards.
+Preserve all existing functionality.
+Apply only the requested visual, navigation and form-selection improvements.

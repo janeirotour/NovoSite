@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { useLanguage } from "@/hooks/use-language";
-import { useCreateB2bQuote, useListB2bPricing, useListB2bTiers } from "@workspace/api-client-react";
+import { useCreateB2bQuote, useListB2bPricing, useListB2bTiers, useListTours } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,7 @@ import {
   ArrowLeft, ArrowRight, Check, ChevronRight, Users, Building2,
   Car, Utensils, Star, MessageSquare, TrendingUp, Send,
   Globe, Phone, Mail, MapPin, Calendar, Clock, DollarSign,
-  Shield, Zap, Award, RefreshCw, CheckCircle2, FileText,
+  Shield, Zap, Award, RefreshCw, CheckCircle2, FileText, Search,
 } from "lucide-react";
 
 const STEPS = [
@@ -96,24 +96,17 @@ const T = {
     vCoach: "Full-size coach",
     // Step 6
     s6title: "Experiences & Activities",
-    s6sub: "Select all that apply",
-    expChrist: "Christ the Redeemer",
-    expSugar: "Sugarloaf Mountain",
-    expFavela: "Favela Community Tour",
-    expCarnival: "Carnival Experience",
-    expSamba: "Samba Show",
-    expBotanical: "Botanical Garden",
-    expBeach: "Beach Day (Copacabana / Ipanema)",
-    expSunset: "Sunset Cruise (Guanabara Bay)",
-    expCaipi: "Caipirinha Workshop",
-    expCooking: "Brazilian Cooking Class",
-    expSurf: "Surfing Lesson",
-    expHike: "Tijuca Forest Hike",
-    expHelicopter: "Helicopter Tour (Rio panoramic)",
-    expHangGliding: "Hang Gliding (Pedra Bonita)",
-    expSailboat: "Sail Boat Tour (Guanabara Bay)",
-    expOtherLabel: "Other / Custom Activity",
-    expOtherPh: "Describe any other activity or request…",
+    s6sub: "Select all experiences for your group",
+    expSearchPh: "Search experiences…",
+    expCatAll: "All", expCatIconic: "Iconic Attractions", expCatCultural: "Cultural",
+    expCatAerial: "Aerial", expCatNight: "Night", expCatGastronomy: "Gastronomy",
+    expCatPremium: "Premium", expCatAdventure: "Adventure", expCatPrivate: "Private Tours",
+    expCatShared: "Shared Tours", expCatCustom: "Custom",
+    expSelected: "selected", expNone: "No experiences match your search.",
+    expRecommended: "Recommended", expPremiumLabel: "Premium",
+    expOtherLabel: "Custom / Other Activity",
+    expOtherPh: "Describe any other activity or special request…",
+    expProgramLabel: "Selected Program",
     // Step 7
     s7title: "Meal Plan",
     mealNone: "No meals included",
@@ -246,24 +239,17 @@ const T = {
     vPrivateMini: "Minivan privado",
     vCoach: "Autocar completo",
     s6title: "Experiencias y Actividades",
-    s6sub: "Seleccione todas las que apliquen",
-    expChrist: "Cristo Redentor",
-    expSugar: "Pan de Azúcar",
-    expFavela: "Tour Favela Comunitaria",
-    expCarnival: "Experiencia Carnaval",
-    expSamba: "Show de Samba",
-    expBotanical: "Jardín Botánico",
-    expBeach: "Día de Playa (Copacabana / Ipanema)",
-    expSunset: "Crucero al Atardecer (Bahía de Guanabara)",
-    expCaipi: "Taller de Caipirinha",
-    expCooking: "Clase de Cocina Brasileña",
-    expSurf: "Clase de Surf",
-    expHike: "Senderismo Bosque Tijuca",
-    expHelicopter: "Tour en Helicóptero (panorámico Río)",
-    expHangGliding: "Ala Delta (Pedra Bonita)",
-    expSailboat: "Tour en Velero (Bahía de Guanabara)",
-    expOtherLabel: "Otro / Actividad Personalizada",
-    expOtherPh: "Describe cualquier otra actividad o solicitud…",
+    s6sub: "Seleccione todas las experiencias para su grupo",
+    expSearchPh: "Buscar experiencias…",
+    expCatAll: "Todas", expCatIconic: "Atracciones Icónicas", expCatCultural: "Cultural",
+    expCatAerial: "Aéreo", expCatNight: "Nocturno", expCatGastronomy: "Gastronomía",
+    expCatPremium: "Premium", expCatAdventure: "Aventura", expCatPrivate: "Tours Privados",
+    expCatShared: "Tours Compartidos", expCatCustom: "Personalizado",
+    expSelected: "seleccionadas", expNone: "No hay experiencias que coincidan.",
+    expRecommended: "Recomendado", expPremiumLabel: "Premium",
+    expOtherLabel: "Actividad Personalizada / Otro",
+    expOtherPh: "Describe cualquier otra actividad o solicitud especial…",
+    expProgramLabel: "Programa Seleccionado",
     s7title: "Plan de Comidas",
     mealNone: "Sin comidas incluidas",
     mealBreakfast: "Solo desayuno",
@@ -388,24 +374,17 @@ const T = {
     vPrivateMini: "Van privativa",
     vCoach: "Ônibus completo",
     s6title: "Experiências e Atividades",
-    s6sub: "Selecione todas que se aplicam",
-    expChrist: "Cristo Redentor",
-    expSugar: "Pão de Açúcar",
-    expFavela: "Tour Favela Comunitária",
-    expCarnival: "Experiência Carnaval",
-    expSamba: "Show de Samba",
-    expBotanical: "Jardim Botânico",
-    expBeach: "Dia de Praia (Copacabana / Ipanema)",
-    expSunset: "Cruzeiro ao Pôr do Sol (Baía de Guanabara)",
-    expCaipi: "Workshop de Caipirinha",
-    expCooking: "Aula de Culinária Brasileira",
-    expSurf: "Aula de Surf",
-    expHike: "Trilha na Floresta da Tijuca",
-    expHelicopter: "Tour de Helicóptero (panorâmico Rio)",
-    expHangGliding: "Asa Delta (Pedra Bonita)",
-    expSailboat: "Passeio de Veleiro (Baía de Guanabara)",
-    expOtherLabel: "Outro / Atividade Personalizada",
+    s6sub: "Selecione todas as experiências para o seu grupo",
+    expSearchPh: "Buscar experiências…",
+    expCatAll: "Todas", expCatIconic: "Atrações Icônicas", expCatCultural: "Cultural",
+    expCatAerial: "Aéreo", expCatNight: "Noturno", expCatGastronomy: "Gastronomia",
+    expCatPremium: "Premium", expCatAdventure: "Aventura", expCatPrivate: "Tours Privados",
+    expCatShared: "Tours Compartilhados", expCatCustom: "Personalizado",
+    expSelected: "selecionadas", expNone: "Nenhuma experiência corresponde à sua busca.",
+    expRecommended: "Recomendado", expPremiumLabel: "Premium",
+    expOtherLabel: "Atividade Personalizada / Outro",
     expOtherPh: "Descreva outra atividade ou pedido especial…",
+    expProgramLabel: "Programa Selecionado",
     s7title: "Plano de Refeições",
     mealNone: "Sem refeições incluídas",
     mealBreakfast: "Café da manhã apenas",
@@ -477,11 +456,75 @@ const T = {
 
 type Lang = "en" | "es" | "pt";
 
-const EXPERIENCES_KEYS = [
-  "expChrist", "expSugar", "expFavela", "expCarnival", "expSamba",
-  "expBotanical", "expBeach", "expSunset", "expCaipi", "expCooking",
-  "expSurf", "expHike", "expHelicopter", "expHangGliding", "expSailboat",
-] as const;
+type ExpCategory = "iconic" | "cultural" | "aerial" | "night" | "gastronomy" | "premium" | "adventure" | "private" | "shared" | "custom";
+
+interface B2bExp {
+  key: string;
+  category: ExpCategory;
+  en: string; es: string; pt: string;
+  icon: string;
+  isPremium?: boolean;
+  isRecommended?: boolean;
+}
+
+const B2B_CURATED: B2bExp[] = [
+  // Iconic Attractions
+  { key: "christ_redeemer", category: "iconic", en: "Christ the Redeemer", es: "Cristo Redentor", pt: "Cristo Redentor", icon: "⛪", isRecommended: true },
+  { key: "sugarloaf", category: "iconic", en: "Sugarloaf Mountain", es: "Pan de Azúcar", pt: "Pão de Açúcar", icon: "⛰️", isRecommended: true },
+  { key: "selaron_steps", category: "iconic", en: "Selarón Steps", es: "Escaleras Selarón", pt: "Escadaria Selarón", icon: "🎨" },
+  { key: "little_africa", category: "iconic", en: "Little Africa", es: "Pequeña África", pt: "Pequena África", icon: "🌍" },
+  // Cultural
+  { key: "favela_tour", category: "cultural", en: "Favela Cultural Tour", es: "Tour Cultural Favela", pt: "Tour Cultural Favela", icon: "🏘️", isRecommended: true },
+  { key: "capoeira", category: "cultural", en: "Capoeira Workshop", es: "Taller de Capoeira", pt: "Workshop de Capoeira", icon: "🥋" },
+  { key: "cultural_walking", category: "cultural", en: "Cultural Walking Tours", es: "Tours a Pie Culturales", pt: "Passeios Culturais a Pé", icon: "🚶" },
+  { key: "samba_experience", category: "cultural", en: "Samba Experience", es: "Experiencia Samba", pt: "Experiência Samba", icon: "🪘", isRecommended: true },
+  { key: "carnival_experience", category: "cultural", en: "Carnival Experience", es: "Experiencia Carnaval", pt: "Experiência Carnaval", icon: "🎭" },
+  // Aerial
+  { key: "helicopter", category: "aerial", en: "Helicopter Experience", es: "Experiencia en Helicóptero", pt: "Experiência de Helicóptero", icon: "🚁", isPremium: true },
+  { key: "hang_gliding", category: "aerial", en: "Hang Gliding", es: "Ala Delta", pt: "Asa Delta", icon: "🪂" },
+  { key: "paragliding", category: "aerial", en: "Paragliding", es: "Parapente", pt: "Parapente", icon: "🪂" },
+  // Night
+  { key: "rio_by_night", category: "night", en: "Rio by Night", es: "Río de Noche", pt: "Rio à Noite", icon: "🌃" },
+  { key: "dinner_show", category: "night", en: "Dinner Show", es: "Cena Show", pt: "Jantar Show", icon: "🎪" },
+  { key: "group_dinner", category: "night", en: "Group Dinner", es: "Cena Grupal", pt: "Jantar em Grupo", icon: "🍷" },
+  // Gastronomy
+  { key: "afro_gastronomy", category: "gastronomy", en: "Afro-Brazilian Gastronomy", es: "Gastronomía Afrobrasileña", pt: "Gastronomia Afro-Brasileira", icon: "🍽️" },
+  { key: "cooking_class", category: "gastronomy", en: "Cooking Class", es: "Clase de Cocina", pt: "Aula de Culinária", icon: "👨‍🍳" },
+  { key: "welcome_dinner", category: "gastronomy", en: "Welcome Dinner", es: "Cena de Bienvenida", pt: "Jantar de Boas-Vindas", icon: "🥂", isRecommended: true },
+  { key: "farewell_dinner", category: "gastronomy", en: "Farewell Dinner", es: "Cena de Despedida", pt: "Jantar de Despedida", icon: "🎊" },
+  // Premium
+  { key: "yacht_experience", category: "premium", en: "Yacht Experience", es: "Experiencia en Yate", pt: "Experiência de Iate", icon: "⛵", isPremium: true },
+  { key: "photographer", category: "premium", en: "Professional Photographer", es: "Fotógrafo Profesional", pt: "Fotógrafo Profissional", icon: "📷", isPremium: true },
+  // Adventure
+  { key: "adventure_exp", category: "adventure", en: "Adventure Experiences", es: "Experiencias de Aventura", pt: "Experiências de Aventura", icon: "🏔️" },
+  // Private / Shared / Custom
+  { key: "private_tours", category: "private", en: "Private Tours", es: "Tours Privados", pt: "Tours Privados", icon: "🔐" },
+  { key: "shared_tours", category: "shared", en: "Shared Tours", es: "Tours Compartidos", pt: "Tours Compartilhados", icon: "👥" },
+  { key: "custom_experience", category: "custom", en: "Custom Experience", es: "Experiencia Personalizada", pt: "Experiência Personalizada", icon: "✨" },
+];
+
+const EXP_CATEGORIES: Array<{ key: string; labelKey: string; icon: string }> = [
+  { key: "all", labelKey: "expCatAll", icon: "🌟" },
+  { key: "iconic", labelKey: "expCatIconic", icon: "🏛️" },
+  { key: "cultural", labelKey: "expCatCultural", icon: "🎭" },
+  { key: "aerial", labelKey: "expCatAerial", icon: "🚁" },
+  { key: "night", labelKey: "expCatNight", icon: "🌃" },
+  { key: "gastronomy", labelKey: "expCatGastronomy", icon: "🍽️" },
+  { key: "premium", labelKey: "expCatPremium", icon: "⭐" },
+  { key: "adventure", labelKey: "expCatAdventure", icon: "🏔️" },
+  { key: "private", labelKey: "expCatPrivate", icon: "🔐" },
+  { key: "shared", labelKey: "expCatShared", icon: "👥" },
+  { key: "custom", labelKey: "expCatCustom", icon: "✨" },
+];
+
+const TOUR_CAT_MAP: Record<string, ExpCategory> = {
+  sightseeing: "iconic", culture: "cultural", aerial: "aerial",
+  gastronomy: "gastronomy", adventure: "adventure", night: "night",
+};
+const TOUR_ICON_MAP: Record<string, string> = {
+  sightseeing: "🏛️", culture: "🎭", aerial: "🚁",
+  gastronomy: "🍽️", adventure: "🏔️", night: "🌃",
+};
 
 interface FormData {
   contactName: string;
@@ -502,6 +545,7 @@ interface FormData {
   airportTransfers: boolean;
   dailyTransport: boolean;
   vehicleLevel: string;
+  programName: string;
   experiences: string[];
   otherExperiences: string;
   mealPlan: string;
@@ -534,7 +578,8 @@ const DEFAULT: FormData = {
   airportTransfers: true,
   dailyTransport: true,
   vehicleLevel: "coach",
-  experiences: ["expChrist", "expSugar", "expFavela"],
+  programName: "",
+  experiences: [],
   otherExperiences: "",
   mealPlan: "breakfast",
   dietary: "",
@@ -745,18 +790,52 @@ export default function GroupTravelQuotePage() {
   const { lang } = useLanguage();
   const l = lang as Lang;
   const t = T[l] ?? T.en;
+  const search = useSearch();
+  const programFromUrl = useMemo(() => decodeURIComponent(new URLSearchParams(search).get("program") ?? ""), []);
 
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormData>(DEFAULT);
+  const [form, setForm] = useState<FormData>(() => ({
+    ...DEFAULT,
+    programName: programFromUrl,
+  }));
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [submitted, setSubmitted] = useState<string | null>(null);
+  const [expCatFilter, setExpCatFilter] = useState("all");
+  const [expSearch, setExpSearch] = useState("");
 
   const upd = <K extends keyof FormData>(key: K, val: FormData[K]) =>
     setForm(prev => ({ ...prev, [key]: val }));
 
   const { data: pricingData = [] } = useListB2bPricing();
   const { data: tiersData = [] } = useListB2bTiers();
+  const { data: rawTours = [] } = useListTours();
   const submitQuote = useCreateB2bQuote();
+
+  const allExperiences = useMemo<B2bExp[]>(() => {
+    const curatedKeys = new Set(B2B_CURATED.map(e => e.key));
+    const dynamic = (rawTours as Array<{ id: number; title: string; category?: string; published?: boolean }>)
+      .filter(r => r.published && r.category !== "transfer")
+      .map(r => ({
+        key: `tour_${r.id}`,
+        category: (TOUR_CAT_MAP[r.category ?? ""] ?? "iconic") as ExpCategory,
+        en: r.title, es: r.title, pt: r.title,
+        icon: TOUR_ICON_MAP[r.category ?? ""] ?? "🗺️",
+      }))
+      .filter(r => !curatedKeys.has(r.key));
+    return [...B2B_CURATED, ...dynamic];
+  }, [rawTours]);
+
+  const filteredExperiences = useMemo(() => {
+    let result = allExperiences;
+    if (expCatFilter !== "all") result = result.filter(e => e.category === expCatFilter);
+    if (expSearch.trim()) {
+      const s = expSearch.toLowerCase();
+      result = result.filter(e =>
+        e.en.toLowerCase().includes(s) || e.es.toLowerCase().includes(s) || e.pt.toLowerCase().includes(s)
+      );
+    }
+    return result;
+  }, [allExperiences, expCatFilter, expSearch]);
 
   const nights = calcNights(form.arrival, form.departure);
 
@@ -797,6 +876,7 @@ export default function GroupTravelQuotePage() {
     if (!validate()) return;
     const groupData = {
       nights,
+      programName: form.programName || undefined,
       groupType: form.groupType,
       accommodation: form.accommodation,
       mealPlan: form.mealPlan,
@@ -930,6 +1010,15 @@ export default function GroupTravelQuotePage() {
             {/* ── Step 1: Contact ── */}
             {step === 1 && (
               <div className="space-y-5">
+                {form.programName && (
+                  <div className="flex items-center gap-2 rounded-xl bg-[#009743]/10 border border-[#009743]/30 px-4 py-3">
+                    <FileText className="w-4 h-4 text-[#009743] flex-shrink-0" />
+                    <div>
+                      <div className="text-xs font-bold text-[#009743] uppercase tracking-wide">{t.expProgramLabel}</div>
+                      <div className="text-sm font-semibold text-gray-800">{form.programName}</div>
+                    </div>
+                  </div>
+                )}
                 <h2 className="text-xl font-bold text-gray-900">{t.s1title}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2 space-y-1.5">
@@ -1146,43 +1235,119 @@ export default function GroupTravelQuotePage() {
 
             {/* ── Step 6: Experiences ── */}
             {step === 6 && (
-              <div className="space-y-5">
-                <h2 className="text-xl font-bold text-gray-900">{t.s6title}</h2>
-                <p className="text-sm text-gray-500">{t.s6sub}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {EXPERIENCES_KEYS.map(key => {
-                    const label = t[key as keyof typeof t] as string;
-                    const checked = form.experiences.includes(key);
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">{t.s6title}</h2>
+                  <p className="text-sm text-gray-500 mt-1">{t.s6sub}</p>
+                </div>
+
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <Input
+                    className="pl-9 text-sm"
+                    placeholder={t.expSearchPh}
+                    value={expSearch}
+                    onChange={e => setExpSearch(e.target.value)}
+                  />
+                </div>
+
+                {/* Category filter pills */}
+                <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+                  {EXP_CATEGORIES.map(cat => {
+                    const label = t[cat.labelKey as keyof typeof t] as string;
+                    const isActive = expCatFilter === cat.key;
+                    return (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => setExpCatFilter(cat.key)}
+                        className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+                          isActive
+                            ? "bg-[#FFB600] text-black border-[#FFB600]"
+                            : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <span>{cat.icon}</span>
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Selected chips */}
+                {form.experiences.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {form.experiences.map(key => {
+                      const exp = allExperiences.find(e => e.key === key);
+                      if (!exp) return null;
+                      return (
+                        <span
+                          key={key}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#FFB600]/15 border border-[#FFB600]/40 text-[#7a5500] rounded-full text-xs font-medium"
+                        >
+                          {exp.icon} {exp[l]}
+                          <button
+                            type="button"
+                            onClick={() => upd("experiences", form.experiences.filter(e => e !== key))}
+                            className="ml-0.5 hover:text-red-600 leading-none"
+                          >×</button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Experience grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-80 overflow-y-auto pr-1">
+                  {filteredExperiences.map(exp => {
+                    const checked = form.experiences.includes(exp.key);
                     return (
                       <label
-                        key={key}
+                        key={exp.key}
                         className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-all ${
                           checked ? "border-[#FFB600] bg-[#FFB600]/5" : "border-gray-200 hover:border-gray-300"
                         }`}
                       >
                         <Checkbox
                           checked={checked}
-                          onCheckedChange={v => {
+                          onCheckedChange={v =>
                             upd("experiences", v
-                              ? [...form.experiences, key]
-                              : form.experiences.filter(e => e !== key));
-                          }}
+                              ? [...form.experiences, exp.key]
+                              : form.experiences.filter(e => e !== exp.key))
+                          }
                         />
-                        <span className="text-sm font-medium text-gray-800">{label}</span>
+                        <span className="text-lg leading-none">{exp.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-gray-800 truncate">{exp[l]}</div>
+                          {(exp.isPremium || exp.isRecommended) && (
+                            <div className="flex gap-1 mt-0.5">
+                              {exp.isPremium && (
+                                <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-semibold">
+                                  {t.expPremiumLabel}
+                                </span>
+                              )}
+                              {exp.isRecommended && (
+                                <span className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded font-semibold">
+                                  ★ {t.expRecommended}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </label>
                     );
                   })}
+                  {filteredExperiences.length === 0 && (
+                    <div className="col-span-2 py-10 text-center text-sm text-gray-400">
+                      {t.expNone}
+                    </div>
+                  )}
                 </div>
 
-                {/* Other / Custom Activity */}
+                {/* Custom / Other */}
                 <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 space-y-2">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <Checkbox
-                      checked={form.otherExperiences.length > 0}
-                      onCheckedChange={v => { if (!v) upd("otherExperiences", ""); }}
-                    />
-                    <span className="text-sm font-medium text-gray-700">{t.expOtherLabel}</span>
-                  </label>
+                  <Label className="text-sm font-medium text-gray-700">{t.expOtherLabel}</Label>
                   <Textarea
                     rows={2}
                     placeholder={t.expOtherPh}
@@ -1193,7 +1358,7 @@ export default function GroupTravelQuotePage() {
                 </div>
 
                 <div className="text-xs text-gray-400">
-                  {form.experiences.length}{form.otherExperiences ? " + 1" : ""} {({ en: "selected", es: "seleccionadas", pt: "selecionadas" })[l]}
+                  {form.experiences.length}{form.otherExperiences ? " + 1" : ""} {t.expSelected}
                 </div>
               </div>
             )}
