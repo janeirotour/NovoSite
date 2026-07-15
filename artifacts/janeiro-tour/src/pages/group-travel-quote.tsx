@@ -109,6 +109,11 @@ const T = {
     expCooking: "Brazilian Cooking Class",
     expSurf: "Surfing Lesson",
     expHike: "Tijuca Forest Hike",
+    expHelicopter: "Helicopter Tour (Rio panoramic)",
+    expHangGliding: "Hang Gliding (Pedra Bonita)",
+    expSailboat: "Sail Boat Tour (Guanabara Bay)",
+    expOtherLabel: "Other / Custom Activity",
+    expOtherPh: "Describe any other activity or request…",
     // Step 7
     s7title: "Meal Plan",
     mealNone: "No meals included",
@@ -254,6 +259,11 @@ const T = {
     expCooking: "Clase de Cocina Brasileña",
     expSurf: "Clase de Surf",
     expHike: "Senderismo Bosque Tijuca",
+    expHelicopter: "Tour en Helicóptero (panorámico Río)",
+    expHangGliding: "Ala Delta (Pedra Bonita)",
+    expSailboat: "Tour en Velero (Bahía de Guanabara)",
+    expOtherLabel: "Otro / Actividad Personalizada",
+    expOtherPh: "Describe cualquier otra actividad o solicitud…",
     s7title: "Plan de Comidas",
     mealNone: "Sin comidas incluidas",
     mealBreakfast: "Solo desayuno",
@@ -391,6 +401,11 @@ const T = {
     expCooking: "Aula de Culinária Brasileira",
     expSurf: "Aula de Surf",
     expHike: "Trilha na Floresta da Tijuca",
+    expHelicopter: "Tour de Helicóptero (panorâmico Rio)",
+    expHangGliding: "Asa Delta (Pedra Bonita)",
+    expSailboat: "Passeio de Veleiro (Baía de Guanabara)",
+    expOtherLabel: "Outro / Atividade Personalizada",
+    expOtherPh: "Descreva outra atividade ou pedido especial…",
     s7title: "Plano de Refeições",
     mealNone: "Sem refeições incluídas",
     mealBreakfast: "Café da manhã apenas",
@@ -464,7 +479,8 @@ type Lang = "en" | "es" | "pt";
 
 const EXPERIENCES_KEYS = [
   "expChrist", "expSugar", "expFavela", "expCarnival", "expSamba",
-  "expBotanical", "expBeach", "expSunset", "expCaipi", "expCooking", "expSurf", "expHike",
+  "expBotanical", "expBeach", "expSunset", "expCaipi", "expCooking",
+  "expSurf", "expHike", "expHelicopter", "expHangGliding", "expSailboat",
 ] as const;
 
 interface FormData {
@@ -487,6 +503,7 @@ interface FormData {
   dailyTransport: boolean;
   vehicleLevel: string;
   experiences: string[];
+  otherExperiences: string;
   mealPlan: string;
   dietary: string;
   guideIncluded: boolean;
@@ -518,6 +535,7 @@ const DEFAULT: FormData = {
   dailyTransport: true,
   vehicleLevel: "coach",
   experiences: ["expChrist", "expSugar", "expFavela"],
+  otherExperiences: "",
   mealPlan: "breakfast",
   dietary: "",
   guideIncluded: true,
@@ -783,6 +801,7 @@ export default function GroupTravelQuotePage() {
       accommodation: form.accommodation,
       mealPlan: form.mealPlan,
       experiences: form.experiences,
+      otherExperiences: form.otherExperiences || undefined,
       airportTransfers: form.airportTransfers,
       dailyTransport: form.dailyTransport,
       vehicleLevel: form.vehicleLevel,
@@ -1154,8 +1173,27 @@ export default function GroupTravelQuotePage() {
                     );
                   })}
                 </div>
+
+                {/* Other / Custom Activity */}
+                <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 space-y-2">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <Checkbox
+                      checked={form.otherExperiences.length > 0}
+                      onCheckedChange={v => { if (!v) upd("otherExperiences", ""); }}
+                    />
+                    <span className="text-sm font-medium text-gray-700">{t.expOtherLabel}</span>
+                  </label>
+                  <Textarea
+                    rows={2}
+                    placeholder={t.expOtherPh}
+                    value={form.otherExperiences}
+                    onChange={e => upd("otherExperiences", e.target.value)}
+                    className="text-sm resize-none"
+                  />
+                </div>
+
                 <div className="text-xs text-gray-400">
-                  {form.experiences.length} {({ en: "selected", es: "seleccionadas", pt: "selecionadas" })[l]}
+                  {form.experiences.length}{form.otherExperiences ? " + 1" : ""} {({ en: "selected", es: "seleccionadas", pt: "selecionadas" })[l]}
                 </div>
               </div>
             )}
