@@ -14,6 +14,9 @@ const UPLOADS_DIR = join(WORKSPACE_ROOT, "artifacts", "janeiro-tour", "public", 
 
 const app: Express = express();
 
+// Trust the Replit reverse proxy so cookies work correctly over HTTPS
+app.set("trust proxy", 1);
+
 // Stripe webhook MUST be registered before express.json() to receive raw Buffer
 app.post(
   "/api/stripe/webhook",
@@ -66,8 +69,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   }),
