@@ -5,6 +5,7 @@ import {
   BarChart3, Compass, Package2, MapPin, FileText, Monitor,
   ClipboardList, CalendarDays, Star, HelpCircle, Tag, Home, Settings,
   LogOut, ExternalLink, Menu, X, Globe, ChevronDown, ChevronRight, TrendingUp, BedDouble,
+  Building2, SlidersHorizontal,
 } from "lucide-react";
 
 type NavItem = { tab: string; label: string; icon: React.ElementType };
@@ -38,6 +39,13 @@ const NAV: NavGroup[] = [
       { tab: "reviews", label: "Reviews & Ratings", icon: Star },
       { tab: "faqs", label: "FAQs", icon: HelpCircle },
       { tab: "blog-monetization", label: "Blog Monetization", icon: TrendingUp },
+    ],
+  },
+  {
+    group: "B2B & Groups",
+    items: [
+      { tab: "b2b-quotes", label: "B2B Quotes", icon: Building2 },
+      { tab: "b2b-pricing", label: "B2B Pricing", icon: SlidersHorizontal },
     ],
   },
   {

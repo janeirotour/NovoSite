@@ -1985,3 +1985,225 @@ export const UpdateReservationStatusResponse = zod.object({
 })
 
 
+/**
+ * @summary List B2B quote requests (admin)
+ */
+export const listB2bQuotesQueryLimitDefault = 50;
+export const listB2bQuotesQueryOffsetDefault = 0;
+
+export const ListB2bQuotesQueryParams = zod.object({
+  "status": zod.coerce.string().optional(),
+  "country": zod.coerce.string().optional(),
+  "limit": zod.coerce.number().default(listB2bQuotesQueryLimitDefault),
+  "offset": zod.coerce.number().default(listB2bQuotesQueryOffsetDefault)
+})
+
+export const ListB2bQuotesResponseItem = zod.object({
+  "id": zod.number().optional(),
+  "quoteRef": zod.string().optional(),
+  "status": zod.string().optional(),
+  "language": zod.string().optional(),
+  "contactName": zod.string().optional(),
+  "company": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "country": zod.string().optional(),
+  "website": zod.string().optional(),
+  "iata": zod.string().optional(),
+  "preferredContact": zod.string().optional(),
+  "groupData": zod.object({
+
+}).passthrough().optional(),
+  "estimateLow": zod.string().optional(),
+  "estimateHigh": zod.string().optional(),
+  "estimateCurrency": zod.string().optional(),
+  "estimateBreakdown": zod.object({
+
+}).passthrough().optional(),
+  "internalNotes": zod.string().optional(),
+  "assignedTo": zod.string().optional(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const ListB2bQuotesResponse = zod.array(ListB2bQuotesResponseItem)
+
+
+/**
+ * @summary Submit a B2B group travel quote request
+ */
+export const CreateB2bQuoteBody = zod.object({
+  "language": zod.string().optional(),
+  "contactName": zod.string(),
+  "company": zod.string().optional(),
+  "email": zod.string(),
+  "phone": zod.string().optional(),
+  "country": zod.string().optional(),
+  "website": zod.string().optional(),
+  "iata": zod.string().optional(),
+  "preferredContact": zod.string().optional(),
+  "groupData": zod.object({
+
+}).passthrough().optional(),
+  "estimateLow": zod.number().optional(),
+  "estimateHigh": zod.number().optional(),
+  "estimateCurrency": zod.string().optional(),
+  "estimateBreakdown": zod.object({
+
+}).passthrough().optional()
+})
+
+
+/**
+ * @summary Get a single B2B quote
+ */
+export const GetB2bQuoteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetB2bQuoteResponse = zod.object({
+  "id": zod.number().optional(),
+  "quoteRef": zod.string().optional(),
+  "status": zod.string().optional(),
+  "language": zod.string().optional(),
+  "contactName": zod.string().optional(),
+  "company": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "country": zod.string().optional(),
+  "website": zod.string().optional(),
+  "iata": zod.string().optional(),
+  "preferredContact": zod.string().optional(),
+  "groupData": zod.object({
+
+}).passthrough().optional(),
+  "estimateLow": zod.string().optional(),
+  "estimateHigh": zod.string().optional(),
+  "estimateCurrency": zod.string().optional(),
+  "estimateBreakdown": zod.object({
+
+}).passthrough().optional(),
+  "internalNotes": zod.string().optional(),
+  "assignedTo": zod.string().optional(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Update a B2B quote (admin)
+ */
+export const UpdateB2bQuoteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateB2bQuoteBody = zod.object({
+  "status": zod.string().optional(),
+  "internalNotes": zod.string().optional(),
+  "assignedTo": zod.string().optional(),
+  "estimateLow": zod.number().optional(),
+  "estimateHigh": zod.number().optional()
+})
+
+export const UpdateB2bQuoteResponse = zod.object({
+  "id": zod.number().optional(),
+  "quoteRef": zod.string().optional(),
+  "status": zod.string().optional(),
+  "language": zod.string().optional(),
+  "contactName": zod.string().optional(),
+  "company": zod.string().optional(),
+  "email": zod.string().optional(),
+  "phone": zod.string().optional(),
+  "country": zod.string().optional(),
+  "website": zod.string().optional(),
+  "iata": zod.string().optional(),
+  "preferredContact": zod.string().optional(),
+  "groupData": zod.object({
+
+}).passthrough().optional(),
+  "estimateLow": zod.string().optional(),
+  "estimateHigh": zod.string().optional(),
+  "estimateCurrency": zod.string().optional(),
+  "estimateBreakdown": zod.object({
+
+}).passthrough().optional(),
+  "internalNotes": zod.string().optional(),
+  "assignedTo": zod.string().optional(),
+  "createdAt": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+
+
+/**
+ * @summary Get B2B pricing settings
+ */
+export const ListB2bPricingResponseItem = zod.object({
+  "id": zod.number().optional(),
+  "settingKey": zod.string().optional(),
+  "settingValue": zod.string().optional(),
+  "settingLabel": zod.string().optional(),
+  "settingGroup": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const ListB2bPricingResponse = zod.array(ListB2bPricingResponseItem)
+
+
+/**
+ * @summary Bulk-update B2B pricing settings (admin)
+ */
+export const UpdateB2bPricingBodyItem = zod.object({
+  "settingKey": zod.string(),
+  "settingValue": zod.number()
+})
+export const UpdateB2bPricingBody = zod.array(UpdateB2bPricingBodyItem)
+
+export const UpdateB2bPricingResponseItem = zod.object({
+  "id": zod.number().optional(),
+  "settingKey": zod.string().optional(),
+  "settingValue": zod.string().optional(),
+  "settingLabel": zod.string().optional(),
+  "settingGroup": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const UpdateB2bPricingResponse = zod.array(UpdateB2bPricingResponseItem)
+
+
+/**
+ * @summary Get B2B group size pricing tiers
+ */
+export const ListB2bTiersResponseItem = zod.object({
+  "id": zod.number().optional(),
+  "minPax": zod.number().optional(),
+  "maxPax": zod.number().optional(),
+  "label": zod.string().optional(),
+  "discountPct": zod.string().optional(),
+  "markupPct": zod.string().optional(),
+  "complimentaryPolicy": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const ListB2bTiersResponse = zod.array(ListB2bTiersResponseItem)
+
+
+/**
+ * @summary Bulk-update B2B group tiers (admin)
+ */
+export const UpdateB2bTiersBodyItem = zod.object({
+  "id": zod.number(),
+  "discountPct": zod.number().optional(),
+  "markupPct": zod.number().optional(),
+  "complimentaryPolicy": zod.string().optional()
+})
+export const UpdateB2bTiersBody = zod.array(UpdateB2bTiersBodyItem)
+
+export const UpdateB2bTiersResponseItem = zod.object({
+  "id": zod.number().optional(),
+  "minPax": zod.number().optional(),
+  "maxPax": zod.number().optional(),
+  "label": zod.string().optional(),
+  "discountPct": zod.string().optional(),
+  "markupPct": zod.string().optional(),
+  "complimentaryPolicy": zod.string().optional(),
+  "updatedAt": zod.string().optional()
+})
+export const UpdateB2bTiersResponse = zod.array(UpdateB2bTiersResponseItem)
+
+

@@ -133,6 +133,109 @@ export async function sendAdminBookingNotification(
   });
 }
 
+// ─── B2B Quote Emails ────────────────────────────────────────────────────────
+
+interface B2bQuoteEmailData {
+  quoteRef: string;
+  contactName: string;
+  email: string;
+  company?: string;
+  country?: string;
+  estimateLow: string;
+  estimateHigh: string;
+  estimateCurrency: string;
+  groupData: Record<string, unknown>;
+  language?: string;
+}
+
+export async function sendB2bAdminNotification(data: B2bQuoteEmailData): Promise<void> {
+  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.EMAIL_FROM ?? process.env.EMAIL_USER;
+  if (!adminEmail) { logger.warn("ADMIN_EMAIL not set — skipping B2B admin notification"); return; }
+  const group = data.groupData as Record<string, unknown>;
+  const pax = group.estimatedTravelers ?? "—";
+  const nights = group.nights ?? "—";
+  const arrival = group.arrivalDate ?? "—";
+  const accommodation = group.accommodationCategory ?? "—";
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto;">
+      <div style="background: #1a1a1a; padding: 24px; border-radius: 8px 8px 0 0;">
+        <h1 style="color: #FFB600; margin: 0; font-size: 20px;">🌍 New B2B Quote Request — ${data.quoteRef}</h1>
+      </div>
+      <div style="background: #f9f9f9; padding: 24px; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px;">
+        <h2 style="margin-top: 0;">Contact</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="color:#666;padding:5px 0">Name</td><td style="font-weight:bold">${data.contactName}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Company</td><td>${data.company ?? "—"}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Email</td><td>${data.email}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Country</td><td>${data.country ?? "—"}</td></tr>
+        </table>
+        <h2 style="margin-top:20px">Group Summary</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="color:#666;padding:5px 0">Travelers</td><td>${pax}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Arrival</td><td>${arrival}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Nights</td><td>${nights}</td></tr>
+          <tr><td style="color:#666;padding:5px 0">Accommodation</td><td>${accommodation}</td></tr>
+        </table>
+        <h2 style="margin-top:20px">Preliminary Estimate</h2>
+        <p style="font-size:20px;font-weight:bold;color:#009743">${data.estimateCurrency} ${Number(data.estimateLow).toLocaleString()} – ${Number(data.estimateHigh).toLocaleString()} per person</p>
+        <p style="color:#888;font-size:12px">This is a preliminary estimate. Final pricing requires manual confirmation.</p>
+        <div style="margin-top:20px;padding:16px;background:#fff3cd;border-left:4px solid #FFB600;border-radius:4px">
+          <strong>Action Required:</strong> Log in to the admin dashboard to review and respond to this quote request.
+        </div>
+      </div>
+    </div>`;
+  await sendMail({ to: adminEmail, subject: `[Janeiro Tour B2B] New Quote ${data.quoteRef} — ${data.contactName}`, html });
+}
+
+export async function sendB2bCustomerConfirmation(data: B2bQuoteEmailData): Promise<void> {
+  const lang = data.language ?? "en";
+  const subjects: Record<string, string> = {
+    en: `Quote Request Received — ${data.quoteRef} | Janeiro Tour & Travel`,
+    es: `Solicitud de Cotización Recibida — ${data.quoteRef} | Janeiro Tour & Travel`,
+    pt: `Solicitação de Cotação Recebida — ${data.quoteRef} | Janeiro Tour & Travel`,
+  };
+  const greetings: Record<string, string> = {
+    en: `Thank you for your B2B group travel inquiry, <strong>${data.contactName}</strong>!`,
+    es: `¡Gracias por su consulta de viaje grupal B2B, <strong>${data.contactName}</strong>!`,
+    pt: `Obrigado pela sua consulta de viagem de grupo B2B, <strong>${data.contactName}</strong>!`,
+  };
+  const bodies: Record<string, string> = {
+    en: "Our team will review your request and send you a detailed formal proposal within 24–48 business hours.",
+    es: "Nuestro equipo revisará su solicitud y le enviará una propuesta formal detallada en un plazo de 24 a 48 horas hábiles.",
+    pt: "Nossa equipe analisará sua solicitação e enviará uma proposta formal detalhada dentro de 24 a 48 horas úteis.",
+  };
+  const disclaimers: Record<string, string> = {
+    en: "This is a preliminary estimate based on the information provided. Hotel availability, supplier rates and final group size may affect the final proposal.",
+    es: "Esta es una estimación preliminar basada en la información proporcionada. La disponibilidad del hotel, las tarifas de los proveedores y el tamaño final del grupo pueden afectar la propuesta final.",
+    pt: "Esta é uma estimativa preliminar baseada nas informações fornecidas. A disponibilidade do hotel, as tarifas dos fornecedores e o tamanho final do grupo podem afetar a proposta final.",
+  };
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;">
+      <div style="background:#1a1a1a;padding:24px;border-radius:8px 8px 0 0;text-align:center">
+        <h1 style="color:#FFB600;margin:0;font-size:22px">Janeiro Tour &amp; Travel</h1>
+        <p style="color:#ccc;margin:6px 0 0">B2B Group Travel Programs</p>
+      </div>
+      <div style="background:#fff;padding:28px;border:1px solid #e0e0e0">
+        <p style="font-size:16px">${greetings[lang] ?? greetings.en}</p>
+        <p>${bodies[lang] ?? bodies.en}</p>
+        <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;border:1px solid #e0e0e0">
+          <p style="margin:0 0 8px;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:.5px">Quote Reference</p>
+          <p style="margin:0;font-size:24px;font-weight:bold;color:#1a1a1a">${data.quoteRef}</p>
+        </div>
+        <div style="background:#f0fdf4;border-radius:8px;padding:20px;margin:20px 0;border:1px solid #bbf7d0">
+          <p style="margin:0 0 4px;font-size:13px;color:#166534">Preliminary Estimate — Subject to Final Confirmation</p>
+          <p style="margin:0;font-size:22px;font-weight:bold;color:#166534">${data.estimateCurrency} ${Number(data.estimateLow).toLocaleString()} – ${Number(data.estimateHigh).toLocaleString()} per person</p>
+        </div>
+        <p style="color:#888;font-size:12px">${disclaimers[lang] ?? disclaimers.en}</p>
+        <p style="color:#555">For urgent inquiries, WhatsApp us at <strong>+55 21 97263-3333</strong></p>
+      </div>
+      <div style="background:#1a1a1a;padding:16px;text-align:center;border-radius:0 0 8px 8px">
+        <p style="color:#888;font-size:12px;margin:0">Janeiro Tour &amp; Travel · Rio de Janeiro, Brazil</p>
+      </div>
+    </div>`;
+  await sendMail({ to: data.email, subject: subjects[lang] ?? subjects.en, html });
+}
+
 export async function sendCustomerConfirmation(
   data: BookingEmailData
 ): Promise<void> {

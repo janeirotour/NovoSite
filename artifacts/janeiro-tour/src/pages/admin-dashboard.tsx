@@ -16,10 +16,14 @@ import { useState, useRef, useCallback, useEffect } from "react";
     useListGroupPrograms, useCreateGroupProgram, useUpdateGroupProgram, useDeleteGroupProgram,
     useListHotels, useCreateHotel, useUpdateHotel, useDeleteHotel,
     useListSpecialSeasons, useCreateSpecialSeason, useUpdateSpecialSeason, useDeleteSpecialSeason,
+    useListB2bQuotes, useUpdateB2bQuote,
+    useListB2bPricing, useUpdateB2bPricing,
+    useListB2bTiers, useUpdateB2bTiers,
     getGetAdminMeQueryKey, getListToursQueryKey, getListDestinationsQueryKey,
     getListBlogPostsQueryKey, getListReviewsQueryKey, getListFaqsQueryKey,
     getGetSettingsQueryKey, getGetAdminStatsQueryKey, getListAdminUsersQueryKey,
     getListGroupProgramsQueryKey, getListHotelsQueryKey, getListSpecialSeasonsQueryKey,
+    getListB2bQuotesQueryKey,
   } from "@workspace/api-client-react";
   import { useQueryClient } from "@tanstack/react-query";
   import { Button } from "@/components/ui/button";
@@ -38,7 +42,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
     CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
-    Sparkles, Search, KeyRound, ShieldCheck,
+    Sparkles, Search, KeyRound, ShieldCheck, Building2, SlidersHorizontal,
+    ChevronDown, TrendingUp, Award, Mail, Phone,
   } from "lucide-react";
   import { Calendar } from "@/components/ui/calendar";
   import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
@@ -1053,6 +1058,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
         case "editor":        return <><PageHeader title="Page Editor" description="Live preview and edit any page on the site." /><PageEditorTab /></>;
         case "blog-monetization": return <><PageHeader title="Blog Monetization" description="Manage conversion sections and affiliate links shown on all blog and travel guide pages." /><BlogMonetizationTab /></>;
         case "users":         return <><PageHeader title="Admin Users" description="Manage admin accounts and change passwords." /><UsersTab /></>;
+        case "b2b-quotes":    return <><PageHeader title="B2B Quotes" description="Manage group travel quote requests from travel agents and operators." /><B2bQuotesTab /></>;
+        case "b2b-pricing":   return <><PageHeader title="B2B Pricing & Tiers" description="Configure base pricing settings and group discount tiers for the estimate engine." /><B2bPricingTab /></>;
         default:              return null;
       }
     };
@@ -3661,3 +3668,426 @@ import { useState, useRef, useCallback, useEffect } from "react";
       </div>
     );
   }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// B2B QUOTES TAB
+// ─────────────────────────────────────────────────────────────────────────────
+const B2B_STATUSES = ["New Lead", "In Review", "Proposal Sent", "Negotiating", "Confirmed", "Lost", "Archived"];
+
+const STATUS_COLORS: Record<string, string> = {
+  "New Lead": "bg-blue-100 text-blue-800",
+  "In Review": "bg-yellow-100 text-yellow-800",
+  "Proposal Sent": "bg-purple-100 text-purple-800",
+  "Negotiating": "bg-orange-100 text-orange-800",
+  "Confirmed": "bg-green-100 text-green-800",
+  "Lost": "bg-red-100 text-red-800",
+  "Archived": "bg-gray-100 text-gray-600",
+};
+
+function B2bQuotesTab() {
+  const qc = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<number | null>(null);
+  const [editStatus, setEditStatus] = useState("");
+  const [editNotes, setEditNotes] = useState("");
+  const [editAssigned, setEditAssigned] = useState("");
+
+  type B2bQuoteRow = { id: number; contactName: string; email: string; company?: string; country?: string; quoteRef: string; status: string; estimateLow?: string | number; estimateHigh?: string | number; createdAt: string; internalNotes?: string; assignedTo?: string; groupData?: Record<string, unknown>; estimateBreakdown?: Record<string, unknown>; phone?: string; language?: string; preferredContact?: string };
+
+  const { data: rawQuotes = [], isLoading } = useListB2bQuotes({ status: statusFilter || undefined });
+  const quotes = rawQuotes as B2bQuoteRow[];
+  const updateQuote = useUpdateB2bQuote();
+
+  const filtered = quotes.filter(q =>
+    !search || q.contactName?.toLowerCase().includes(search.toLowerCase()) || q.email?.toLowerCase().includes(search.toLowerCase()) || q.quoteRef?.toLowerCase().includes(search.toLowerCase()) || q.company?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const selectedQuote = selected !== null ? filtered.find(q => q.id === selected) ?? quotes.find(q => q.id === selected) : null;
+
+  useEffect(() => {
+    if (selectedQuote) {
+      setEditStatus(selectedQuote.status ?? "");
+      setEditNotes(selectedQuote.internalNotes ?? "");
+      setEditAssigned(selectedQuote.assignedTo ?? "");
+    }
+  }, [selected]);
+
+  async function saveQuote() {
+    if (!selected) return;
+    await updateQuote.mutateAsync({ id: selected, data: { status: editStatus, internalNotes: editNotes, assignedTo: editAssigned } });
+    qc.invalidateQueries({ queryKey: getListB2bQuotesQueryKey() });
+  }
+
+  function fmt(n: number | string | undefined) {
+    const num = Number(n);
+    if (!num) return "—";
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(num);
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 items-center">
+        <div className="relative flex-1 min-w-48">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input placeholder="Search by name, email, ref…" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <select
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+        >
+          <option value="">All Statuses</option>
+          {B2B_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <div className="text-sm text-gray-500 whitespace-nowrap">{filtered.length} quote{filtered.length !== 1 ? "s" : ""}</div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* List */}
+        <div className="lg:col-span-1 space-y-2">
+          {isLoading && <div className="text-center py-8 text-gray-400"><RefreshCw className="w-5 h-5 animate-spin mx-auto" /></div>}
+          {!isLoading && filtered.length === 0 && (
+            <div className="text-center py-12 text-gray-400">
+              <Building2 className="w-8 h-8 mx-auto mb-2 opacity-40" />
+              <p className="text-sm">No quotes yet</p>
+            </div>
+          )}
+          {filtered.map(q => (
+            <button
+              key={q.id}
+              type="button"
+              onClick={() => setSelected(q.id)}
+              className={`w-full text-left rounded-xl border p-4 transition-all ${selected === q.id ? "border-[#FFB600] bg-[#FFB600]/5" : "border-gray-200 hover:border-gray-300 bg-white"}`}
+            >
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <span className="font-semibold text-sm text-gray-900 truncate">{q.contactName}</span>
+                <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${STATUS_COLORS[q.status] ?? "bg-gray-100 text-gray-600"}`}>{q.status}</span>
+              </div>
+              <div className="text-xs text-gray-500 truncate">{q.company || q.email}</div>
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs font-mono text-gray-400">{q.quoteRef}</span>
+                <span className="text-xs text-[#FFB600] font-semibold">{fmt(q.estimateLow)}–{fmt(q.estimateHigh)} <span className="text-gray-400 font-normal">pp</span></span>
+              </div>
+              <div className="text-xs text-gray-400 mt-1">{new Date(q.createdAt).toLocaleDateString()}</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Detail pane */}
+        <div className="lg:col-span-2">
+          {!selectedQuote ? (
+            <div className="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl">
+              <Building2 className="w-8 h-8 mb-2 opacity-40" />
+              <p className="text-sm">Select a quote to review</p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              {/* Header */}
+              <div className="bg-black text-white px-6 py-4 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-lg">{selectedQuote.contactName}</div>
+                  <div className="text-xs text-gray-300 font-mono">{selectedQuote.quoteRef}</div>
+                </div>
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${STATUS_COLORS[selectedQuote.status] ?? "bg-gray-700 text-gray-200"}`}>{selectedQuote.status}</span>
+              </div>
+
+              <div className="p-6 space-y-5">
+                {/* Contact info */}
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  {[
+                    { icon: Mail, label: "Email", value: selectedQuote.email },
+                    { icon: Phone, label: "Phone", value: selectedQuote.phone || "—" },
+                    { icon: Building2, label: "Company", value: selectedQuote.company || "—" },
+                    { icon: Globe, label: "Country", value: selectedQuote.country || "—" },
+                    { icon: TrendingUp, label: "Low Estimate", value: fmt(selectedQuote.estimateLow) + " pp" },
+                    { icon: TrendingUp, label: "High Estimate", value: fmt(selectedQuote.estimateHigh) + " pp" },
+                  ].map(({ icon: Icon, label, value }) => (
+                    <div key={label} className="flex items-start gap-2">
+                      <Icon className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div className="text-xs text-gray-400">{label}</div>
+                        <div className="font-medium text-gray-800 break-all">{value}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Group data */}
+                {selectedQuote.groupData && Object.keys(selectedQuote.groupData).length > 0 && (
+                  <div>
+                    <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Group Details</div>
+                    <div className="bg-gray-50 rounded-lg p-3 grid grid-cols-2 gap-2">
+                      {Object.entries(selectedQuote.groupData).filter(([, v]) => v !== undefined && v !== "" && v !== false).map(([k, v]) => (
+                        <div key={k} className="text-xs">
+                          <span className="text-gray-400">{k.replace(/([A-Z])/g, " $1").toLowerCase()}: </span>
+                          <span className="font-medium text-gray-800">{String(v)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Status management */}
+                <div className="border-t border-gray-100 pt-4 space-y-3">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Manage Quote</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Status</Label>
+                      <select
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
+                        value={editStatus}
+                        onChange={e => setEditStatus(e.target.value)}
+                      >
+                        {B2B_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Assigned To</Label>
+                      <Input value={editAssigned} onChange={e => setEditAssigned(e.target.value)} placeholder="Team member name" className="text-sm" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Internal Notes</Label>
+                    <Textarea value={editNotes} onChange={e => setEditNotes(e.target.value)} rows={3} placeholder="Internal notes (not visible to client)…" />
+                  </div>
+                  <div className="flex justify-end">
+                    <Button onClick={saveQuote} disabled={updateQuote.isPending} className="bg-[#FFB600] hover:bg-[#e6a400] text-black gap-1.5 text-sm">
+                      {updateQuote.isPending ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// B2B PRICING TAB
+// ─────────────────────────────────────────────────────────────────────────────
+const PRICING_GROUP_LABELS: Record<string, string> = {
+  accommodation: "Accommodation",
+  transport: "Transportation",
+  experience: "Experiences",
+  meal: "Meals",
+  service: "Guide & Services",
+  markup: "Markup & Range",
+  peak: "Peak Season",
+};
+
+function B2bPricingTab() {
+  const qc = useQueryClient();
+  const [activeSubTab, setActiveSubTab] = useState<"pricing" | "tiers">("pricing");
+
+  // ── Pricing settings ──
+  const { data: pricingData = [], isLoading: pricingLoading } = useListB2bPricing();
+  const updatePricing = useUpdateB2bPricing();
+  const [pricingEdits, setPricingEdits] = useState<Record<string, string>>({});
+  const [pricingSaved, setPricingSaved] = useState(false);
+
+  useEffect(() => {
+    const init: Record<string, string> = {};
+    (pricingData as Array<{ settingKey: string; settingValue: string; settingGroup: string; settingLabel: string }>).forEach(s => { init[s.settingKey] = s.settingValue; });
+    setPricingEdits(init);
+  }, [pricingData]);
+
+  async function savePricing() {
+    const updates = Object.entries(pricingEdits).map(([settingKey, settingValue]) => ({ settingKey, settingValue: Number(settingValue) }));
+    await updatePricing.mutateAsync({ data: updates });
+    setPricingSaved(true);
+    setTimeout(() => setPricingSaved(false), 2000);
+  }
+
+  // ── Group tiers ──
+  const { data: tiersData = [], isLoading: tiersLoading } = useListB2bTiers();
+  const updateTiers = useUpdateB2bTiers();
+  const [tierEdits, setTierEdits] = useState<Array<{ id: number; discountPct: string; markupPct: string; complimentaryPolicy: string }>>([]);
+  const [tiersSaved, setTiersSaved] = useState(false);
+
+  useEffect(() => {
+    setTierEdits((tiersData as Array<{ id: number; discountPct: string; markupPct: string; complimentaryPolicy: string }>).map(t => ({
+      id: t.id,
+      discountPct: t.discountPct,
+      markupPct: t.markupPct,
+      complimentaryPolicy: t.complimentaryPolicy ?? "",
+    })));
+  }, [tiersData]);
+
+  function updateTierEdit(id: number, field: "discountPct" | "markupPct" | "complimentaryPolicy", val: string) {
+    setTierEdits(prev => prev.map(t => t.id === id ? { ...t, [field]: val } : t));
+  }
+
+  async function saveTiers() {
+    const updates = tierEdits.map(t => ({ id: t.id, discountPct: Number(t.discountPct), markupPct: Number(t.markupPct), complimentaryPolicy: t.complimentaryPolicy }));
+    await updateTiers.mutateAsync({ data: updates });
+    setTiersSaved(true);
+    setTimeout(() => setTiersSaved(false), 2000);
+  }
+
+  // Group pricing by settingGroup
+  type PricingRow = { settingKey: string; settingValue: string; settingGroup: string; settingLabel: string };
+  const pricingGroups = (pricingData as PricingRow[]).reduce((acc, s) => {
+    const g = s.settingGroup ?? "other";
+    if (!acc[g]) acc[g] = [];
+    acc[g].push(s);
+    return acc;
+  }, {} as Record<string, PricingRow[]>);
+
+  return (
+    <div className="space-y-6">
+      {/* Sub-tabs */}
+      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("pricing")}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeSubTab === "pricing" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"}`}
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" /> Pricing Settings
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveSubTab("tiers")}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeSubTab === "tiers" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"}`}
+        >
+          <Award className="w-3.5 h-3.5" /> Group Tiers
+        </button>
+      </div>
+
+      {/* ── Pricing settings ── */}
+      {activeSubTab === "pricing" && (
+        <div className="space-y-5">
+          {pricingLoading && <div className="text-center py-8 text-gray-400"><RefreshCw className="w-5 h-5 animate-spin mx-auto" /></div>}
+
+          {Object.entries(pricingGroups).map(([group, settings]) => (
+            <div key={group} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 px-5 py-3 flex items-center gap-2">
+                <SlidersHorizontal className="w-4 h-4 text-[#FFB600]" />
+                <span className="text-sm font-bold text-gray-700">{PRICING_GROUP_LABELS[group] ?? group}</span>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {settings.map(s => (
+                  <div key={s.settingKey} className="flex items-center gap-4 px-5 py-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-gray-900">{s.settingLabel}</div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Input
+                        type="number"
+                        step="0.0001"
+                        min="0"
+                        value={pricingEdits[s.settingKey] ?? s.settingValue}
+                        onChange={e => setPricingEdits(prev => ({ ...prev, [s.settingKey]: e.target.value }))}
+                        className="w-28 text-right text-sm"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {!pricingLoading && (
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-400">Changes apply immediately to new quote estimates.</p>
+              <Button onClick={savePricing} disabled={updatePricing.isPending} className={`gap-1.5 text-sm ${pricingSaved ? "bg-[#009743] text-white" : "bg-[#FFB600] hover:bg-[#e6a400] text-black"}`}>
+                {updatePricing.isPending ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : pricingSaved ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" />}
+                {pricingSaved ? "Saved!" : "Save Pricing"}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Group tiers ── */}
+      {activeSubTab === "tiers" && (
+        <div className="space-y-4">
+          {tiersLoading && <div className="text-center py-8 text-gray-400"><RefreshCw className="w-5 h-5 animate-spin mx-auto" /></div>}
+
+          <p className="text-sm text-gray-500">Configure discount and markup percentages for each group size tier. Tiers are applied automatically based on passenger count.</p>
+
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-widest">Tier</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-widest">Pax Range</th>
+                  <th className="text-center px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-widest">Discount %</th>
+                  <th className="text-center px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-widest">Markup %</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-widest">Complimentary Policy</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {(tiersData as Array<{ id: number; tierName: string; minPax: number; maxPax: number | null; discountPct: string; markupPct: string; complimentaryPolicy: string }>).map((tier) => {
+                  const edit = tierEdits.find(t => t.id === tier.id);
+                  if (!edit) return null;
+                  return (
+                    <tr key={tier.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3">
+                        <div className="font-semibold text-gray-900">{tier.tierName}</div>
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">
+                        {tier.minPax}–{tier.maxPax ?? "∞"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1 justify-center">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            max="50"
+                            value={edit.discountPct}
+                            onChange={e => updateTierEdit(tier.id, "discountPct", e.target.value)}
+                            className="w-20 text-center text-sm"
+                          />
+                          <span className="text-gray-400 text-xs">%</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1 justify-center">
+                          <Input
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            max="50"
+                            value={edit.markupPct}
+                            onChange={e => updateTierEdit(tier.id, "markupPct", e.target.value)}
+                            className="w-20 text-center text-sm"
+                          />
+                          <span className="text-gray-400 text-xs">%</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Input
+                          value={edit.complimentaryPolicy}
+                          onChange={e => updateTierEdit(tier.id, "complimentaryPolicy", e.target.value)}
+                          placeholder="e.g. 1 FOC per 15 pax"
+                          className="text-sm"
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {!tiersLoading && (
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-400">FOC = Free of Charge (complimentary room/seat)</p>
+              <Button onClick={saveTiers} disabled={updateTiers.isPending} className={`gap-1.5 text-sm ${tiersSaved ? "bg-[#009743] text-white" : "bg-[#FFB600] hover:bg-[#e6a400] text-black"}`}>
+                {updateTiers.isPending ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : tiersSaved ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" />}
+                {tiersSaved ? "Saved!" : "Save Tiers"}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

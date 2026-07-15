@@ -1,0 +1,406 @@
+Create a B2B Group Travel Quote Builder for Janeiro Tour & Travel.
+
+Do not redesign the website.
+Do not change the current structure, branding, colors or existing pages.
+Add this feature inside the existing "Group Travel Programs" section.
+
+SECTION TITLE
+
+B2B Group Travel Programs
+
+SUBTITLE
+
+Curated multi-day programs for incentive groups, corporate travel, affinity travel and cultural tours. Fully customizable for groups of 10–200+ travelers.
+
+PRIMARY CTA
+
+Request a Custom Proposal
+
+MAIN GOAL
+
+Create an interactive form that allows international travel advisors, tour operators, group leaders and corporate planners to receive an automatic preliminary estimate for a group travel program in Brazil.
+
+The estimate must be clearly labeled as:
+
+"Preliminary Estimate — Subject to Availability and Final Confirmation"
+
+Do not treat the automatic estimate as a confirmed booking or final contract.
+
+FORM STRUCTURE
+
+Step 1: Contact Information
+
+* Full name
+* Company / Agency name
+* Business email
+* Phone / WhatsApp
+* Country
+* Website
+* IATA / agency registration, optional
+* Preferred contact method
+
+Step 2: Group Information
+
+* Estimated number of travelers
+* Minimum group size: 10
+* Maximum group size: 200+
+* Number of group leaders
+* Number of complimentary travelers requested
+* Adult travelers
+* Children, if applicable
+* Group type
+
+Group Type options:
+
+* Travel Advisor Group
+* Affinity Group
+* Women's Group
+* Cultural Heritage Group
+* Corporate Group
+* Incentive Group
+* Educational Group
+* Faith-Based Group
+* Luxury Group
+* Other
+
+Step 3: Travel Dates
+
+* Arrival date
+* Departure date
+* Number of nights
+* Dates confirmed or flexible
+* Alternative travel dates
+* Special season alert
+
+Special seasons:
+
+* Carnival
+* New Year's Eve
+* National holidays
+* Major events
+* Custom blackout dates
+
+If dates fall within a special season, display:
+
+"Special-season pricing applies. Final hotel and service rates require confirmation."
+
+Step 4: Destinations
+
+Allow multiple selections:
+
+* Rio de Janeiro
+* São Paulo
+* Bahia
+* Foz do Iguaçu
+* Recife
+* Amazon Rainforest
+
+Step 5: Program Style
+
+* Cultural Immersion
+* Black Heritage
+* Iconic Highlights
+* Luxury Travel
+* Adventure
+* Food & Gastronomy
+* Wellness
+* Corporate / Incentive
+* Educational
+* Custom
+
+Step 6: Accommodation
+
+Options:
+
+* Land Only — No accommodation
+* 3-star hotel
+* 4-star hotel
+* 5-star hotel
+* Luxury hotel
+* Hotel to be confirmed
+
+Rooming options:
+
+* Single rooms
+* Double / twin rooms
+* Triple rooms
+* Mixed rooming
+
+Allow selection of preferred hotels from the global hotel catalog.
+
+Include the current hotel options already configured in the website.
+
+Step 7: Transportation
+
+Options:
+
+* Airport arrival transfer
+* Airport departure transfer
+* Private coach during program
+* Minivan service
+* Executive vehicle
+* Daily transportation
+* No transportation
+
+Step 8: Experiences
+
+Allow customers to select:
+
+* Christ the Redeemer
+* Sugarloaf Mountain
+* Selarón Steps
+* Little Africa
+* Favela Cultural Tour
+* Carnival Experience
+* Samba Experience
+* Afro-Brazilian Gastronomy
+* Welcome Dinner
+* Farewell Dinner
+* Professional Photographer
+* Capoeira Workshop
+* Cooking Class
+* Yacht Experience
+* Helicopter Experience
+* Custom Experience
+
+Step 9: Meals
+
+* Breakfast only
+* Half board
+* Full board
+* Welcome dinner
+* Farewell dinner
+* Group lunch
+* Special dietary requirements
+
+Step 10: Guide and Support
+
+* English-speaking guide
+* Spanish-speaking guide
+* Portuguese-speaking guide
+* French-speaking guide
+* Tour escort throughout the program
+* Airport assistance
+* 24/7 local support
+* On-site coordinator
+
+Step 11: Budget
+
+Budget type:
+
+* Total group budget
+* Per-person budget
+* Not defined yet
+
+Currency:
+
+* USD
+* EUR
+* GBP
+* BRL
+
+Budget ranges:
+
+* Under USD 1,000 per person
+* USD 1,000–1,500 per person
+* USD 1,500–2,500 per person
+* USD 2,500–4,000 per person
+* USD 4,000+ per person
+
+Step 12: Additional Information
+
+* Special interests
+* Accessibility needs
+* Dietary restrictions
+* Celebration or special occasion
+* Additional notes
+* Upload itinerary or request document
+* Upload rooming list, optional
+
+AUTOMATIC ESTIMATE ENGINE
+
+Create a configurable estimate engine.
+
+The system should calculate a preliminary estimate using:
+
+* Number of travelers
+* Number of nights
+* Accommodation category
+* Number and type of rooms
+* Transportation
+* Number of selected experiences
+* Meals
+* Guide services
+* Group coordinator
+* Special-season surcharge
+* Optional services
+* Configurable agency markup
+
+The calculation must not be hardcoded.
+
+All rates must be editable from the admin dashboard.
+
+ESTIMATE DISPLAY
+
+Show:
+
+* Estimated program price per person
+* Estimated total group price
+* Accommodation estimate
+* Transportation estimate
+* Experiences estimate
+* Meals estimate
+* Guide and support estimate
+* Optional services estimate
+* Agency markup
+* Taxes or fees when applicable
+* Estimated price range
+
+Example:
+
+Estimated Land-Only Program:
+USD 1,150–1,350 per person
+
+Estimated Complete Package with 4-Star Hotel:
+USD 1,750–2,050 per person
+
+Display:
+
+"This is a preliminary estimate based on the information provided. Hotel availability, supplier rates, special-event dates and final group size may affect the final proposal."
+
+PRICING BY GROUP SIZE
+
+Create editable group pricing tiers:
+
+* 10–14 travelers
+* 15–19 travelers
+* 20–29 travelers
+* 30–39 travelers
+* 40–59 travelers
+* 60–99 travelers
+* 100–149 travelers
+* 150–200+ travelers
+
+Allow different:
+
+* Per-person rates
+* Transportation costs
+* Guide costs
+* Complimentary traveler policies
+* Markup percentages
+* Discounts by group size
+
+PROPOSAL SUBMISSION
+
+After showing the preliminary estimate, allow the customer to click:
+
+Request My Custom Proposal
+
+The form should:
+
+* Save the lead in the admin dashboard
+* Generate a unique proposal request ID
+* Send an email to Janeiro Tour & Travel
+* Send a confirmation email to the customer
+* Store the full form submission
+* Store the estimate calculation
+* Allow the admin to convert the request into a formal proposal
+
+ADMIN DASHBOARD
+
+Create a B2B Group Quotes section.
+
+Allow the admin to:
+
+* View quote requests
+* Filter by country, dates, group size and status
+* Edit rates
+* Edit group pricing tiers
+* Edit hotel rates
+* Edit transportation rates
+* Edit experience rates
+* Edit meal rates
+* Edit guide rates
+* Edit agency markup
+* Apply discounts
+* Add custom charges
+* Change quote status
+* Add internal notes
+* Assign a team member
+* Duplicate a quote
+* Generate a formal proposal
+* Export proposal as PDF
+* Send proposal by email
+* Convert approved proposal into a booking or service order
+
+Quote status options:
+
+* New Lead
+* Under Review
+* Estimate Sent
+* Proposal Sent
+* Follow-Up Required
+* Approved
+* Deposit Pending
+* Confirmed
+* Declined
+* Cancelled
+
+B2B PRICING SETTINGS
+
+Create a centralized pricing area where the admin can configure:
+
+* Net supplier cost
+* B2B selling price
+* Markup percentage
+* Commission percentage
+* Group discount
+* Travel advisor commission
+* Complimentary traveler policy
+* Special-season surcharge
+* Currency conversion rate
+* Minimum profit margin
+
+TRAVEL ADVISOR COMMISSION
+
+Allow the admin to configure:
+
+* Net rate
+* Gross rate
+* Advisor commission
+* Commission percentage
+* Commission amount
+* Non-commissionable fees
+
+Do not display confidential net costs to the customer.
+
+MULTILINGUAL REQUIREMENTS
+
+Make the entire form and estimate available in:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+The customer must receive the estimate and email in the selected language.
+
+DESIGN
+
+* Premium B2B travel design
+* Clear multi-step form
+* Progress indicator
+* Mobile responsive
+* Save and continue later
+* Professional summary page
+* Strong trust indicators
+* Janeiro Tour & Travel branding
+* No generic form appearance
+
+IMPORTANT
+
+Do not redesign the website.
+Do not change existing pages or functionality.
+Do not replace the current booking system.
+Add this as a separate B2B group quote and proposal system.
+
+The automatic estimate is informational only and must always require final manual approval by Janeiro Tour & Travel before confirmation.

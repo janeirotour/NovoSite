@@ -1249,6 +1249,168 @@ paths:
               schema:
                 $ref: "#/components/schemas/Reservation"
 
+
+  /b2b/quotes:
+    get:
+      summary: List B2B quote requests (admin)
+      operationId: listB2bQuotes
+      tags: [b2b]
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: country
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: List of B2B quote requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/B2bQuote"
+    post:
+      summary: Submit a B2B group travel quote request
+      operationId: createB2bQuote
+      tags: [b2b]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/B2bQuoteInput"
+      responses:
+        "201":
+          description: Quote request submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/B2bQuote"
+
+  /b2b/quotes/{id}:
+    get:
+      summary: Get a single B2B quote
+      operationId: getB2bQuote
+      tags: [b2b]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: B2B quote details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/B2bQuote"
+    patch:
+      summary: Update a B2B quote (admin)
+      operationId: updateB2bQuote
+      tags: [b2b]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/B2bQuoteUpdate"
+      responses:
+        "200":
+          description: Updated quote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/B2bQuote"
+
+  /b2b/pricing:
+    get:
+      summary: Get B2B pricing settings
+      operationId: listB2bPricing
+      tags: [b2b]
+      responses:
+        "200":
+          description: Pricing settings list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/B2bPricingSetting"
+    put:
+      summary: Bulk-update B2B pricing settings (admin)
+      operationId: updateB2bPricing
+      tags: [b2b]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required: [settingKey, settingValue]
+                properties:
+                  settingKey: { type: string }
+                  settingValue: { type: number }
+      responses:
+        "200":
+          description: Updated pricing settings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/B2bPricingSetting"
+
+  /b2b/tiers:
+    get:
+      summary: Get B2B group size pricing tiers
+      operationId: listB2bTiers
+      tags: [b2b]
+      responses:
+        "200":
+          description: Group pricing tiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/B2bGroupTier"
+    put:
+      summary: Bulk-update B2B group tiers (admin)
+      operationId: updateB2bTiers
+      tags: [b2b]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/B2bGroupTierInput"
+      responses:
+        "200":
+          description: Updated tiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/B2bGroupTier"
+
 components:
   schemas:
     Package:
@@ -2780,3 +2942,145 @@ components:
           type: string
         isActive:
           type: boolean
+
+    B2bQuote:
+      type: object
+      properties:
+        id:
+          type: integer
+        quoteRef:
+          type: string
+        status:
+          type: string
+        language:
+          type: string
+        contactName:
+          type: string
+        company:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        country:
+          type: string
+        website:
+          type: string
+        iata:
+          type: string
+        preferredContact:
+          type: string
+        groupData:
+          type: object
+        estimateLow:
+          type: string
+        estimateHigh:
+          type: string
+        estimateCurrency:
+          type: string
+        estimateBreakdown:
+          type: object
+        internalNotes:
+          type: string
+        assignedTo:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    B2bQuoteInput:
+      type: object
+      required: [contactName, email]
+      properties:
+        language:
+          type: string
+        contactName:
+          type: string
+        company:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        country:
+          type: string
+        website:
+          type: string
+        iata:
+          type: string
+        preferredContact:
+          type: string
+        groupData:
+          type: object
+        estimateLow:
+          type: number
+        estimateHigh:
+          type: number
+        estimateCurrency:
+          type: string
+        estimateBreakdown:
+          type: object
+
+    B2bQuoteUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        internalNotes:
+          type: string
+        assignedTo:
+          type: string
+        estimateLow:
+          type: number
+        estimateHigh:
+          type: number
+
+    B2bPricingSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+        settingKey:
+          type: string
+        settingValue:
+          type: string
+        settingLabel:
+          type: string
+        settingGroup:
+          type: string
+        updatedAt:
+          type: string
+
+    B2bGroupTier:
+      type: object
+      properties:
+        id:
+          type: integer
+        minPax:
+          type: integer
+        maxPax:
+          type: integer
+        label:
+          type: string
+        discountPct:
+          type: string
+        markupPct:
+          type: string
+        complimentaryPolicy:
+          type: string
+        updatedAt:
+          type: string
+
+    B2bGroupTierInput:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+        discountPct:
+          type: number
+        markupPct:
+          type: number
+        complimentaryPolicy:
+          type: string

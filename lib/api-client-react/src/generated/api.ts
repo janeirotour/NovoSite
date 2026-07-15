@@ -25,6 +25,12 @@ import type {
   AdminMe,
   AdminStats,
   AdminUser,
+  B2bGroupTier,
+  B2bGroupTierInput,
+  B2bPricingSetting,
+  B2bQuote,
+  B2bQuoteInput,
+  B2bQuoteUpdate,
   BlogPost,
   BlogPostInput,
   BlogPostUpdate,
@@ -42,6 +48,7 @@ import type {
   HotelInput,
   ListAdminTourAvailabilityParams,
   ListAllExtrasParams,
+  ListB2bQuotesParams,
   ListBlogPostsParams,
   ListDestinationsParams,
   ListFaqsParams,
@@ -69,7 +76,8 @@ import type {
   TourExtraInput,
   TourExtraUpdate,
   TourInput,
-  TourUpdate
+  TourUpdate,
+  UpdateB2bPricingBodyItem
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -4737,5 +4745,605 @@ export const useUpdateReservationStatus = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getUpdateReservationStatusMutationOptions(options));
+    }
+
+export const getListB2bQuotesUrl = (params?: ListB2bQuotesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/b2b/quotes?${stringifiedParams}` : `/api/b2b/quotes`
+}
+
+/**
+ * @summary List B2B quote requests (admin)
+ */
+export const listB2bQuotes = async (params?: ListB2bQuotesParams, options?: RequestInit): Promise<B2bQuote[]> => {
+
+  return customFetch<B2bQuote[]>(getListB2bQuotesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListB2bQuotesQueryKey = (params?: ListB2bQuotesParams,) => {
+    return [
+    `/api/b2b/quotes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListB2bQuotesQueryOptions = <TData = Awaited<ReturnType<typeof listB2bQuotes>>, TError = ErrorType<unknown>>(params?: ListB2bQuotesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bQuotes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListB2bQuotesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listB2bQuotes>>> = ({ signal }) => listB2bQuotes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listB2bQuotes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListB2bQuotesQueryResult = NonNullable<Awaited<ReturnType<typeof listB2bQuotes>>>
+export type ListB2bQuotesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List B2B quote requests (admin)
+ */
+
+export function useListB2bQuotes<TData = Awaited<ReturnType<typeof listB2bQuotes>>, TError = ErrorType<unknown>>(
+ params?: ListB2bQuotesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bQuotes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListB2bQuotesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateB2bQuoteUrl = () => {
+
+
+
+
+  return `/api/b2b/quotes`
+}
+
+/**
+ * @summary Submit a B2B group travel quote request
+ */
+export const createB2bQuote = async (b2bQuoteInput: B2bQuoteInput, options?: RequestInit): Promise<B2bQuote> => {
+
+  return customFetch<B2bQuote>(getCreateB2bQuoteUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      b2bQuoteInput,)
+  }
+);}
+
+
+
+
+export const getCreateB2bQuoteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createB2bQuote>>, TError,{data: BodyType<B2bQuoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createB2bQuote>>, TError,{data: BodyType<B2bQuoteInput>}, TContext> => {
+
+const mutationKey = ['createB2bQuote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createB2bQuote>>, {data: BodyType<B2bQuoteInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createB2bQuote(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateB2bQuoteMutationResult = NonNullable<Awaited<ReturnType<typeof createB2bQuote>>>
+    export type CreateB2bQuoteMutationBody = BodyType<B2bQuoteInput>
+    export type CreateB2bQuoteMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Submit a B2B group travel quote request
+ */
+export const useCreateB2bQuote = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createB2bQuote>>, TError,{data: BodyType<B2bQuoteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createB2bQuote>>,
+        TError,
+        {data: BodyType<B2bQuoteInput>},
+        TContext
+      > => {
+      return useMutation(getCreateB2bQuoteMutationOptions(options));
+    }
+
+export const getGetB2bQuoteUrl = (id: number,) => {
+
+
+
+
+  return `/api/b2b/quotes/${id}`
+}
+
+/**
+ * @summary Get a single B2B quote
+ */
+export const getB2bQuote = async (id: number, options?: RequestInit): Promise<B2bQuote> => {
+
+  return customFetch<B2bQuote>(getGetB2bQuoteUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetB2bQuoteQueryKey = (id: number,) => {
+    return [
+    `/api/b2b/quotes/${id}`
+    ] as const;
+    }
+
+
+export const getGetB2bQuoteQueryOptions = <TData = Awaited<ReturnType<typeof getB2bQuote>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getB2bQuote>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetB2bQuoteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getB2bQuote>>> = ({ signal }) => getB2bQuote(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getB2bQuote>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetB2bQuoteQueryResult = NonNullable<Awaited<ReturnType<typeof getB2bQuote>>>
+export type GetB2bQuoteQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get a single B2B quote
+ */
+
+export function useGetB2bQuote<TData = Awaited<ReturnType<typeof getB2bQuote>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getB2bQuote>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetB2bQuoteQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateB2bQuoteUrl = (id: number,) => {
+
+
+
+
+  return `/api/b2b/quotes/${id}`
+}
+
+/**
+ * @summary Update a B2B quote (admin)
+ */
+export const updateB2bQuote = async (id: number,
+    b2bQuoteUpdate: B2bQuoteUpdate, options?: RequestInit): Promise<B2bQuote> => {
+
+  return customFetch<B2bQuote>(getUpdateB2bQuoteUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      b2bQuoteUpdate,)
+  }
+);}
+
+
+
+
+export const getUpdateB2bQuoteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bQuote>>, TError,{id: number;data: BodyType<B2bQuoteUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateB2bQuote>>, TError,{id: number;data: BodyType<B2bQuoteUpdate>}, TContext> => {
+
+const mutationKey = ['updateB2bQuote'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateB2bQuote>>, {id: number;data: BodyType<B2bQuoteUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateB2bQuote(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateB2bQuoteMutationResult = NonNullable<Awaited<ReturnType<typeof updateB2bQuote>>>
+    export type UpdateB2bQuoteMutationBody = BodyType<B2bQuoteUpdate>
+    export type UpdateB2bQuoteMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a B2B quote (admin)
+ */
+export const useUpdateB2bQuote = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bQuote>>, TError,{id: number;data: BodyType<B2bQuoteUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateB2bQuote>>,
+        TError,
+        {id: number;data: BodyType<B2bQuoteUpdate>},
+        TContext
+      > => {
+      return useMutation(getUpdateB2bQuoteMutationOptions(options));
+    }
+
+export const getListB2bPricingUrl = () => {
+
+
+
+
+  return `/api/b2b/pricing`
+}
+
+/**
+ * @summary Get B2B pricing settings
+ */
+export const listB2bPricing = async ( options?: RequestInit): Promise<B2bPricingSetting[]> => {
+
+  return customFetch<B2bPricingSetting[]>(getListB2bPricingUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListB2bPricingQueryKey = () => {
+    return [
+    `/api/b2b/pricing`
+    ] as const;
+    }
+
+
+export const getListB2bPricingQueryOptions = <TData = Awaited<ReturnType<typeof listB2bPricing>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bPricing>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListB2bPricingQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listB2bPricing>>> = ({ signal }) => listB2bPricing({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listB2bPricing>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListB2bPricingQueryResult = NonNullable<Awaited<ReturnType<typeof listB2bPricing>>>
+export type ListB2bPricingQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get B2B pricing settings
+ */
+
+export function useListB2bPricing<TData = Awaited<ReturnType<typeof listB2bPricing>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bPricing>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListB2bPricingQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateB2bPricingUrl = () => {
+
+
+
+
+  return `/api/b2b/pricing`
+}
+
+/**
+ * @summary Bulk-update B2B pricing settings (admin)
+ */
+export const updateB2bPricing = async (updateB2bPricingBodyItem: UpdateB2bPricingBodyItem[], options?: RequestInit): Promise<B2bPricingSetting[]> => {
+
+  return customFetch<B2bPricingSetting[]>(getUpdateB2bPricingUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateB2bPricingBodyItem,)
+  }
+);}
+
+
+
+
+export const getUpdateB2bPricingMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bPricing>>, TError,{data: BodyType<UpdateB2bPricingBodyItem[]>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateB2bPricing>>, TError,{data: BodyType<UpdateB2bPricingBodyItem[]>}, TContext> => {
+
+const mutationKey = ['updateB2bPricing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateB2bPricing>>, {data: BodyType<UpdateB2bPricingBodyItem[]>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateB2bPricing(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateB2bPricingMutationResult = NonNullable<Awaited<ReturnType<typeof updateB2bPricing>>>
+    export type UpdateB2bPricingMutationBody = BodyType<UpdateB2bPricingBodyItem[]>
+    export type UpdateB2bPricingMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Bulk-update B2B pricing settings (admin)
+ */
+export const useUpdateB2bPricing = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bPricing>>, TError,{data: BodyType<UpdateB2bPricingBodyItem[]>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateB2bPricing>>,
+        TError,
+        {data: BodyType<UpdateB2bPricingBodyItem[]>},
+        TContext
+      > => {
+      return useMutation(getUpdateB2bPricingMutationOptions(options));
+    }
+
+export const getListB2bTiersUrl = () => {
+
+
+
+
+  return `/api/b2b/tiers`
+}
+
+/**
+ * @summary Get B2B group size pricing tiers
+ */
+export const listB2bTiers = async ( options?: RequestInit): Promise<B2bGroupTier[]> => {
+
+  return customFetch<B2bGroupTier[]>(getListB2bTiersUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListB2bTiersQueryKey = () => {
+    return [
+    `/api/b2b/tiers`
+    ] as const;
+    }
+
+
+export const getListB2bTiersQueryOptions = <TData = Awaited<ReturnType<typeof listB2bTiers>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bTiers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListB2bTiersQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listB2bTiers>>> = ({ signal }) => listB2bTiers({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listB2bTiers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListB2bTiersQueryResult = NonNullable<Awaited<ReturnType<typeof listB2bTiers>>>
+export type ListB2bTiersQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get B2B group size pricing tiers
+ */
+
+export function useListB2bTiers<TData = Awaited<ReturnType<typeof listB2bTiers>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listB2bTiers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListB2bTiersQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUpdateB2bTiersUrl = () => {
+
+
+
+
+  return `/api/b2b/tiers`
+}
+
+/**
+ * @summary Bulk-update B2B group tiers (admin)
+ */
+export const updateB2bTiers = async (b2bGroupTierInput: B2bGroupTierInput[], options?: RequestInit): Promise<B2bGroupTier[]> => {
+
+  return customFetch<B2bGroupTier[]>(getUpdateB2bTiersUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      b2bGroupTierInput,)
+  }
+);}
+
+
+
+
+export const getUpdateB2bTiersMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bTiers>>, TError,{data: BodyType<B2bGroupTierInput[]>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateB2bTiers>>, TError,{data: BodyType<B2bGroupTierInput[]>}, TContext> => {
+
+const mutationKey = ['updateB2bTiers'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateB2bTiers>>, {data: BodyType<B2bGroupTierInput[]>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateB2bTiers(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateB2bTiersMutationResult = NonNullable<Awaited<ReturnType<typeof updateB2bTiers>>>
+    export type UpdateB2bTiersMutationBody = BodyType<B2bGroupTierInput[]>
+    export type UpdateB2bTiersMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Bulk-update B2B group tiers (admin)
+ */
+export const useUpdateB2bTiers = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateB2bTiers>>, TError,{data: BodyType<B2bGroupTierInput[]>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateB2bTiers>>,
+        TError,
+        {data: BodyType<B2bGroupTierInput[]>},
+        TContext
+      > => {
+      return useMutation(getUpdateB2bTiersMutationOptions(options));
     }
 

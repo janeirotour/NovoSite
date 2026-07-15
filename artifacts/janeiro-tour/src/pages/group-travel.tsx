@@ -218,16 +218,16 @@ export default function GroupTravelPage() {
           <h2 className="text-3xl lg:text-4xl font-black mb-4">{t("ctaTitle")}</h2>
           <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">{t("ctaSub")}</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/5521999999999" target="_blank" rel="noopener noreferrer">
+            <Link href="/group-travel/quote">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-black font-bold rounded-xl px-8">
+                <ArrowRight className="w-4 h-4 mr-2" /> {t("request")}
+              </Button>
+            </Link>
+            <a href="https://wa.me/5521999999999" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-xl px-8">
                 <MessageCircle className="w-4 h-4 mr-2" /> {t("whatsapp")}
               </Button>
             </a>
-            <Link href="/contact">
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 rounded-xl px-8">
-                {t("contactUs")}
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

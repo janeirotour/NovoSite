@@ -4,3 +4,4 @@
 - [Nav & Regiondo design](nav-regiondo.md) — premium dropdown nav with NavigationMenu (shadcn), logo at /janeiro-logo.png; Regiondo widget uses useEffect+useRef script injection on tour-detail.tsx
 - [Blog schema multilingual](blog-multilingual.md) — blog_posts table has excerptEs/Pt, contentEs/Pt, seoTitleEs/Pt, seoDescriptionEs/Pt, galleryImages (JSONB); settings has siteName, seoTitle, seoDescription, ogImageUrl, heroImageUrl; always run push+codegen after schema changes.
 - [Currency conversion](currency-conversion.md) — display-only conversion via CurrencyContext; backend GET /api/currency/rates fetches open.er-api.com with 1hr cache + static fallback; Stripe charges always USD.
+- [B2B pricing schema](b2b-pricing-schema.md) — settingLabel (not label), tier field is `label` (not tierName); pct values are decimals (0.15=15%), do NOT divide by 100 in estimate engine.

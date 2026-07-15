@@ -836,6 +836,90 @@ export interface SpecialSeasonInput {
   isActive?: boolean;
 }
 
+export type B2bQuoteGroupData = { [key: string]: unknown };
+
+export type B2bQuoteEstimateBreakdown = { [key: string]: unknown };
+
+export interface B2bQuote {
+  id?: number;
+  quoteRef?: string;
+  status?: string;
+  language?: string;
+  contactName?: string;
+  company?: string;
+  email?: string;
+  phone?: string;
+  country?: string;
+  website?: string;
+  iata?: string;
+  preferredContact?: string;
+  groupData?: B2bQuoteGroupData;
+  estimateLow?: string;
+  estimateHigh?: string;
+  estimateCurrency?: string;
+  estimateBreakdown?: B2bQuoteEstimateBreakdown;
+  internalNotes?: string;
+  assignedTo?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type B2bQuoteInputGroupData = { [key: string]: unknown };
+
+export type B2bQuoteInputEstimateBreakdown = { [key: string]: unknown };
+
+export interface B2bQuoteInput {
+  language?: string;
+  contactName: string;
+  company?: string;
+  email: string;
+  phone?: string;
+  country?: string;
+  website?: string;
+  iata?: string;
+  preferredContact?: string;
+  groupData?: B2bQuoteInputGroupData;
+  estimateLow?: number;
+  estimateHigh?: number;
+  estimateCurrency?: string;
+  estimateBreakdown?: B2bQuoteInputEstimateBreakdown;
+}
+
+export interface B2bQuoteUpdate {
+  status?: string;
+  internalNotes?: string;
+  assignedTo?: string;
+  estimateLow?: number;
+  estimateHigh?: number;
+}
+
+export interface B2bPricingSetting {
+  id?: number;
+  settingKey?: string;
+  settingValue?: string;
+  settingLabel?: string;
+  settingGroup?: string;
+  updatedAt?: string;
+}
+
+export interface B2bGroupTier {
+  id?: number;
+  minPax?: number;
+  maxPax?: number;
+  label?: string;
+  discountPct?: string;
+  markupPct?: string;
+  complimentaryPolicy?: string;
+  updatedAt?: string;
+}
+
+export interface B2bGroupTierInput {
+  id: number;
+  discountPct?: number;
+  markupPct?: number;
+  complimentaryPolicy?: string;
+}
+
 export type ListToursParams = {
 destination?: string;
 category?: string;
@@ -897,5 +981,17 @@ to?: string;
 export type ListReservationsParams = {
 bookingStatus?: string;
 paymentStatus?: string;
+};
+
+export type ListB2bQuotesParams = {
+status?: string;
+country?: string;
+limit?: number;
+offset?: number;
+};
+
+export type UpdateB2bPricingBodyItem = {
+  settingKey: string;
+  settingValue: number;
 };
 

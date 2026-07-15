@@ -37,6 +37,7 @@ import PackagesPage from "@/pages/packages";
 import PackageDetailPage from "@/pages/package-detail";
 import GroupTravelPage from "@/pages/group-travel";
 import GroupTravelDetailPage from "@/pages/group-travel-detail";
+import GroupTravelQuotePage from "@/pages/group-travel-quote";
 import AdminLoginPage from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -142,6 +143,9 @@ function Router() {
       <Route path="/packages/:slug" component={PackageDetailPage} />
       <Route path="/group-travel">
         <MainLayout><GroupTravelPage /></MainLayout>
+      </Route>
+      <Route path="/group-travel/quote">
+        <MainLayout><GroupTravelQuotePage /></MainLayout>
       </Route>
       <Route path="/group-travel/:slug">
         <MainLayout><GroupTravelDetailPage /></MainLayout>
