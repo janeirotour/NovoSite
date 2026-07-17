@@ -376,10 +376,10 @@ export default function RichTextEditor({ value, onChange, placeholder = "Start w
   };
 
   return (
-    <div className="border border-input rounded-xl overflow-hidden bg-background flex flex-col">
+    <div className="border border-input rounded-xl bg-background flex flex-col">
 
       {/* ── Toolbar ── */}
-      <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 bg-muted/30 border-b border-input">
+      <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 px-2 py-1.5 bg-card border-b border-input rounded-t-xl">
 
         {/* Block type */}
         <div className="relative">

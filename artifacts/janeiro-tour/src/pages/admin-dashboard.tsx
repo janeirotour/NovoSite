@@ -41,7 +41,7 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     Settings, LogOut, Plus, Pencil, Trash2, BarChart3, Globe, Image,
     ExternalLink, Code2, Monitor, Upload, Save, Eye, RefreshCw, ChevronRight,
     Bold, Italic, Link2, ImagePlus, ClipboardList, Tag, X as XIcon,
-    CheckCircle2, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
+    CheckCircle2, Check, Clock, AlertCircle, DollarSign, CalendarDays, Ban, Users, Boxes,
     Sparkles, Search, KeyRound, ShieldCheck, Building2, SlidersHorizontal,
     ChevronDown, TrendingUp, Award, Mail, Phone,
   } from "lucide-react";
@@ -1968,7 +1968,7 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     };
 
     return (
-      <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
+      <div className="space-y-4 px-6 py-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="space-y-1"><Label>Slug *</Label><Input value={str("slug")} onChange={e => onChange("slug", e.target.value)} placeholder="article-url-slug" /></div>
           <div className="space-y-1"><Label>Author</Label><Input value={str("author")} onChange={e => onChange("author", e.target.value)} /></div>
@@ -2095,6 +2095,35 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     const [editPost, setEditPost] = useState<Post | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [search, setSearch] = useState("");
+    const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+    const autoSaveRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastSavedSnapshotRef = useRef<string>("");
+
+    useEffect(() => {
+      if (!editPost) { lastSavedSnapshotRef.current = ""; setAutoSaveStatus("idle"); return; }
+      const snap = JSON.stringify(editPost);
+      if (snap === lastSavedSnapshotRef.current) return;
+      if (autoSaveRef.current) clearTimeout(autoSaveRef.current);
+      autoSaveRef.current = setTimeout(() => {
+        setAutoSaveStatus("saving");
+        const { id: _id, createdAt: _ca, ...rest } = editPost as Post & { id: number; createdAt: string };
+        const clean = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== null));
+        updatePost.mutate(
+          { id: editPost.id, data: clean as Parameters<typeof updatePost.mutate>[0]["data"] },
+          {
+            onSuccess: () => {
+              setAutoSaveStatus("saved");
+              lastSavedSnapshotRef.current = snap;
+              queryClient.invalidateQueries({ queryKey: getListBlogPostsQueryKey() });
+              setTimeout(() => setAutoSaveStatus(s => s === "saved" ? "idle" : s), 3000);
+            },
+            onError: () => setAutoSaveStatus("idle"),
+          }
+        );
+      }, 3000);
+      return () => { if (autoSaveRef.current) clearTimeout(autoSaveRef.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editPost]);
 
     const filteredPosts = (posts ?? []).filter(p => {
       if (!search.trim()) return true;
@@ -2142,10 +2171,14 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
           </div>
           <Dialog open={createOpen} onOpenChange={o => { setCreateOpen(o); if (!o) setForm(emptyForm); }}>
             <DialogTrigger asChild><Button className="gap-1"><Plus size={15} /> Add Post</Button></DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader><DialogTitle>Add Travel Guide Post</DialogTitle></DialogHeader>
-              <BlogForm values={form} onChange={onChange} />
-              <div className="flex gap-3 justify-end pt-3 border-t">
+            <DialogContent className="max-w-5xl p-0 gap-0 flex flex-col max-h-[92vh]">
+              <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 pr-14">
+                <DialogTitle>Add Travel Guide Post</DialogTitle>
+              </DialogHeader>
+              <div className="flex-1 overflow-y-auto min-h-0">
+                <BlogForm values={form} onChange={onChange} />
+              </div>
+              <div className="flex gap-3 justify-end px-6 py-4 border-t bg-background shrink-0">
                 <Button variant="outline" onClick={() => { setCreateOpen(false); setForm(emptyForm); }}>Cancel</Button>
                 <Button onClick={() => { createPost.mutate({ data: form as unknown as Parameters<typeof createPost.mutate>[0]["data"] }); setCreateOpen(false); setForm(emptyForm); }}>Save Post</Button>
               </div>
@@ -2236,20 +2269,39 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
           </Table>
         </div>
         {editPost && (
-          <Dialog open={!!editPost} onOpenChange={() => setEditPost(null)}>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader><DialogTitle>Edit: {editPost.title}</DialogTitle></DialogHeader>
-              <BlogForm
-                values={editPost as unknown as Record<string, unknown>}
-                onChange={(k, v) => setEditPost(p => p ? { ...p, [k]: v } as Post : null)}
-              />
-              <div className="flex gap-3 justify-end pt-3 border-t">
-                <Button variant="outline" onClick={() => setEditPost(null)}>Cancel</Button>
+          <Dialog open={!!editPost} onOpenChange={() => { if (autoSaveRef.current) clearTimeout(autoSaveRef.current); setEditPost(null); setAutoSaveStatus("idle"); }}>
+            <DialogContent className="max-w-5xl p-0 gap-0 flex flex-col max-h-[92vh]">
+              <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 pr-14">
+                <div className="flex items-center gap-3">
+                  <DialogTitle className="truncate max-w-[500px]">Edit: {editPost.title}</DialogTitle>
+                  {autoSaveStatus === "saving" && (
+                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground shrink-0">
+                      <RefreshCw size={10} className="animate-spin" /> Saving…
+                    </span>
+                  )}
+                  {autoSaveStatus === "saved" && (
+                    <span className="flex items-center gap-1.5 text-xs text-green-600 shrink-0">
+                      <Check size={10} /> Autosaved
+                    </span>
+                  )}
+                </div>
+              </DialogHeader>
+              <div className="flex-1 overflow-y-auto min-h-0">
+                <BlogForm
+                  values={editPost as unknown as Record<string, unknown>}
+                  onChange={(k, v) => setEditPost(p => p ? { ...p, [k]: v } as Post : null)}
+                />
+              </div>
+              <div className="flex gap-3 justify-end px-6 py-4 border-t bg-background shrink-0">
+                <Button variant="outline" onClick={() => { if (autoSaveRef.current) clearTimeout(autoSaveRef.current); setEditPost(null); setAutoSaveStatus("idle"); }}>Cancel</Button>
                 <Button onClick={() => {
+                  if (autoSaveRef.current) clearTimeout(autoSaveRef.current);
                   const { id: _id, createdAt: _ca, ...rest } = editPost as Post & { id: number; createdAt: string };
                   const clean = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== null));
                   updatePost.mutate({ id: editPost.id, data: clean as Parameters<typeof updatePost.mutate>[0]["data"] });
+                  lastSavedSnapshotRef.current = JSON.stringify(editPost);
                   setEditPost(null);
+                  setAutoSaveStatus("idle");
                 }}>Save</Button>
               </div>
             </DialogContent>

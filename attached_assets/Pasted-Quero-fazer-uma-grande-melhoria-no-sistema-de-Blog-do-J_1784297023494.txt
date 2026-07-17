@@ -1,0 +1,439 @@
+Quero fazer uma grande melhoria no sistema de Blog do Janeiro Tour. O objetivo é transformar o editor em um sistema profissional semelhante ao WordPress/Elementor, corrigindo todos os problemas atuais de edição, renderização e publicação.
+
+Nenhuma funcionalidade existente deve ser removida.
+
+1. Ordenação dos Posts
+
+Na página de gerenciamento dos artigos, sempre mostrar primeiro o artigo mais recentemente editado.
+
+Ordenação padrão:
+
+updated_at DESC
+
+Caso haja empate:
+
+created_at DESC
+
+Após salvar um artigo:
+
+atualizar automaticamente a lista;
+o artigo salvo deve subir imediatamente para o topo.
+2. Editor Profissional
+
+Substituir o editor atual por um editor WYSIWYG completo.
+
+Desejo recursos semelhantes ao:
+
+WordPress
+Elementor
+Notion
+Medium
+Google Docs
+
+O editor deve possuir:
+
+Bold
+Italic
+Underline
+Strike
+Headings H1-H6
+Paragraph
+Bullet List
+Numbered List
+Checklist
+Quote
+Table
+Divider
+Code Block
+Inline Code
+Links
+Images
+Video
+Callout
+Columns
+Undo
+Redo
+Clear Formatting
+Paste mantendo formatação
+3. Toolbar fixa
+
+Hoje, quando faço scroll, a barra desaparece.
+
+A toolbar deve permanecer fixa durante toda a edição.
+
+Exemplo:
+
+-----------------------------
+Toolbar
+-----------------------------
+Conteúdo
+Conteúdo
+Conteúdo
+Conteúdo
+Conteúdo
+
+Independentemente da posição do scroll.
+
+4. Cabeçalho e Rodapé Fixos
+
+O modal deve possuir:
+
+Header (fixo)
+
+↓
+
+Campos
+
+↓
+
+Toolbar (fixa)
+
+↓
+
+Conteúdo
+
+↓
+
+Footer (fixo)
+
+Salvar
+Cancelar
+
+Somente o conteúdo deve rolar.
+
+5. Não perder posição
+
+Quando clicar em:
+
+Bold
+Heading
+Link
+Lista
+
+o sistema NÃO pode:
+
+voltar para o topo;
+perder o cursor;
+perder seleção;
+fechar modal;
+mudar de idioma.
+6. Renderização correta do conteúdo
+
+Atualmente o site publica assim:
+
+<p>
+
+<strong>
+
+<li>
+
+<ul>
+
+<br>
+
+</p>
+
+Isso está errado.
+
+O visitante nunca deve visualizar HTML bruto.
+
+O conteúdo precisa ser renderizado corretamente.
+
+Exemplo:
+
+Hoje:
+
+<p>Standing high...</p>
+
+<strong>Why Visit?</strong>
+
+<ul>
+
+<li>Sugarloaf</li>
+
+Correto:
+
+Standing high...
+
+Why Visit?
+
+• Sugarloaf
+
+• Copacabana
+
+• Ipanema
+
+7. Corrigir toda a pipeline do conteúdo
+
+Verificar toda a cadeia:
+
+Editor
+
+↓
+
+Markdown
+
+↓
+
+HTML
+
+↓
+
+Banco de Dados
+
+↓
+
+API
+
+↓
+
+Frontend
+
+Garantir que:
+
+Markdown seja convertido corretamente;
+HTML seja sanitizado;
+HTML seja renderizado;
+nenhuma tag apareça como texto.
+8. Compatibilidade Markdown
+
+Os artigos antigos não podem ser perdidos.
+
+Na abertura do editor:
+
+Markdown
+
+↓
+
+Converter para HTML
+
+↓
+
+Editor Visual
+
+Ao salvar:
+
+Editor
+
+↓
+
+HTML limpo
+
+↓
+
+Banco
+
+Nunca mostrar Markdown ou HTML para o usuário final.
+
+9. Preview em tempo real
+
+Criar botão:
+
+Preview
+
+Ao clicar:
+
+abrir exatamente como ficará publicado.
+
+Não apenas mostrar Markdown.
+
+10. Colar do Word
+
+Quando copiar conteúdo de:
+
+Word
+Google Docs
+ChatGPT
+Notion
+
+O editor deve:
+
+manter headings;
+manter listas;
+manter links;
+manter negrito;
+remover estilos desnecessários.
+11. SEO
+
+Adicionar ferramentas:
+
+✓ Contador de palavras
+
+✓ Tempo de leitura automático
+
+✓ Meta Title
+
+✓ Meta Description
+
+✓ Slug automático
+
+✓ Keywords
+
+✓ Preview Google
+
+✓ Schema.org
+
+✓ FAQ Schema
+
+✓ Breadcrumb Schema
+
+12. Imagens
+
+Adicionar:
+
+Upload
+
+Drag and Drop
+
+Crop
+
+Resize
+
+Alt Text
+
+Caption
+
+Lazy Load
+
+Imagem destacada
+
+Galeria
+
+13. Autosave
+
+Salvar automaticamente a cada:
+
+30 segundos
+
+ou
+
+quando o usuário parar de digitar.
+
+Em caso de queda da internet:
+
+Recuperar o rascunho automaticamente.
+
+14. Tradução IA
+
+Hoje existe:
+
+Auto Translate
+
+Desejo que funcione corretamente.
+
+Cada idioma deve manter:
+
+Título
+
+Resumo
+
+Conteúdo
+
+Slug
+
+SEO
+
+independentes.
+
+15. IA
+
+Melhorar os botões IA:
+
+Gerar artigo
+
+Melhorar SEO
+
+Melhorar gramática
+
+Reescrever
+
+Expandir texto
+
+Resumir
+
+Gerar FAQ
+
+Gerar Meta Description
+
+Gerar Meta Title
+
+Criar Slug
+
+Criar Excerpt
+
+Criar ALT Text
+
+Criar JSON-LD
+
+16. UX
+
+O editor deve parecer um CMS profissional.
+
+Referências:
+
+WordPress Gutenberg
+Elementor
+Notion
+Medium
+
+Não desejo um textarea simples.
+
+17. Performance
+
+Evitar:
+
+rerender desnecessário;
+perder foco;
+perder seleção;
+recarregar editor inteiro.
+18. Segurança
+
+Sanitizar HTML.
+
+Remover:
+
+<script>
+
+iframe malicioso
+
+javascript:
+
+Permitir apenas HTML seguro.
+
+19. Testes obrigatórios
+
+Antes de concluir:
+
+Testar um artigo com:
+
+mais de 5.000 palavras;
+20 headings;
+listas;
+tabelas;
+imagens;
+links;
+FAQ;
+HTML;
+Markdown.
+
+Verificar:
+
+edição;
+preview;
+salvamento;
+publicação.
+20. Resultado esperado
+
+Ao finalizar, o sistema deve funcionar como um editor profissional.
+
+O administrador deve conseguir:
+
+escrever artigos grandes sem dificuldades;
+editar qualquer trecho sem perder a toolbar;
+visualizar o texto formatado durante a edição;
+publicar artigos sem que nenhuma tag HTML (<p>, <strong>, <ul>, <li>, <br>, etc.) apareça para o visitante;
+manter compatibilidade com conteúdos antigos;
+salvar corretamente HTML/Markdown;
+publicar exatamente o mesmo conteúdo visto no editor.
+
+A implementação deve incluir a correção da renderização do frontend, garantindo que o HTML seja interpretado corretamente e nunca exibido como texto bruto ao usuário final. Isso é um requisito obrigatório para a conclusão da tarefa.

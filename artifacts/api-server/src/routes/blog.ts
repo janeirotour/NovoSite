@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { db, blogPostsTable } from "@workspace/db";
 import {
   ListBlogPostsQueryParams,
@@ -30,7 +30,7 @@ router.get("/blog", async (req, res): Promise<void> => {
     .select()
     .from(blogPostsTable)
     .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(blogPostsTable.createdAt);
+    .orderBy(desc(blogPostsTable.updatedAt), desc(blogPostsTable.createdAt));
   res.json(ListBlogPostsResponse.parse(posts.map(mapPost)));
 });
 
