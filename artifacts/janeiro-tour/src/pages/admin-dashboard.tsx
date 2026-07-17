@@ -2221,7 +2221,12 @@ import { useState, useRef, useCallback, useEffect } from "react";
               />
               <div className="flex gap-3 justify-end pt-3 border-t">
                 <Button variant="outline" onClick={() => setEditPost(null)}>Cancel</Button>
-                <Button onClick={() => { updatePost.mutate({ id: editPost.id, data: editPost as Parameters<typeof updatePost.mutate>[0]["data"] }); setEditPost(null); }}>Save</Button>
+                <Button onClick={() => {
+                  const { id: _id, createdAt: _ca, ...rest } = editPost as Post & { id: number; createdAt: string };
+                  const clean = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== null));
+                  updatePost.mutate({ id: editPost.id, data: clean as Parameters<typeof updatePost.mutate>[0]["data"] });
+                  setEditPost(null);
+                }}>Save</Button>
               </div>
             </DialogContent>
           </Dialog>
