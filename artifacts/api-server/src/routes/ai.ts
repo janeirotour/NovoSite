@@ -57,7 +57,12 @@ Return ONLY the description text, nothing else.`,
     res.json({ text });
   } catch (err: unknown) {
     req.log.error({ err }, "OpenAI generate-text failed");
-    res.status(500).json({ error: "AI generation failed. Check your API key." });
+    const message = (err as { message?: string })?.message ?? "";
+    if (message.includes("insufficient_quota") || message.includes("429")) {
+      res.status(500).json({ error: "OpenAI quota exceeded — add billing credits at platform.openai.com/account/billing." });
+    } else {
+      res.status(500).json({ error: `AI generation failed: ${message || "unknown error"}` });
+    }
   }
 });
 
@@ -96,7 +101,14 @@ router.post("/ai/translate", async (req, res): Promise<void> => {
     res.json({ titleEs, titlePt, excerptEs, excerptPt, contentEs, contentPt, seoTitleEs, seoTitlePt, seoDescriptionEs: seoDescEs, seoDescriptionPt: seoDescPt });
   } catch (err: unknown) {
     req.log.error({ err }, "OpenAI translate failed");
-    res.status(500).json({ error: "Translation failed. Check your API key." });
+    const message = (err as { message?: string })?.message ?? "";
+    if (message.includes("insufficient_quota") || message.includes("429")) {
+      res.status(500).json({ error: "OpenAI quota exceeded — add billing credits at platform.openai.com/account/billing." });
+    } else if (message.includes("OPENAI_API_KEY")) {
+      res.status(500).json({ error: "OPENAI_API_KEY is not configured on this server." });
+    } else {
+      res.status(500).json({ error: `Translation failed: ${message || "unknown error"}` });
+    }
   }
 });
 
