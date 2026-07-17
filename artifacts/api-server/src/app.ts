@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import router from "./routes";
@@ -63,8 +64,16 @@ app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
 const sessionSecret = process.env.SESSION_SECRET || "janeiro-tour-secret-key-change-in-production";
 
+// Use PostgreSQL as session store so sessions survive server restarts and scale correctly
+const PgSession = connectPgSimple(session);
+
 app.use(
   session({
+    store: new PgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: "session",
+      createTableIfMissing: true,
+    }),
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,

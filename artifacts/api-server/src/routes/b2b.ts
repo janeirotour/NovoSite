@@ -61,8 +61,9 @@ router.post("/b2b/quotes", async (req, res) => {
     }).returning();
 
     // Send emails (non-blocking)
-    sendB2bAdminNotification(quote).catch(err => logger.error({ err }, "Admin B2B email failed"));
-    sendB2bCustomerConfirmation(quote).catch(err => logger.error({ err }, "Customer B2B email failed"));
+    const quoteForEmail = { ...quote, groupData: (quote.groupData ?? {}) as Record<string, unknown> };
+    sendB2bAdminNotification(quoteForEmail).catch(err => logger.error({ err }, "Admin B2B email failed"));
+    sendB2bCustomerConfirmation(quoteForEmail).catch(err => logger.error({ err }, "Customer B2B email failed"));
 
     res.status(201).json(quote);
   } catch (err) {
@@ -91,7 +92,7 @@ router.get("/b2b/quotes", async (req, res) => {
 router.get("/b2b/quotes/:id", async (req, res) => {
   const id = Number(req.params.id);
   const [quote] = await db.select().from(b2bQuotesTable).where(eq(b2bQuotesTable.id, id));
-  if (!quote) return res.status(404).json({ error: "Not found" });
+  if (!quote) { res.status(404).json({ error: "Not found" }); return; }
   res.json(quote);
 });
 
@@ -111,7 +112,7 @@ router.patch("/b2b/quotes/:id", async (req, res) => {
   if (parsed.estimateLow !== undefined) updates.estimateLow = String(parsed.estimateLow);
   if (parsed.estimateHigh !== undefined) updates.estimateHigh = String(parsed.estimateHigh);
   const [updated] = await db.update(b2bQuotesTable).set(updates).where(eq(b2bQuotesTable.id, id)).returning();
-  if (!updated) return res.status(404).json({ error: "Not found" });
+  if (!updated) { res.status(404).json({ error: "Not found" }); return; }
   res.json(updated);
 });
 
