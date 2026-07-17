@@ -35,9 +35,16 @@ router.get("/blog", async (req, res): Promise<void> => {
 });
 
 router.get("/blog/:id", async (req, res): Promise<void> => {
-  const params = GetBlogPostParams.safeParse(req.params);
-  if (!params.success) { res.status(400).json({ error: params.error.message }); return; }
-  const [post] = await db.select().from(blogPostsTable).where(eq(blogPostsTable.id, params.data.id));
+  const rawId = req.params.id;
+  const numId = parseInt(rawId, 10);
+  const isNumeric = !isNaN(numId) && String(numId) === rawId;
+
+  let post;
+  if (isNumeric) {
+    [post] = await db.select().from(blogPostsTable).where(eq(blogPostsTable.id, numId));
+  } else {
+    [post] = await db.select().from(blogPostsTable).where(eq(blogPostsTable.slug, rawId));
+  }
   if (!post) { res.status(404).json({ error: "Blog post not found" }); return; }
   res.json(GetBlogPostResponse.parse(mapPost(post)));
 });

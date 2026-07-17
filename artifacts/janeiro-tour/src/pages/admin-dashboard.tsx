@@ -1995,8 +1995,40 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
   function BlogForm({ values, onChange }: { values: Record<string, unknown>; onChange: (k: string, v: unknown) => void }) {
     const [lang, setLang] = useState<"en" | "es" | "pt">("en");
+    const [translating, setTranslating] = useState(false);
+    const [translateError, setTranslateError] = useState<string | null>(null);
     const str = (k: string) => (values[k] ?? "") as string;
     const imgs = () => (values.galleryImages ?? []) as string[];
+
+    const handleAutoTranslate = async () => {
+      const title = str("title");
+      const content = str("content");
+      if (!title && !content) return;
+      setTranslating(true);
+      setTranslateError(null);
+      try {
+        const res = await fetch("/api/ai/translate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            title: str("title"),
+            excerpt: str("excerpt"),
+            content: str("content"),
+            seoTitle: str("seoTitle"),
+            seoDescription: str("seoDescription"),
+          }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json() as Record<string, string>;
+        Object.entries(data).forEach(([k, v]) => { if (v) onChange(k, v); });
+        setLang("es");
+      } catch (e) {
+        setTranslateError("Translation failed — check the OpenAI API key.");
+      } finally {
+        setTranslating(false);
+      }
+    };
 
     return (
       <div className="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
@@ -2011,14 +2043,25 @@ import { useState, useRef, useCallback, useEffect } from "react";
           <div className="flex items-center gap-2 mt-5"><Switch checked={!!values.featured} onCheckedChange={v => onChange("featured", v)} /><Label>Featured</Label></div>
         </div>
         <div className="border rounded-xl overflow-hidden">
-          <div className="flex border-b bg-muted/30">
+          <div className="flex items-center border-b bg-muted/30">
             {(["en", "es", "pt"] as const).map((code, i) => (
               <button key={code} onClick={() => setLang(code)}
                 className={`flex-1 py-2.5 text-sm font-medium transition-colors ${lang === code ? "bg-primary text-primary-foreground" : "hover:bg-muted text-muted-foreground"}`}>
                 {["English", "Español", "Português"][i]}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={handleAutoTranslate}
+              disabled={translating || (!str("title") && !str("content"))}
+              title="Auto-translate English content to Spanish and Portuguese using AI"
+              className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-l border-border text-violet-700 bg-violet-50 hover:bg-violet-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+            >
+              {translating ? <RefreshCw size={11} className="animate-spin" /> : <Sparkles size={11} />}
+              {translating ? "Translating…" : "Auto-translate ES/PT"}
+            </button>
           </div>
+          {translateError && <div className="px-4 py-2 text-xs text-red-600 bg-red-50 border-b border-red-100">{translateError}</div>}
           <div className="p-4 space-y-3">
             {lang === "en" && (<>
               <div className="space-y-1"><Label>Title — English *</Label><Input value={str("title")} onChange={e => onChange("title", e.target.value)} placeholder="Article title" /></div>

@@ -61,4 +61,43 @@ Return ONLY the description text, nothing else.`,
   }
 });
 
+router.post("/ai/translate", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
+
+  const { title = "", excerpt = "", content = "", seoTitle = "", seoDescription = "" } = req.body as Record<string, string>;
+
+  const translate = async (text: string, lang: string) => {
+    if (!text?.trim()) return "";
+    const completion = await getOpenAI().chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: `You are a professional translator for a travel company in Rio de Janeiro. Translate the following text to ${lang}. Preserve all Markdown formatting (**, *, #, [], etc.), keep place names and brand names in their original form. Return ONLY the translated text, nothing else.` },
+        { role: "user", content: text },
+      ],
+      max_tokens: 2000,
+      temperature: 0.2,
+    });
+    return completion.choices[0]?.message?.content?.trim() ?? "";
+  };
+
+  try {
+    const [titleEs, titlePt, excerptEs, excerptPt, contentEs, contentPt, seoTitleEs, seoTitlePt, seoDescEs, seoDescPt] = await Promise.all([
+      translate(title, "Spanish"),
+      translate(title, "Brazilian Portuguese"),
+      translate(excerpt, "Spanish"),
+      translate(excerpt, "Brazilian Portuguese"),
+      translate(content, "Spanish"),
+      translate(content, "Brazilian Portuguese"),
+      translate(seoTitle, "Spanish"),
+      translate(seoTitle, "Brazilian Portuguese"),
+      translate(seoDescription, "Spanish"),
+      translate(seoDescription, "Brazilian Portuguese"),
+    ]);
+    res.json({ titleEs, titlePt, excerptEs, excerptPt, contentEs, contentPt, seoTitleEs, seoTitlePt, seoDescriptionEs: seoDescEs, seoDescriptionPt: seoDescPt });
+  } catch (err: unknown) {
+    req.log.error({ err }, "OpenAI translate failed");
+    res.status(500).json({ error: "Translation failed. Check your API key." });
+  }
+});
+
 export default router;

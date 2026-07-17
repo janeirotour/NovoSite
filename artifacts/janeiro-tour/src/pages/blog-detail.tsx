@@ -21,10 +21,10 @@ const TX = {
 
 export default function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const postId = parseInt(id ?? "0", 10);
   const { lang } = useLanguage();
 
-  const { data: post, isLoading } = useGetBlogPost(postId);
+  // id may be a numeric ID or a slug — backend handles both
+  const { data: post, isLoading } = useGetBlogPost(id as unknown as number);
 
   const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
 
