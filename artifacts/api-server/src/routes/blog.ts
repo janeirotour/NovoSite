@@ -43,6 +43,7 @@ router.get("/blog/:id", async (req, res): Promise<void> => {
 });
 
 router.post("/blog", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
   const parsed = CreateBlogPostBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const [post] = await db.insert(blogPostsTable).values(parsed.data as typeof blogPostsTable.$inferInsert).returning();
@@ -50,6 +51,7 @@ router.post("/blog", async (req, res): Promise<void> => {
 });
 
 router.patch("/blog/:id", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
   const params = UpdateBlogPostParams.safeParse(req.params);
   if (!params.success) { res.status(400).json({ error: params.error.message }); return; }
   const parsed = UpdateBlogPostBody.safeParse(req.body);
@@ -60,6 +62,7 @@ router.patch("/blog/:id", async (req, res): Promise<void> => {
 });
 
 router.delete("/blog/:id", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
   const params = DeleteBlogPostParams.safeParse(req.params);
   if (!params.success) { res.status(400).json({ error: params.error.message }); return; }
   const [post] = await db.delete(blogPostsTable).where(eq(blogPostsTable.id, params.data.id)).returning();

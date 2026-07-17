@@ -24,6 +24,7 @@ router.get("/settings", async (_req, res): Promise<void> => {
 });
 
 router.patch("/settings", async (req, res): Promise<void> => {
+  if (!req.session.adminId) { res.status(401).json({ error: "Not authenticated" }); return; }
   const parsed = UpdateSettingsBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: parsed.error.message }); return; }
   const existing = await ensureSettings();
