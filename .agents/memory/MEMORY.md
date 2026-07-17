@@ -6,3 +6,4 @@
 - [Currency conversion](currency-conversion.md) — display-only conversion via CurrencyContext; backend GET /api/currency/rates fetches open.er-api.com with 1hr cache + static fallback; Stripe charges always USD.
 - [B2B pricing schema](b2b-pricing-schema.md) — settingLabel (not label), tier field is `label` (not tierName); pct values are decimals (0.15=15%), do NOT divide by 100 in estimate engine.
 - [TipTap v3 API](tiptap-v3.md) — v3 breaks from v2: BubbleMenu uses Floating UI options (not tippyOptions); TextStyle/Color/FontSize from one package; TableKit replaces individual Table extensions.
+- [Blog content & SEO](blog-content-seo.md) — 7 multilingual articles as drafts (EN/PT/ES); blog-detail.tsx uses SeoHead with Article+FAQPage JSON-LD, OG, hreflang; BlogConversionSection at bottom; 5 thin stubs soft-deleted.

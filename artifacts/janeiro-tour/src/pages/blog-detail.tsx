@@ -9,6 +9,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import DOMPurify from "dompurify";
 import { BlogConversionSection } from "@/components/blog/BlogConversionSection";
+import { SeoHead } from "@/components/seo/SeoHead";
+
+const SITE_URL = "https://www.janeirotour.com";
 
 const TX = {
   loading:    { en: "Loading article...",             es: "Cargando artículo...",              pt: "Carregando artigo...",              fr: "Chargement de l'article...",           de: "Artikel wird geladen..." },
@@ -20,11 +23,20 @@ const TX = {
   exploreTours:{ en: "Explore Tours",                 es: "Explorar Tours",                    pt: "Explorar Tours",                    fr: "Explorer les Tours",                   de: "Touren Erkunden" },
 } as const;
 
+function extractFaqs(html: string): Array<{ question: string; answer: string }> {
+  const faqs: Array<{ question: string; answer: string }> = [];
+  const faqRegex = /<h3[^>]*>([^<]+\?)<\/h3>\s*<p>([^<]+)<\/p>/gi;
+  let match;
+  while ((match = faqRegex.exec(html)) !== null) {
+    faqs.push({ question: match[1].trim(), answer: match[2].trim() });
+  }
+  return faqs;
+}
+
 export default function BlogDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { lang } = useLanguage();
 
-  // id may be a numeric ID or a slug — backend handles both
   const { data: post, isLoading } = useGetBlogPost(id as unknown as number);
 
   const tx = (key: keyof typeof TX) => TX[key][lang as keyof typeof TX[typeof key]] ?? TX[key]["en"];
@@ -60,11 +72,80 @@ export default function BlogDetailPage() {
     lang === "pt" ? (post.contentPt ?? post.content) :
     post.content;
 
+  const seoTitle =
+    lang === "es" ? (post.seoTitleEs ?? post.seoTitle ?? post.titleEs ?? post.title) :
+    lang === "pt" ? (post.seoTitlePt ?? post.seoTitle ?? post.titlePt ?? post.title) :
+    (post.seoTitle ?? post.title);
+
+  const seoDescription =
+    lang === "es" ? (post.seoDescriptionEs ?? post.seoDescription ?? post.excerptEs ?? post.excerpt) :
+    lang === "pt" ? (post.seoDescriptionPt ?? post.seoDescription ?? post.excerptPt ?? post.excerpt) :
+    (post.seoDescription ?? post.excerpt);
+
   const dateLocale =
     lang === "fr" ? "fr-FR" : lang === "de" ? "de-DE" : lang === "pt" ? "pt-BR" : lang === "es" ? "es-ES" : "en-US";
 
+  const canonicalPath = `/blog/${post.slug}`;
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: seoDescription,
+    url: `${SITE_URL}${canonicalPath}`,
+    datePublished: post.createdAt,
+    dateModified: (post as { updatedAt?: string }).updatedAt ?? post.createdAt,
+    author: {
+      "@type": "Person",
+      name: post.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Janeiro Tour & Travel",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/janeiro-logo.png` },
+    },
+    image: post.imageUrl?.startsWith("http") ? post.imageUrl : `${SITE_URL}${post.imageUrl}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}${canonicalPath}`,
+    },
+  };
+
+  const faqs = extractFaqs(content);
+  const faqSchema = faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(faq => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  } : null;
+
+  const alternateUrls: Record<string, string> = {
+    en: `${SITE_URL}${canonicalPath}`,
+    pt: `${SITE_URL}${canonicalPath}`,
+    es: `${SITE_URL}${canonicalPath}`,
+  };
+
   return (
     <MainLayout>
+      <SeoHead
+        title={seoTitle}
+        description={seoDescription}
+        canonical={canonicalPath}
+        ogImage={post.imageUrl?.startsWith("http") ? post.imageUrl : `${SITE_URL}${post.imageUrl}`}
+        ogType="article"
+        lang={lang}
+        alternateUrls={alternateUrls}
+        schemas={[articleSchema, ...(faqSchema ? [faqSchema] : [])]}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Blog", url: "/blog" },
+          { name: title, url: canonicalPath },
+        ]}
+      />
+
       {/* Hero */}
       <section className="relative h-[55vh] min-h-[400px] bg-neutral-900">
         <img src={post.imageUrl} alt={title} className="w-full h-full object-cover opacity-80" />

@@ -1,0 +1,51 @@
+Preparei um pacote completo com os 7 artigos originais, cada um em:
+
+Inglês;
+Português;
+Espanhol;
+Metadados de SEO;
+Slug, excerpt, palavras-chave e schemas recomendados;
+Planejamento de imagens com nome de arquivo, formato, dimensões e ALT Text;
+Prompt completo para importar os artigos, corrigir a renderização, manter o editor visual e excluir posts vazios com segurança.
+
+A estrutura editorial foi conferida com referências oficiais de turismo do Brasil, incluindo informações sobre Foz do Iguaçu, São Paulo, diversidade cultural, destinos de natureza e principais regiões turísticas. Informações que podem mudar — vistos, horários, ingressos e fronteiras — ficaram marcadas para validação antes da publicação.
+
+Conteúdo incluído
+Brazil Travel Tips for Americans
+Iguazu Falls Travel Guide
+Best Places to Visit in Brazil
+Bahia Travel Guide: Experience the Cultural Heart of Afro-Brazilian Heritage
+São Paulo Travel Guide: How to Experience Brazil's Vibrant Metropolis
+Brazil Travel Tips for Americans: What No One Tells You Before Your Trip
+Recife & Olinda Travel Guide: Brazil's Hidden Cultural Treasure
+
+Dentro de cada pasta existem:
+
+article-en.md
+article-pt.md
+article-es.md
+seo.json
+images.md
+
+Também está incluído:
+
+MASTER-IMPLEMENTATION-PROMPT.md
+
+Esse prompt pede ao sistema para:
+
+Alocar cada conteúdo na aba correta;
+Criar os posts inicialmente como rascunho;
+Inserir SEO, metadados, canonical e hreflang;
+Configurar Article, Breadcrumb e FAQ Schema;
+Adicionar imagens licenciadas e convertê-las para WebP;
+Corrigir o erro que exibe <p>, <strong> e outras tags;
+Manter a barra do editor fixa;
+Preservar formatação e conteúdo nos três idiomas;
+Colocar o post editado mais recentemente no topo;
+Localizar posts vazios;
+Fazer backup antes de excluir;
+Criar redirecionamentos 301 quando necessário;
+Usar exclusão reversível antes da remoção definitiva;
+Testar o resultado em desktop e celular.
+
+As fotografias propriamente ditas não foram incluídas porque precisam ser imagens próprias ou licenciadas para evitar problemas de direitos autorais. Cada artigo contém um plano exato para três imagens, com arquivo, tamanho, função, legenda e ALT Text nos três idiomas.
