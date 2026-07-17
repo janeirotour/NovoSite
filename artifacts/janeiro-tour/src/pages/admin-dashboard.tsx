@@ -2094,6 +2094,18 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     type Post = NonNullable<typeof posts>[number];
     const [editPost, setEditPost] = useState<Post | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
+    const [search, setSearch] = useState("");
+
+    const filteredPosts = (posts ?? []).filter(p => {
+      if (!search.trim()) return true;
+      const q = search.toLowerCase();
+      return (
+        p.title?.toLowerCase().includes(q) ||
+        p.category?.toLowerCase().includes(q) ||
+        p.author?.toLowerCase().includes(q) ||
+        p.slug?.toLowerCase().includes(q)
+      );
+    });
 
     const emptyForm: Record<string, unknown> = {
       slug: "", title: "", titleEs: "", titlePt: "",
@@ -2123,7 +2135,7 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
 
     return (
       <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-2xl font-bold">Travel Guide Posts ({posts?.length ?? 0})</h2>
             <p className="text-sm text-muted-foreground mt-1">Full multilingual editing — English, Español, Português — with gallery images and SEO</p>
@@ -2140,6 +2152,23 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Search bar */}
+        <div className="relative mb-4">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+          <Input
+            placeholder="Search by title, category, author or slug…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="pl-8 h-9"
+          />
+          {search && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+              {filteredPosts.length} result{filteredPosts.length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+
         <div className="bg-card border rounded-xl overflow-hidden">
           <Table>
             <TableHeader>
@@ -2149,11 +2178,26 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
             </TableHeader>
             <TableBody>
               {isLoading ? [...Array(4)].map((_, i) => <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell></TableRow>)
-                : posts?.map(post => (
+                : filteredPosts.length === 0 && search ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-10 text-muted-foreground text-sm">
+                      No posts match "<span className="font-medium text-foreground">{search}</span>"
+                    </TableCell>
+                  </TableRow>
+                ) : filteredPosts.map(post => (
                   <TableRow key={post.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        {post.imageUrl && <img src={post.imageUrl} alt="" className="w-10 h-8 rounded object-cover flex-shrink-0" />}
+                        <div className="w-10 h-8 rounded bg-muted flex-shrink-0 overflow-hidden">
+                          {post.imageUrl && (
+                            <img
+                              src={post.imageUrl}
+                              alt=""
+                              className="w-full h-full object-cover"
+                              onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                            />
+                          )}
+                        </div>
                         <div>
                           <span className="font-medium max-w-[180px] truncate block">{post.title}</span>
                           <span className="text-xs text-muted-foreground">{post.author}</span>
