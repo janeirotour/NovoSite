@@ -179,9 +179,12 @@ export default function BlogDetailPage() {
           prose-li:leading-relaxed
           prose-table:w-full prose-th:bg-muted prose-td:border prose-th:border">
           {/^\s*<[a-zA-Z]/.test(content) ? (
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) }} />
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(
+              content.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i, ''),
+              { ADD_ATTR: ["target"] }
+            ) }} />
           ) : (
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.replace(/^\s*#[^\n]*\n/, '')}</ReactMarkdown>
           )}
         </div>
 
