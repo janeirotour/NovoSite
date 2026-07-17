@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import DOMPurify from "dompurify";
 import { BlogConversionSection } from "@/components/blog/BlogConversionSection";
 
 const TX = {
@@ -94,10 +95,13 @@ export default function BlogDetailPage() {
           prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
           prose-code:text-sm prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
           prose-ul:text-muted-foreground prose-ol:text-muted-foreground
-          prose-li:leading-relaxed">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {content}
-          </ReactMarkdown>
+          prose-li:leading-relaxed
+          prose-table:w-full prose-th:bg-muted prose-td:border prose-th:border">
+          {/^\s*<[a-zA-Z]/.test(content) ? (
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { ADD_ATTR: ["target"] }) }} />
+          ) : (
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          )}
         </div>
 
         {/* CTA */}

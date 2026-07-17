@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react";
   import { useLocation, useSearch } from "wouter";
   import { BlogConversionData, DEFAULT_BLOG_CONVERSION } from "@/components/blog/BlogConversionSection";
   import {
@@ -48,6 +48,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
   import { Calendar } from "@/components/ui/calendar";
   import { Popover as UIPopover, PopoverContent as UIPopoverContent, PopoverTrigger as UIPopoverTrigger } from "@/components/ui/popover";
   import { format as formatDate, addMonths, startOfMonth, endOfMonth } from "date-fns";
+
+  const RichTextEditor = lazy(() => import("@/components/RichTextEditor"));
 
   // ─── helpers ───────────────────────────────────────────────────────────────
 
@@ -1918,78 +1920,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
     );
   }
 
-  function MarkdownEditor({ value, onChange: onChangeMd, placeholder, rows = 14 }: {
+  function MarkdownEditor({ value, onChange: onChangeMd, placeholder }: {
     value: string; onChange: (v: string) => void; placeholder?: string; rows?: number;
   }) {
-    const taRef = useRef<HTMLTextAreaElement>(null);
-
-    const wrap = (before: string, after: string) => {
-      const ta = taRef.current;
-      if (!ta) return;
-      const s = ta.selectionStart, e = ta.selectionEnd;
-      const sel = value.slice(s, e) || "text";
-      const next = value.slice(0, s) + before + sel + after + value.slice(e);
-      onChangeMd(next);
-      setTimeout(() => { ta.focus(); ta.setSelectionRange(s + before.length, s + before.length + sel.length); }, 0);
-    };
-
-    const insertLink = () => {
-      const ta = taRef.current;
-      if (!ta) return;
-      const s = ta.selectionStart, e = ta.selectionEnd;
-      const sel = value.slice(s, e) || "link text";
-      const url = window.prompt("Link URL (affiliate or page):", "https://");
-      if (!url) return;
-      const md = `[${sel}](${url})`;
-      const next = value.slice(0, s) + md + value.slice(e);
-      onChangeMd(next);
-      setTimeout(() => { ta.focus(); ta.setSelectionRange(s, s + md.length); }, 0);
-    };
-
-    const insertImage = () => {
-      const ta = taRef.current;
-      if (!ta) return;
-      const s = ta.selectionStart;
-      const url = window.prompt("Image URL:", "https://");
-      if (!url) return;
-      const alt = window.prompt("Alt text / caption:", "image") || "image";
-      const md = `\n\n![${alt}](${url})\n\n`;
-      const next = value.slice(0, s) + md + value.slice(s);
-      onChangeMd(next);
-      setTimeout(() => { ta.focus(); ta.setSelectionRange(s + md.length, s + md.length); }, 0);
-    };
-
     return (
-      <div className="rounded-md border border-input overflow-hidden">
-        <div className="flex items-center gap-0.5 px-2 py-1 bg-muted/40 border-b border-input">
-          <button type="button" onClick={() => wrap("**", "**")} title="Bold"
-            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-            <Bold className="w-3.5 h-3.5" />
-          </button>
-          <button type="button" onClick={() => wrap("*", "*")} title="Italic"
-            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-            <Italic className="w-3.5 h-3.5" />
-          </button>
-          <span className="w-px h-4 bg-border mx-1" />
-          <button type="button" onClick={insertLink} title="Insert link / affiliate"
-            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-            <Link2 className="w-3.5 h-3.5" />
-          </button>
-          <button type="button" onClick={insertImage} title="Insert image"
-            className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-            <ImagePlus className="w-3.5 h-3.5" />
-          </button>
-          <span className="ml-auto text-[10px] text-muted-foreground/60 pr-1">Markdown</span>
-        </div>
-        <textarea
-          ref={taRef}
-          rows={rows}
-          value={value}
-          onChange={e => onChangeMd(e.target.value)}
-          placeholder={placeholder}
-          className="w-full px-3 py-2.5 text-sm font-mono bg-background text-foreground placeholder:text-muted-foreground resize-y focus:outline-none"
-        />
-      </div>
+      <Suspense fallback={<div className="border rounded-xl h-48 flex items-center justify-center text-sm text-muted-foreground animate-pulse">Loading editor…</div>}>
+        <RichTextEditor value={value} onChange={onChangeMd} placeholder={placeholder} minHeight={380} />
+      </Suspense>
     );
   }
 
