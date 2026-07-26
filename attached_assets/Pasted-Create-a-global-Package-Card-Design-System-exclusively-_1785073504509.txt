@@ -1,0 +1,276 @@
+Create a global Package Card Design System exclusively for travel packages.
+
+Do not apply this design to tours, experiences, transfers, blog posts, destinations or any other content type.
+
+Do not redesign the website.
+Do not change the current tour cards.
+Do not change the current experience cards.
+
+MAIN REQUIREMENT
+
+Create one reusable Package Card component that becomes the permanent standard for:
+
+* All current packages
+* All future packages
+* Packages created manually
+* Packages created from the Admin Dashboard
+* Packages created by AI
+* Featured package sections
+* Package search results
+* Related packages
+* Destination pages that display packages
+* Homepage sections that display packages
+
+This component must be used only when the content type is:
+
+Package
+
+Do not use it when the content type is:
+
+* Tour
+* Experience
+* Transfer
+* Destination
+* Travel Guide
+* Blog Post
+* Hotel
+* Optional Extra
+
+PACKAGE CARD STANDARD
+
+All package cards must follow one consistent structure.
+
+Desktop Layout:
+
+* Large image on one side
+* Package information on the other side
+* Alternating image position is allowed only if it is already part of the existing packages-page design
+* Consistent card height
+* Aligned content and buttons
+* Premium spacing
+* Rounded corners
+* Subtle shadow
+
+Mobile Layout:
+
+* Image above content
+* Full-width layout
+* Buttons stacked or aligned for easy tapping
+* No text overflow
+* No cropped buttons
+* Preserve important areas of the image
+
+PACKAGE IMAGE
+
+Use:
+
+* Fixed aspect ratio
+* Consistent dimensions
+* Proper object-fit cropping
+* Responsive image loading
+* Editable image from the Admin Dashboard
+
+Allow configurable badges such as:
+
+* Best Seller
+* Premium
+* Most Popular
+* New
+* Luxury
+* Cultural
+* Family
+* Adventure
+* Private
+* Limited Availability
+* Save XX%
+
+PACKAGE INFORMATION
+
+Display:
+
+* Package title
+* Package subtitle
+* Short positioning statement
+* Duration
+* Number of days and nights
+* Number of included experiences
+* Private or shared package type
+* Maximum group size when applicable
+
+Example metadata:
+
+* 4 Days / 3 Nights
+* 3 Experiences
+* Private
+* Up to 40 Travelers
+
+INCLUDED EXPERIENCES
+
+Display up to the first three included experiences.
+
+Each item should show:
+
+* Numbered green indicator
+* Experience name
+* Short description
+* Duration aligned to the right
+
+If the package contains more than three experiences, show:
+
+* X more experiences
+
+Do not display this structure on standalone tour cards.
+
+PACKAGE INFORMATION BAR
+
+Add one configurable information bar for package-specific benefits.
+
+Examples:
+
+* Airport Transfers Included
+* Accommodation Available
+* Dinner Show Included
+* Private Guide Included
+* Breakfast Included
+* Two Full-Day Tours Included
+* Hotel Upgrade Available
+
+The information bar must be editable from the Admin Dashboard.
+
+PACKAGE HIGHLIGHTS
+
+Display up to six package highlights.
+
+Examples:
+
+* Private transportation
+* Professional guides
+* Attraction tickets
+* Included meals
+* Airport assistance
+* Local support
+* Hotel options
+* Optional upgrades
+
+Use consistent check icons and spacing.
+
+PACKAGE PRICING
+
+Display:
+
+* Current package price
+* “Per person” or other applicable price basis
+* Original price when configured
+* Discount percentage when configured
+
+The current price should use the existing green pricing style.
+
+If no original price exists:
+
+* Hide the crossed-out price
+* Do not show an empty placeholder
+
+PACKAGE BUTTONS
+
+Primary button:
+
+See Prices & Book
+
+Secondary button:
+
+WhatsApp
+
+Allow button labels to be translated and edited from the Admin Dashboard.
+
+The primary button must link to the package detail page.
+
+The WhatsApp button must open the configured Janeiro Tour & Travel WhatsApp contact.
+
+ADMIN DASHBOARD
+
+Allow the administrator to edit package-card fields:
+
+* Package image
+* Badge
+* Subtitle
+* Short description
+* Metadata
+* Included experiences
+* Information bar
+* Package highlights
+* Current price
+* Original price
+* Discount badge
+* Display order
+* Featured status
+* Premium status
+* Best Seller status
+* Most Popular status
+* Button labels
+* Published status
+
+FUTURE PACKAGE STANDARD
+
+Whenever a new package is created, automatically use this Package Card component.
+
+No additional coding should be necessary.
+
+Do not create separate package-card layouts for individual packages.
+
+All package listings must reference one shared component, such as:
+
+PackageCard.tsx
+
+or the equivalent shared component used by the current project architecture.
+
+CONTENT-TYPE PROTECTION
+
+Add a clear content-type condition.
+
+Only render the Package Card component when:
+
+contentType === "package"
+
+Keep the existing components for:
+
+* Tours
+* Experiences
+* Transfers
+* Hotels
+* Blog content
+* Destinations
+
+Do not convert tour cards into package cards.
+
+Do not change tour-card fields, styling or behavior.
+
+MULTILINGUAL REQUIREMENT
+
+Apply the package-card system in:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Translate:
+
+* Badges
+* Metadata labels
+* Information bar
+* Highlight labels
+* Pricing labels
+* Buttons
+
+Do not leave mixed-language content.
+
+IMPORTANT
+
+This design system is exclusively for packages.
+
+Do not apply it to tours or experiences.
+
+Do not redesign the website.
+
+Do not change unrelated components.
+
+Preserve the existing Janeiro Tour & Travel branding and package-page structure.
