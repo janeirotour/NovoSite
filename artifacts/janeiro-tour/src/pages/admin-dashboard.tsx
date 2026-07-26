@@ -1296,14 +1296,16 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
                   placeholder="1300"
                 />
               </div>
-              <div className="space-y-1">
-                <Label className="text-xs">Group Discount % (2+ travelers)</Label>
-                <Input
-                  type="number"
-                  value={fppConfig.discountPercent}
-                  onChange={e => setPricingField("discountPercent", Number(e.target.value))}
-                  placeholder="5"
-                />
+              <div className="space-y-1 col-span-2">
+                <Label className="text-xs">Group Discounts (global tiers, applied automatically)</Label>
+                <div className="rounded-md border border-amber-200 bg-white text-xs grid grid-cols-5 divide-x divide-amber-100 overflow-hidden">
+                  {[{r:"1 person",d:"0%"},{r:"2–5",d:"5%"},{r:"6–10",d:"7%"},{r:"11–20",d:"10%"},{r:"21–40",d:"12%"}].map(t => (
+                    <div key={t.r} className="flex flex-col items-center py-1.5">
+                      <span className="text-muted-foreground">{t.r}</span>
+                      <span className="font-bold text-amber-700">{t.d}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="space-y-1">
                 <Label className="text-xs">Min Travelers</Label>

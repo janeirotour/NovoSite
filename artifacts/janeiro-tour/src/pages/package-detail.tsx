@@ -13,6 +13,22 @@ import { PackageBookingModal } from "@/components/ui/PackageBookingModal";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useLanguage } from "@/hooks/use-language";
 
+// ─── Group discount tiers (applied to ALL package types) ─────────────────────
+const GROUP_DISCOUNT_TIERS: { minPax: number; maxPax: number | null; discountPct: number }[] = [
+  { minPax: 1,  maxPax: 1,    discountPct: 0  },
+  { minPax: 2,  maxPax: 5,    discountPct: 5  },
+  { minPax: 6,  maxPax: 10,   discountPct: 7  },
+  { minPax: 11, maxPax: 20,   discountPct: 10 },
+  { minPax: 21, maxPax: null, discountPct: 12 },
+];
+
+function getGroupDiscount(pax: number): number {
+  return (
+    GROUP_DISCOUNT_TIERS.find(t => pax >= t.minPax && (t.maxPax === null || pax <= t.maxPax))
+      ?.discountPct ?? 0
+  );
+}
+
 // ─── Standard package types & helpers ─────────────────────────────────────────
 const VEHICLE_TIERS = [
   { minPax: 1,  maxPax: 2,  vehicle: "Private Car",  price: 120 },
@@ -64,8 +80,9 @@ function calcPackageTotal(tours: TourEntry[], pax: number) {
   const transferOut  = TRANSFER_PRICE_PER_PERSON * pax;
   const airportTotal = transferIn + transferOut;
   const subtotal     = toursTotal + transport2x + airportTotal;
-  const discount     = subtotal * 0.05;
-  return { subtotal, discount, grandTotal: subtotal - discount, toursTotal, transport2x, transferIn, transferOut, airportTotal, vt };
+  const discountPct  = getGroupDiscount(pax);
+  const discount     = subtotal * (discountPct / 100);
+  return { subtotal, discount, grandTotal: subtotal - discount, toursTotal, transport2x, transferIn, transferOut, airportTotal, vt, discountPct };
 }
 
 // ─── Premium pricing types & helpers ─────────────────────────────────────────
@@ -128,10 +145,10 @@ function calcMultiDayTotal(config: MultiDayConfig, pax: number) {
 
 function calcFixedPerPersonTotal(config: FixedPerPersonConfig, pax: number) {
   const subtotal = config.basePricePerPerson * pax;
-  // Discount only applies to groups of 2 or more
-  const discount = pax >= 2 ? subtotal * (config.discountPercent / 100) : 0;
+  const discountPct = getGroupDiscount(pax);
+  const discount = subtotal * (discountPct / 100);
   const grandTotal = subtotal - discount;
-  return { subtotal, discount, grandTotal };
+  return { subtotal, discount, grandTotal, discountPct };
 }
 
 function calcAnyPremiumTotal(config: PremiumPricingConfig, pax: number) {
@@ -141,10 +158,6 @@ function calcAnyPremiumTotal(config: PremiumPricingConfig, pax: number) {
 
 function getPremiumMaxPax(config: PremiumPricingConfig): number {
   return config.type === "fixed_per_person" ? config.maxTravelers : config.maxPax;
-}
-
-function getPremiumDiscountPercent(config: PremiumPricingConfig): number {
-  return config.discountPercent;
 }
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
@@ -621,7 +634,7 @@ export default function PackageDetailPage() {
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-xs text-green-600 font-medium">
-                      <span>Package discount ({isPremium ? getPremiumDiscountPercent(pricingConfig!) : 5}%)</span>
+                      <span>Group discount ({getGroupDiscount(pax)}%)</span>
                       <span>−{formatPrice(discount)}</span>
                     </div>
                   )}
@@ -692,18 +705,16 @@ export default function PackageDetailPage() {
         <div className="max-w-6xl mx-auto px-4 py-12">
           <h2 className="text-xl font-bold mb-2">Price by group size</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            {isPremium && pricingConfig
+            {isPremium && pricingConfig && pricingConfig.tableDescription
               ? pricingConfig.tableDescription
-              : "All prices include activities, round-trip transport for 2 activity days and both airport transfers (arrival + departure). 5% package discount already applied."}
+              : "All prices include activities, round-trip transport for 2 activity days and both airport transfers. Group discounts applied automatically."}
           </p>
           <div className="overflow-x-auto rounded-2xl border shadow-sm">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-muted/60 border-b">
                   <th className="px-5 py-3 text-left font-semibold text-muted-foreground">Travelers</th>
-                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">
-                    Package Total{isPremium && pricingConfig ? ` (−${getPremiumDiscountPercent(pricingConfig)}% for 2+)` : " (−5%)"}
-                  </th>
+                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Package Total</th>
                   <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Per Person</th>
                 </tr>
               </thead>
@@ -737,21 +748,10 @@ export default function PackageDetailPage() {
               </tbody>
             </table>
           </div>
-          {isFixedPerPerson && pricingConfig ? (
-            <p className="text-xs text-muted-foreground mt-3">
-              * Retail price: {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson)}/person.
-              1 traveler: full rate, no discount. Groups of 2 or more receive a {(pricingConfig as FixedPerPersonConfig).discountPercent}% package discount
-              (per-person rate reduces to {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson * (1 - (pricingConfig as FixedPerPersonConfig).discountPercent / 100))}).
-            </p>
-          ) : isMultiDay ? (
-            <p className="text-xs text-muted-foreground mt-3">
-              * Cost-based pricing: per-person operating costs + fixed group costs, less {(pricingConfig as MultiDayConfig)?.discountPercent ?? 5}% package discount.
-            </p>
-          ) : (
-            <p className="text-xs text-muted-foreground mt-3">
-              * Transport assigned proportionally to group: 1–2 pax = Private Car ($120/trip), 3–11 pax = Minivan ($300/trip), 12–16 pax = Minibus ($500/trip), 17+ pax = Coach Bus ($700/trip).
-            </p>
-          )}
+          <p className="text-xs text-muted-foreground mt-3">
+            * Group discounts: 1 person — no discount · 2–5 people — 5% · 6–10 people — 7% · 11–20 people — 10% · 21–40 people — 12%.
+            {!isPremium && " Transport allocated by group size: 1–2 pax Private Car · 3–11 Minivan · 12–16 Minibus · 17+ Coach Bus."}
+          </p>
         </div>
       </section>
 
