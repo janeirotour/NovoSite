@@ -1,23 +1,13 @@
 import { useListPackages } from "@workspace/api-client-react";
 import { useLanguage } from "@/hooks/use-language";
 import { SeoHead } from "@/components/seo/SeoHead";
-import { useCurrency } from "@/contexts/CurrencyContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import {
-  Check, Star, ArrowRight, Clock, Users, Award, Tag,
-  Layers, Heart, MessageCircle, Plane, Search, X, SlidersHorizontal,
-} from "lucide-react";
+import { PackageCard } from "@/components/packages/PackageCard";
+import { Award, Tag, Layers, Heart, Search, X, SlidersHorizontal, ArrowRight } from "lucide-react";
 import { useState, useMemo } from "react";
 
-const BADGE_STYLES: Record<string, string> = {
-  green: "bg-green-600 text-white",
-  amber: "bg-amber-500 text-black",
-  purple: "bg-purple-700 text-white",
-};
-
-type TourIncluded = { slug: string; title: string; duration: string; description: string };
 type FilterKey = "all" | "budget" | "mid" | "premium" | "short" | "long";
 
 interface FilterOption {
@@ -74,7 +64,6 @@ const TX = {
 
 export default function PackagesPage() {
   const { lang } = useLanguage();
-  const { formatPrice } = useCurrency();
   const { data: packages, isLoading } = useListPackages();
 
   const [query, setQuery] = useState("");
@@ -223,101 +212,9 @@ export default function PackagesPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {filtered.map((pkg, idx) => {
-              const tours      = (pkg.toursIncluded ?? []) as TourIncluded[];
-              const highlights = (pkg.highlights ?? []) as string[];
-              const isReversed = idx % 2 === 1;
-
-              return (
-                <div key={pkg.id} className="relative bg-card border rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 grid lg:grid-cols-5">
-                  <div className={`relative lg:col-span-2 min-h-52 lg:min-h-0 ${isReversed ? "lg:order-last" : ""}`}>
-                    {pkg.badge && (
-                      <div className={`absolute top-4 left-4 z-10 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide shadow ${BADGE_STYLES[pkg.badgeColor ?? "green"] ?? BADGE_STYLES.green}`}>
-                        {pkg.badge === "Best Seller" ? (
-                          <span className="flex items-center gap-1"><Star size={10} fill="currentColor" />{pkg.badge}</span>
-                        ) : pkg.badge}
-                      </div>
-                    )}
-                    <img src={pkg.imageUrl} alt={pkg.title} className="absolute inset-0 w-full h-full object-cover" />
-                    {pkg.savingsPercent && (
-                      <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm">
-                        Save {pkg.savingsPercent}%
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="lg:col-span-3 p-5 flex flex-col gap-4">
-                    <div className="flex items-start justify-between gap-3 flex-wrap">
-                      <div>
-                        <h3 className="text-xl font-bold leading-tight">{pkg.title}</h3>
-                        {pkg.subtitle && <p className="text-muted-foreground text-xs mt-0.5">{pkg.subtitle}</p>}
-                        <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
-                          {pkg.durationLabel && <span className="flex items-center gap-1"><Clock size={10} />{pkg.durationLabel}</span>}
-                          {pkg.groupSizeLabel && <span className="flex items-center gap-1"><Users size={10} />{pkg.groupSizeLabel}</span>}
-                        </div>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-2xl font-bold text-green-600">{formatPrice(Number(pkg.priceFrom))}</p>
-                        <p className="text-[11px] text-muted-foreground">{tx("perPerson")}</p>
-                        {pkg.originalPrice && (
-                          <p className="text-[11px] line-through text-muted-foreground">{formatPrice(Number(pkg.originalPrice))}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {tours.length > 0 && (
-                      <div>
-                        <p className="text-[10px] font-semibold text-muted-foreground tracking-[0.05em] mb-1.5">{tx("included")}</p>
-                        <div className="flex flex-col gap-1.5">
-                          {tours.map((t, ti) => (
-                            <div key={t.slug} className="flex gap-2.5 items-start bg-muted/40 rounded-lg px-3 py-2 border">
-                              <div className="w-5 h-5 rounded-md bg-green-100 text-green-700 flex items-center justify-center flex-shrink-0 font-bold text-[10px] mt-0.5">
-                                {ti + 1}
-                              </div>
-                              <div className="min-w-0">
-                                <p className="font-semibold text-xs leading-tight">{t.title}</p>
-                                <p className="text-[11px] text-muted-foreground leading-snug line-clamp-1 mt-0.5">{t.description}</p>
-                              </div>
-                              <span className="flex-shrink-0 text-[10px] text-green-600 font-medium flex items-center gap-0.5 mt-0.5">
-                                <Clock size={9} />{t.duration}
-                              </span>
-                            </div>
-                          ))}
-                          <div className="flex gap-2 items-center bg-blue-50 rounded-lg px-3 py-1.5 border border-blue-100 text-xs text-blue-700">
-                            <Plane size={11} className="flex-shrink-0" />
-                            <span className="font-medium">{tx("transfers")}</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {highlights.length > 0 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
-                        {highlights.slice(0, 4).map((h) => (
-                          <div key={h} className="flex items-start gap-1.5 text-xs">
-                            <Check size={11} className="text-green-600 flex-shrink-0 mt-0.5" />
-                            <span className="text-muted-foreground leading-snug">{h}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t mt-auto">
-                      <Link href={`/packages/${pkg.slug}`} className="flex-1">
-                        <Button className="w-full h-10 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm gap-1.5">
-                          {tx("seePrices")} <ArrowRight size={14} />
-                        </Button>
-                      </Link>
-                      <a href="https://wa.me/5521972633333" target="_blank" rel="noopener noreferrer" className="sm:w-auto">
-                        <Button variant="outline" className="w-full h-10 border-green-300 text-green-700 hover:bg-green-50 text-sm gap-1.5 px-4">
-                          <MessageCircle size={14} /> WhatsApp
-                        </Button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {filtered.map((pkg, idx) => (
+              <PackageCard key={pkg.id} pkg={pkg} variant="horizontal" idx={idx} lang={lang} />
+            ))}
           </div>
         )}
 

@@ -4,9 +4,10 @@ import { SeoHead } from "@/components/seo/SeoHead";
 import { HeroSection } from "@/components/home/hero-section";
 import { TourCard } from "@/components/ui/tour-card";
 import { DestinationCard } from "@/components/ui/destination-card";
+import { PackageCard } from "@/components/packages/PackageCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Users, MapPin, Heart, Star, ExternalLink, Clock, Package, MessageCircle, ShieldCheck, Award } from "lucide-react";
+import { ArrowRight, Users, MapPin, Heart, Star, ExternalLink, Clock, MessageCircle, Award } from "lucide-react";
 import { useEffect } from "react";
 
 const TRIPADVISOR_URL = "https://www.tripadvisor.com/Attraction_Review-g303488-d14760440-Reviews-Janeiro_Tour_Travel-State_of_Rio_de_Janeiro.html";
@@ -546,69 +547,9 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {(packages ?? []).slice(0, 3).map((pkg) => {
-                const tours = (pkg.toursIncluded ?? []) as { title: string; duration: string }[];
-                const BADGE_COLORS: Record<string, string> = {
-                  green: "bg-green-600 text-white",
-                  amber: "bg-amber-500 text-black",
-                  purple: "bg-purple-700 text-white",
-                };
-                const badgeStyle = BADGE_COLORS[pkg.badgeColor ?? "green"] ?? BADGE_COLORS.green;
-                return (
-                  <div key={pkg.id} className="group bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                    <div className="relative aspect-[16/9] overflow-hidden">
-                      <img src={pkg.imageUrl} alt={pkg.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                      {pkg.badge && (
-                        <div className={`absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${badgeStyle}`}>
-                          {pkg.badge}
-                        </div>
-                      )}
-                      {pkg.savingsPercent && (
-                        <div className="absolute bottom-3 right-3 bg-black/75 text-white text-xs font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm">
-                          Save {pkg.savingsPercent}%
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-5 flex flex-col gap-4 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="font-bold text-base leading-tight">{pkg.title}</h3>
-                          {pkg.subtitle && <p className="text-xs text-muted-foreground mt-0.5">{pkg.subtitle}</p>}
-                        </div>
-                        <div className="text-right flex-shrink-0">
-                          <p className="text-xl font-bold text-green-600">${Number(pkg.priceFrom).toFixed(0)}</p>
-                          <p className="text-xs text-muted-foreground">per person</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        {tours.slice(0, 3).map((t, i) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Package size={11} className="text-green-600 flex-shrink-0" />
-                            <span className="leading-snug line-clamp-1">{t.title}</span>
-                          </div>
-                        ))}
-                        <div className="flex items-center gap-2 text-xs text-blue-600">
-                          <ShieldCheck size={11} className="flex-shrink-0" />
-                          <span>{tx.pkgTransfers}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        {pkg.durationLabel && <span className="flex items-center gap-1"><Clock size={10} />{pkg.durationLabel}</span>}
-                        {pkg.groupSizeLabel && <span className="flex items-center gap-1"><Users size={10} />{pkg.groupSizeLabel}</span>}
-                      </div>
-
-                      <Link href={`/packages/${pkg.slug}`} className="mt-auto">
-                        <Button className="w-full h-10 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold gap-2">
-                          {tx.pkgBook} <ArrowRight size={14} />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
+              {(packages ?? []).slice(0, 3).map((pkg) => (
+                <PackageCard key={pkg.id} pkg={pkg} variant="vertical" lang={lang} />
+              ))}
             </div>
           )}
 
