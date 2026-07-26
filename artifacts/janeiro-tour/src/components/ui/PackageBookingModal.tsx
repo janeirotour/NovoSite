@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, Loader2, CreditCard, CalendarDays, Users, Plane, Hotel, MapPin, Globe, MessageSquare } from "lucide-react";
+import { getGroupDiscount } from "@/lib/group-discount";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -165,7 +166,9 @@ export function PackageBookingModal({
             </div>
             <p className="text-base font-bold text-green-800 dark:text-green-200">
               Total: ${grandTotal.toFixed(0)} USD
-              <span className="text-xs font-normal ml-2 text-green-600">(5% bundle discount applied)</span>
+              {getGroupDiscount(pax) > 0 && (
+                <span className="text-xs font-normal ml-2 text-green-600">({getGroupDiscount(pax)}% group discount applied)</span>
+              )}
             </p>
           </div>
 

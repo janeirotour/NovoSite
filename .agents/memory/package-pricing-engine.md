@@ -10,16 +10,20 @@ description: Two pricing models in package-detail.tsx; detection via pricingConf
 - Max 45 pax
 
 ## Global group discount tiers (ALL package types)
-- Defined as `GROUP_DISCOUNT_TIERS` constant in package-detail.tsx
+- Single source of truth: `artifacts/janeiro-tour/src/lib/group-discount.ts`
+- Exports: `GROUP_DISCOUNT_TIERS`, `getGroupDiscount(pax)`, `getGroupDiscountLabel(pax)`
 - 1 person = 0% · 2–5 = 5% · 6–10 = 7% · 11–20 = 10% · 21–40 = 12%
-- `getGroupDiscount(pax)` returns the applicable %; used in both `calcPackageTotal` and `calcFixedPerPersonTotal`
+- Imported in `package-detail.tsx` and `PackageBookingModal.tsx`
 - Admin PackageForm shows these tiers as a read-only reference table (not editable per-package)
 
-## Fixed per-person packages (Essential Premium Rio)
-- Uses `pricingConfig` jsonb field with `type: "fixed_per_person"`
-- Fields: `basePricePerPerson`, `minTravelers`, `maxTravelers`, `tableDescription?` (discountPercent kept in DB but unused — tiers govern)
-- Formula: basePricePerPerson × pax × (1 − getGroupDiscount(pax)/100)
-- Examples: 1 pax = $1,300; 2 pax = $2,470; 6 pax = $7,254; 11 pax = $12,870
+## All packages now use fixed_per_person model
+All 4 packages have `pricing_config.type = "fixed_per_person"`. Base prices (1-pax retail):
+- Afro Rio Soul: $700/person
+- Rio Highlights: $940/person
+- Rio VIP: $1,016/person
+- Essential Premium Rio: $1,300/person
+Formula: basePricePerPerson × pax × (1 − getGroupDiscount(pax)/100)
+`price_from` in DB is kept in sync with `basePricePerPerson`.
 
 ## Legacy multi-day config (backward compat only)
 - `type: "premium_multi_day"` — cost-based formula using its own `discountPercent`; kept for backward compat but not used by any active package

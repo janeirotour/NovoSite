@@ -13,21 +13,7 @@ import { PackageBookingModal } from "@/components/ui/PackageBookingModal";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useLanguage } from "@/hooks/use-language";
 
-// ─── Group discount tiers (applied to ALL package types) ─────────────────────
-const GROUP_DISCOUNT_TIERS: { minPax: number; maxPax: number | null; discountPct: number }[] = [
-  { minPax: 1,  maxPax: 1,    discountPct: 0  },
-  { minPax: 2,  maxPax: 5,    discountPct: 5  },
-  { minPax: 6,  maxPax: 10,   discountPct: 7  },
-  { minPax: 11, maxPax: 20,   discountPct: 10 },
-  { minPax: 21, maxPax: null, discountPct: 12 },
-];
-
-function getGroupDiscount(pax: number): number {
-  return (
-    GROUP_DISCOUNT_TIERS.find(t => pax >= t.minPax && (t.maxPax === null || pax <= t.maxPax))
-      ?.discountPct ?? 0
-  );
-}
+import { getGroupDiscount } from "@/lib/group-discount";
 
 // ─── Standard package types & helpers ─────────────────────────────────────────
 const VEHICLE_TIERS = [
