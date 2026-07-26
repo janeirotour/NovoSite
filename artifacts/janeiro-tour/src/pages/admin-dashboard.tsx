@@ -1075,6 +1075,15 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
 
   // ─── packages tab ────────────────────────────────────────────────────────
 
+  type FixedPerPersonPricingConfig = {
+    type: "fixed_per_person";
+    basePricePerPerson: number;
+    discountPercent: number;
+    minTravelers: number;
+    maxTravelers: number;
+    tableDescription?: string;
+  };
+
   type AdminPackage = {
     id: number; slug: string; title: string; subtitle?: string | null;
     description: string; badge?: string | null; badgeColor?: string | null;
@@ -1082,6 +1091,7 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     imageUrl: string; durationLabel?: string | null; groupSizeLabel?: string | null;
     highlights: string[]; includedItems: string[]; toursIncluded: unknown[];
     published: boolean; sortOrder: number;
+    pricingConfig?: FixedPerPersonPricingConfig | Record<string, unknown> | null;
   };
 
   const emptyPkg: Omit<AdminPackage, "id"> = {
@@ -1089,7 +1099,7 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
     badge: "", badgeColor: "green", priceFrom: "", originalPrice: "",
     savingsPercent: undefined as unknown as null, imageUrl: "", durationLabel: "",
     groupSizeLabel: "", highlights: [], includedItems: [], toursIncluded: [],
-    published: true, sortOrder: 10,
+    published: true, sortOrder: 10, pricingConfig: null,
   };
 
   function PackageForm({ pkg, onSave, onClose }: {
@@ -1105,7 +1115,19 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
       highlights: pkg.highlights ?? [], includedItems: pkg.includedItems ?? [],
       toursIncluded: pkg.toursIncluded ?? [],
       published: pkg.published, sortOrder: pkg.sortOrder,
+      pricingConfig: pkg.pricingConfig ?? null,
     } : emptyPkg);
+
+    // Helper to update a field inside pricingConfig (fixed_per_person only)
+    const setPricingField = (field: keyof FixedPerPersonPricingConfig, value: number | string) => {
+      setForm(f => ({
+        ...f,
+        pricingConfig: { ...(f.pricingConfig as FixedPerPersonPricingConfig), [field]: value },
+      }));
+    };
+
+    const fppConfig = form.pricingConfig as FixedPerPersonPricingConfig | null | undefined;
+    const isFixedPerPerson = fppConfig?.type === "fixed_per_person";
 
     const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
     const listToArray = (s: string) => s.split("\n").map(l => l.trim()).filter(Boolean);
@@ -1254,6 +1276,59 @@ import { useState, useRef, useCallback, useEffect, Suspense, lazy } from "react"
             <Plus size={13} /> Add Tour to Package
           </Button>
         </div>
+
+        {/* ── Fixed Per-Person Pricing (Premium packages) ── */}
+        {isFixedPerPerson && fppConfig && (
+          <div className="border rounded-lg p-4 space-y-3 bg-amber-50/50 border-amber-200">
+            <div>
+              <Label className="text-sm font-semibold text-amber-800">Premium Pricing — Fixed Per Person</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Formula: (Base Price × Travelers) × (1 − Discount%). Discount applies to groups of 2 or more.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs">Base Price Per Person (USD) *</Label>
+                <Input
+                  type="number"
+                  value={fppConfig.basePricePerPerson}
+                  onChange={e => setPricingField("basePricePerPerson", Number(e.target.value))}
+                  placeholder="1300"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Group Discount % (2+ travelers)</Label>
+                <Input
+                  type="number"
+                  value={fppConfig.discountPercent}
+                  onChange={e => setPricingField("discountPercent", Number(e.target.value))}
+                  placeholder="5"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Min Travelers</Label>
+                <Input
+                  type="number"
+                  value={fppConfig.minTravelers}
+                  onChange={e => setPricingField("minTravelers", Number(e.target.value))}
+                  placeholder="1"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Max Travelers</Label>
+                <Input
+                  type="number"
+                  value={fppConfig.maxTravelers}
+                  onChange={e => setPricingField("maxTravelers", Number(e.target.value))}
+                  placeholder="40"
+                />
+              </div>
+            </div>
+            <div className="rounded-md bg-amber-100/60 border border-amber-200 px-3 py-2 text-xs text-amber-900">
+              Preview — 1 traveler: <strong>${fppConfig.basePricePerPerson.toFixed(0)}</strong> · 2 travelers: <strong>${(fppConfig.basePricePerPerson * 2 * (1 - fppConfig.discountPercent / 100)).toFixed(0)}</strong> (${(fppConfig.basePricePerPerson * (1 - fppConfig.discountPercent / 100)).toFixed(0)}/person)
+            </div>
+          </div>
+        )}
 
         {/* ── Published ── */}
         <div className="flex items-center gap-3 py-2">

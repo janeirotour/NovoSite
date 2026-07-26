@@ -9,12 +9,17 @@ description: Two pricing models in package-detail.tsx; detection via pricingConf
 - 5% discount hardcoded
 - Max 45 pax
 
-## Premium multi-day packages (Essential Premium Rio)
-- Uses `pricingConfig` jsonb field with `type: "premium_multi_day"`
-- Fields: `perPersonCosts[]`, `fixedGroupCosts[]`, `discountPercent`, `maxPax`, `tableDescription`
-- Formula: (sum(perPersonCosts) × pax) + sum(fixedGroupCosts), then × (1 - discountPercent/100)
-- `calcPremiumTotal()` in package-detail.tsx
+## Fixed per-person packages (Essential Premium Rio)
+- Uses `pricingConfig` jsonb field with `type: "fixed_per_person"`
+- Fields: `basePricePerPerson`, `discountPercent`, `minTravelers`, `maxTravelers`, `tableDescription?`
+- Formula: basePricePerPerson × pax; discount (5%) applies only for pax ≥ 2; 1 traveler = no discount
+- Examples: 1 pax = $1,300; 2 pax = $2,470; 5 pax = $6,175; 10 pax = $12,350
+- `calcFixedPerPersonTotal()` and `calcAnyPremiumTotal()` in package-detail.tsx
 - Itinerary from `itineraryDays` jsonb field (ItineraryDay[])
+- Admin dashboard PackageForm shows editable fields for this type (base price, discount%, min/max travelers)
+
+## Legacy multi-day config (backward compat only)
+- `type: "premium_multi_day"` — cost-based formula with `perPersonCosts[]` + `fixedGroupCosts[]`; kept for backward compat but not used by any active package
 
 ## DB columns added to packages table
 - `pricing_config` jsonb

@@ -1,0 +1,150 @@
+Update the pricing logic for the Essential Premium Rio Package.
+
+The current pricing model is incorrect.
+
+Do not divide the package cost by the number of travelers.
+
+This is a premium private package and the selling price is based on a fixed per-person rate.
+
+Base Selling Price
+
+Set the default selling price to:
+
+USD 1,300 per traveler
+
+This value is the base retail selling price.
+
+Group Pricing
+
+When more travelers are added, calculate the total as:
+
+Package Total =
+USD 1,300 × Number of Travelers
+
+After calculating the total, apply a package discount.
+
+Default package discount:
+
+5%
+
+Formula:
+
+Package Total Before Discount =
+1300 × Travelers
+
+Package Discount =
+5%
+
+Package Total =
+Package Total Before Discount × 0.95
+
+Per Person =
+Package Total ÷ Travelers
+Examples
+
+1 traveler
+
+1300
+
+No discount.
+
+Package Total
+
+USD 1,300
+
+Per Person
+
+USD 1,300
+
+2 travelers
+
+1300 × 2 = 2600
+
+5% discount
+
+Final Package Total
+
+USD 2,470
+
+Per Person
+
+USD 1,235
+
+3 travelers
+
+1300 × 3 = 3900
+
+5% discount
+
+Final Total
+
+USD 3,705
+
+Per Person
+
+USD 1,235
+
+5 travelers
+
+1300 × 5 = 6500
+
+5% discount
+
+Final Total
+
+USD 6,175
+
+Per Person
+
+USD 1,235
+
+10 travelers
+
+1300 × 10 = 13,000
+
+5% discount
+
+Final Total
+
+USD 12,350
+
+Per Person
+
+USD 1,235
+
+Price Table
+
+Generate the table dynamically from 1 to 40 travelers.
+
+Columns:
+
+Travelers
+Package Total
+Per Person
+
+Use the same visual style already used on the Afro Rio Soul package.
+
+Admin Dashboard
+
+Allow the administrator to edit:
+
+Base selling price (default USD 1,300)
+Discount percentage (default 5%)
+Minimum travelers
+Maximum travelers
+
+The pricing engine should always use the base selling price multiplied by the number of travelers, then apply the package discount.
+
+Do not divide operating costs or fixed costs to determine the selling price.
+
+The package is sold using a fixed retail price per traveler.
+
+Na minha opinião, essa é a estratégia mais adequada para a Janeiro Tour. Você mantém sua margem de lucro previsível e oferece apenas um pequeno benefício para grupos. Mais tarde, se quiser incentivar grupos maiores, pode criar descontos progressivos, por exemplo:
+
+1 pessoa → sem desconto
+2–5 pessoas → 5%
+6–10 pessoas → 7%
+11–20 pessoas → 10%
+21–40 pessoas → 12%
+
+Assim o preço continua premium e fica mais competitivo para grupos maiores, sem comprometer sua rentabilidade.

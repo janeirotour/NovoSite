@@ -68,10 +68,11 @@ function calcPackageTotal(tours: TourEntry[], pax: number) {
   return { subtotal, discount, grandTotal: subtotal - discount, toursTotal, transport2x, transferIn, transferOut, airportTotal, vt };
 }
 
-// ─── Premium multi-day pricing types & helpers ────────────────────────────────
+// ─── Premium pricing types & helpers ─────────────────────────────────────────
 type PremiumCostItem = { label: string; price: number };
 
-type PremiumPricingConfig = {
+/** Legacy cost-based multi-day config (kept for backward compat) */
+type MultiDayConfig = {
   type: "premium_multi_day";
   perPersonCosts: PremiumCostItem[];
   fixedGroupCosts: PremiumCostItem[];
@@ -79,6 +80,18 @@ type PremiumPricingConfig = {
   maxPax: number;
   tableDescription: string;
 };
+
+/** Simple fixed retail price per traveler */
+type FixedPerPersonConfig = {
+  type: "fixed_per_person";
+  basePricePerPerson: number;
+  discountPercent: number;
+  minTravelers: number;
+  maxTravelers: number;
+  tableDescription?: string;
+};
+
+type PremiumPricingConfig = MultiDayConfig | FixedPerPersonConfig;
 
 type ItineraryDay = {
   day: number;
@@ -104,13 +117,34 @@ type PackageExtended = {
   destination?: string | null;
 };
 
-function calcPremiumTotal(config: PremiumPricingConfig, pax: number) {
+function calcMultiDayTotal(config: MultiDayConfig, pax: number) {
   const perPersonSubtotal = config.perPersonCosts.reduce((s, c) => s + c.price, 0) * pax;
   const fixedGroupSubtotal = config.fixedGroupCosts.reduce((s, c) => s + c.price, 0);
   const subtotal = perPersonSubtotal + fixedGroupSubtotal;
   const discount = subtotal * (config.discountPercent / 100);
   const grandTotal = subtotal - discount;
   return { subtotal, discount, grandTotal, perPersonSubtotal, fixedGroupSubtotal };
+}
+
+function calcFixedPerPersonTotal(config: FixedPerPersonConfig, pax: number) {
+  const subtotal = config.basePricePerPerson * pax;
+  // Discount only applies to groups of 2 or more
+  const discount = pax >= 2 ? subtotal * (config.discountPercent / 100) : 0;
+  const grandTotal = subtotal - discount;
+  return { subtotal, discount, grandTotal };
+}
+
+function calcAnyPremiumTotal(config: PremiumPricingConfig, pax: number) {
+  if (config.type === "fixed_per_person") return calcFixedPerPersonTotal(config, pax);
+  return calcMultiDayTotal(config, pax);
+}
+
+function getPremiumMaxPax(config: PremiumPricingConfig): number {
+  return config.type === "fixed_per_person" ? config.maxTravelers : config.maxPax;
+}
+
+function getPremiumDiscountPercent(config: PremiumPricingConfig): number {
+  return config.discountPercent;
 }
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
@@ -142,7 +176,9 @@ export default function PackageDetailPage() {
   // Cast to include DB-extended fields
   const pkg = pkgRaw as (typeof pkgRaw & PackageExtended) | undefined;
   const pricingConfig = pkg?.pricingConfig as PremiumPricingConfig | null | undefined;
-  const isPremium = pricingConfig?.type === "premium_multi_day";
+  const isPremium = pricingConfig?.type === "premium_multi_day" || pricingConfig?.type === "fixed_per_person";
+  const isFixedPerPerson = pricingConfig?.type === "fixed_per_person";
+  const isMultiDay = pricingConfig?.type === "premium_multi_day";
   const itineraryDays = (pkg?.itineraryDays ?? []) as ItineraryDay[];
   const notIncludedItems = (pkg?.notIncludedItems ?? []) as string[];
 
@@ -160,7 +196,7 @@ export default function PackageDetailPage() {
 
   // Pricing — branch based on package type
   const premiumCalc = useMemo(
-    () => (isPremium && pricingConfig ? calcPremiumTotal(pricingConfig, pax) : null),
+    () => (isPremium && pricingConfig ? calcAnyPremiumTotal(pricingConfig, pax) : null),
     [isPremium, pricingConfig, pax]
   );
   const standardCalc = useMemo(
@@ -174,7 +210,7 @@ export default function PackageDetailPage() {
 
   const perPerson = pax > 0 ? grandTotal / pax : grandTotal;
 
-  const maxPax = isPremium ? (pricingConfig?.maxPax ?? 40) : 45;
+  const maxPax = isPremium ? getPremiumMaxPax(pricingConfig!) : 45;
   const TABLE_ROWS = Array.from({ length: maxPax }, (_, i) => i + 1);
 
   const today = new Date().toISOString().split("T")[0];
@@ -475,15 +511,32 @@ export default function PackageDetailPage() {
 
                 <Separator />
 
-                {/* Breakdown — PREMIUM */}
-                {isPremium && pricingConfig && (
+                {/* Breakdown — FIXED PER PERSON (e.g. Essential Premium Rio) */}
+                {isFixedPerPerson && pricingConfig && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">
+                      Retail Price
+                    </p>
+                    <div className="flex justify-between text-xs gap-2">
+                      <span className="text-muted-foreground leading-snug">
+                        {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson)}/person × {pax} traveler{pax !== 1 ? "s" : ""}
+                      </span>
+                      <span className="font-medium flex-shrink-0">
+                        {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson * pax)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Breakdown — MULTI-DAY (legacy cost-based) */}
+                {isMultiDay && pricingConfig && (
                   <>
-                    {pricingConfig.perPersonCosts.length > 0 && (
+                    {(pricingConfig as MultiDayConfig).perPersonCosts.length > 0 && (
                       <div className="space-y-1.5">
                         <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">
                           Per Person × {pax}
                         </p>
-                        {pricingConfig.perPersonCosts.map((c) => (
+                        {(pricingConfig as MultiDayConfig).perPersonCosts.map((c) => (
                           <div key={c.label} className="flex justify-between text-xs gap-2">
                             <span className="text-muted-foreground leading-snug">
                               {c.label}
@@ -499,12 +552,12 @@ export default function PackageDetailPage() {
 
                     <Separator />
 
-                    {pricingConfig.fixedGroupCosts.length > 0 && (
+                    {(pricingConfig as MultiDayConfig).fixedGroupCosts.length > 0 && (
                       <div className="space-y-1.5">
                         <p className="text-xs font-semibold text-muted-foreground tracking-[0.05em] mb-2">
                           Fixed Group Costs
                         </p>
-                        {pricingConfig.fixedGroupCosts.map((c) => (
+                        {(pricingConfig as MultiDayConfig).fixedGroupCosts.map((c) => (
                           <div key={c.label} className="flex justify-between text-xs gap-2">
                             <span className="text-muted-foreground leading-snug">{c.label}</span>
                             <span className="font-medium flex-shrink-0">{formatPrice(c.price)}</span>
@@ -566,10 +619,12 @@ export default function PackageDetailPage() {
                     <span>Package subtotal</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-green-600 font-medium">
-                    <span>Package discount ({isPremium ? pricingConfig!.discountPercent : 5}%)</span>
-                    <span>−{formatPrice(discount)}</span>
-                  </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-xs text-green-600 font-medium">
+                      <span>Package discount ({isPremium ? getPremiumDiscountPercent(pricingConfig!) : 5}%)</span>
+                      <span>−{formatPrice(discount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-bold text-sm">
                     <span>Total</span>
                     <span className="text-green-600">{formatPrice(grandTotal)}</span>
@@ -646,14 +701,16 @@ export default function PackageDetailPage() {
               <thead>
                 <tr className="bg-muted/60 border-b">
                   <th className="px-5 py-3 text-left font-semibold text-muted-foreground">Travelers</th>
-                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Package Total (−{isPremium ? pricingConfig!.discountPercent : 5}%)</th>
+                  <th className="px-5 py-3 text-right font-semibold text-muted-foreground">
+                    Package Total{isPremium && pricingConfig ? ` (−${getPremiumDiscountPercent(pricingConfig)}% for 2+)` : " (−5%)"}
+                  </th>
                   <th className="px-5 py-3 text-right font-semibold text-muted-foreground">Per Person</th>
                 </tr>
               </thead>
               <tbody>
                 {TABLE_ROWS.map((n) => {
                   const gt = isPremium && pricingConfig
-                    ? calcPremiumTotal(pricingConfig, n).grandTotal
+                    ? calcAnyPremiumTotal(pricingConfig, n).grandTotal
                     : calcPackageTotal(tours, n).grandTotal;
                   const isActive = n === pax;
                   return (
@@ -680,9 +737,15 @@ export default function PackageDetailPage() {
               </tbody>
             </table>
           </div>
-          {isPremium ? (
+          {isFixedPerPerson && pricingConfig ? (
             <p className="text-xs text-muted-foreground mt-3">
-              * Per-person costs: airport arrival transfer (${pricingConfig?.perPersonCosts.find(c => c.label.includes("arrival"))?.price ?? 60}) + dinner show (${ pricingConfig?.perPersonCosts.find(c => c.label.toLowerCase().includes("dinner show"))?.price ?? 160}) + dinner-show transport (${pricingConfig?.perPersonCosts.find(c => c.label.includes("transportation"))?.price ?? 60}) + departure transfer (${pricingConfig?.perPersonCosts.find(c => c.label.includes("departure"))?.price ?? 60}) = $340/person. Fixed group costs: ${pricingConfig?.fixedGroupCosts.map(c => c.label.split("—")[0].trim() + " $" + c.price).join(" + ")} = $${pricingConfig?.fixedGroupCosts.reduce((s, c) => s + c.price, 0)}. Formula: (340 × travelers + ${pricingConfig?.fixedGroupCosts.reduce((s, c) => s + c.price, 0)}) × 0.{100 - (pricingConfig?.discountPercent ?? 5)}5.
+              * Retail price: {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson)}/person.
+              1 traveler: full rate, no discount. Groups of 2 or more receive a {(pricingConfig as FixedPerPersonConfig).discountPercent}% package discount
+              (per-person rate reduces to {formatPrice((pricingConfig as FixedPerPersonConfig).basePricePerPerson * (1 - (pricingConfig as FixedPerPersonConfig).discountPercent / 100))}).
+            </p>
+          ) : isMultiDay ? (
+            <p className="text-xs text-muted-foreground mt-3">
+              * Cost-based pricing: per-person operating costs + fixed group costs, less {(pricingConfig as MultiDayConfig)?.discountPercent ?? 5}% package discount.
             </p>
           ) : (
             <p className="text-xs text-muted-foreground mt-3">
