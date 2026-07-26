@@ -37,19 +37,28 @@ router.get("/admin/packages", async (req, res): Promise<void> => {
 
 router.post("/admin/packages", async (req, res): Promise<void> => {
   if (!requireAdmin(req, res)) return;
-  const { slug, title, subtitle, description, badge, badgeColor, priceFrom, originalPrice,
-    savingsPercent, imageUrl, durationLabel, groupSizeLabel, highlights,
-    includedItems, toursIncluded, published, sortOrder } = req.body;
+  const {
+    slug, title, titleEs, titlePt, subtitle, description, descriptionEs, descriptionPt,
+    badge, badgeColor, priceFrom, originalPrice, savingsPercent,
+    imageUrl, durationLabel, groupSizeLabel, category, destination,
+    highlights, includedItems, notIncludedItems, toursIncluded, itineraryDays, pricingConfig,
+    seoTitle, seoDescription, published, sortOrder,
+  } = req.body;
   if (!slug || !title || !description || !priceFrom || !imageUrl) {
     res.status(400).json({ error: "slug, title, description, priceFrom, imageUrl are required" }); return;
   }
   const [pkg] = await db.insert(packagesTable).values({
-    slug, title, subtitle, description, badge, badgeColor: badgeColor ?? "green",
+    slug, title, titleEs, titlePt, subtitle, description, descriptionEs, descriptionPt,
+    badge, badgeColor: badgeColor ?? "green",
     priceFrom, originalPrice, savingsPercent,
-    imageUrl, durationLabel, groupSizeLabel,
+    imageUrl, durationLabel, groupSizeLabel, category, destination,
     highlights: highlights ?? [],
     includedItems: includedItems ?? [],
+    notIncludedItems: notIncludedItems ?? [],
     toursIncluded: toursIncluded ?? [],
+    itineraryDays: itineraryDays ?? [],
+    pricingConfig: pricingConfig ?? null,
+    seoTitle, seoDescription,
     published: published ?? true,
     sortOrder: sortOrder ?? 10,
   }).returning();
@@ -60,14 +69,20 @@ router.put("/admin/packages/:id", async (req, res): Promise<void> => {
   if (!requireAdmin(req, res)) return;
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
-  const { slug, title, subtitle, description, badge, badgeColor, priceFrom, originalPrice,
-    savingsPercent, imageUrl, durationLabel, groupSizeLabel, highlights,
-    includedItems, toursIncluded, published, sortOrder } = req.body;
+  const {
+    slug, title, titleEs, titlePt, subtitle, description, descriptionEs, descriptionPt,
+    badge, badgeColor, priceFrom, originalPrice, savingsPercent,
+    imageUrl, durationLabel, groupSizeLabel, category, destination,
+    highlights, includedItems, notIncludedItems, toursIncluded, itineraryDays, pricingConfig,
+    seoTitle, seoDescription, published, sortOrder,
+  } = req.body;
   const [pkg] = await db.update(packagesTable).set({
-    slug, title, subtitle, description, badge, badgeColor,
+    slug, title, titleEs, titlePt, subtitle, description, descriptionEs, descriptionPt,
+    badge, badgeColor,
     priceFrom, originalPrice, savingsPercent,
-    imageUrl, durationLabel, groupSizeLabel,
-    highlights, includedItems, toursIncluded,
+    imageUrl, durationLabel, groupSizeLabel, category, destination,
+    highlights, includedItems, notIncludedItems, toursIncluded, itineraryDays, pricingConfig,
+    seoTitle, seoDescription,
     published, sortOrder,
     updatedAt: new Date(),
   }).where(eq(packagesTable.id, id)).returning();

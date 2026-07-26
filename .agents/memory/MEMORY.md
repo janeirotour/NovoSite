@@ -7,3 +7,4 @@
 - [B2B pricing schema](b2b-pricing-schema.md) — settingLabel (not label), tier field is `label` (not tierName); pct values are decimals (0.15=15%), do NOT divide by 100 in estimate engine.
 - [TipTap v3 API](tiptap-v3.md) — v3 breaks from v2: BubbleMenu uses Floating UI options (not tippyOptions); TextStyle/Color/FontSize from one package; TableKit replaces individual Table extensions.
 - [Blog content & SEO](blog-content-seo.md) — 7 multilingual articles as drafts (EN/PT/ES); blog-detail.tsx uses SeoHead with Article+FAQPage JSON-LD, OG, hreflang; BlogConversionSection at bottom; 5 thin stubs soft-deleted.
+- [Package pricing engine](package-pricing-engine.md) — packages table has pricing_config jsonb; type="premium_multi_day" uses perPersonCosts+fixedGroupCosts formula; package-detail.tsx branches on isPremium; existing standard packages unchanged.

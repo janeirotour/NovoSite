@@ -1,0 +1,576 @@
+Create a brand-new package from scratch on the Janeiro Tour & Travel website.
+
+Do not redesign the website.
+Do not change the current package-page structure.
+Do not modify existing packages.
+Use the existing package:
+
+/packages/afro-rio-soul
+
+only as the visual and functional reference for:
+
+* Page structure
+* Dynamic “Price by Group Size” table
+* Selected-row behavior
+* Booking summary
+* Mobile responsiveness
+* Admin editing pattern
+
+NEW PACKAGE
+
+Package Name:
+Essential Premium Rio Package
+
+Suggested URL:
+/packages/essential-premium-rio
+
+Product Type:
+Private Multi-Day Package
+
+Category:
+Premium Packages
+
+Destination:
+Rio de Janeiro
+
+Duration:
+4 Days / 3 Nights
+
+Accommodation:
+Not included in the base package
+
+Allow accommodation to be added separately through the existing global hotel add-on system.
+
+PACKAGE POSITIONING
+
+Create this package for travelers who want an organized premium introduction to Rio de Janeiro, including:
+
+* Private airport transfers
+* Welcome dinner and cultural show
+* Two full-day private tours
+* Professional guides
+* Attraction tickets
+* Included lunches
+* Airport departure transfer
+
+Create an original package description for Janeiro Tour & Travel.
+
+Do not copy content from another website.
+
+Suggested Short Description:
+
+Experience the essential highlights and cultural soul of Rio de Janeiro through a carefully organized private package. Enjoy airport transfers, a premium welcome dinner show, two full-day guided tours and a seamless departure service.
+
+PACKAGE ITINERARY
+
+DAY 1 — ARRIVAL, AIRPORT WELCOME AND DINNER SHOW
+
+Arrival Service:
+
+* Private airport arrival transfer
+* Airport welcome assistance
+* Transportation from the airport to the accommodation
+* Local support from Janeiro Tour & Travel
+
+Airport Arrival Transfer Price:
+USD 60 per person
+
+Calculation:
+
+Arrival Transfer Total =
+USD 60 × number of travelers
+
+Dinner Show Experience:
+
+Include:
+
+* Round-trip transportation between the accommodation and the venue
+* Three-course dinner
+* Opening act with Banda Roxy
+* Aquele Abraço show
+* Return transportation to the accommodation
+
+Dinner Show Price:
+USD 160 per person
+
+Dinner Show Transportation:
+USD 60 per person
+
+Dinner Show Includes:
+
+* Opening Act with Banda Roxy
+* Three-course dinner
+* Aquele Abraço show
+
+Dinner Show Schedule:
+
+* 6:30 PM — Doors open
+* 7:00 PM — Dinner begins
+* 7:30 PM — Opening act with Banda Roxy
+* 9:00 PM — Aquele Abraço show
+* 10:45 PM — Closing
+
+Day 1 Calculations:
+
+Arrival Transfer Total =
+USD 60 × travelers
+
+Dinner Show Total =
+USD 160 × travelers
+
+Dinner Transportation Total =
+USD 60 × travelers
+
+DAY 2 — SOUTH ZONE, SUGARLOAF, SELARÓN AND LAPA
+
+Duration:
+Approximately 8 hours
+
+Tour Type:
+Private Full-Day Tour
+
+Fixed Group Price:
+USD 500 per group
+
+Include:
+
+* Private transportation
+* Professional guide
+* Attraction tickets
+* Lunch
+* South Zone beaches
+* Sugarloaf Mountain
+* Selarón Steps
+* Lapa
+* Hotel pickup and drop-off
+
+Important:
+
+USD 500 is a fixed cost for the group, not a per-person cost.
+
+The total cost remains USD 500 for the supported group capacity.
+
+For the per-person display, divide USD 500 by the selected number of travelers.
+
+DAY 3 — CHRIST THE REDEEMER, SANTA TERESA AND LITTLE AFRICA
+
+Duration:
+Approximately 8 hours
+
+Tour Type:
+Private Full-Day Cultural Tour
+
+Fixed Group Price:
+USD 450 per group
+
+Include:
+
+* Private transportation
+* Professional guide
+* Attraction tickets
+* Lunch
+* Christ the Redeemer
+* Santa Teresa
+* Little Africa
+* Cultural and historical interpretation
+* Hotel pickup and drop-off
+
+Important:
+
+USD 450 is a fixed cost for the group, not a per-person cost.
+
+The total cost remains USD 450 for the supported group capacity.
+
+For the per-person display, divide USD 450 by the selected number of travelers.
+
+DAY 4 — DEPARTURE
+
+Include:
+
+* Private departure transfer
+* Transportation from the accommodation to the airport
+* Departure assistance when applicable
+
+Airport Departure Transfer Price:
+USD 60 per person
+
+Calculation:
+
+Departure Transfer Total =
+USD 60 × number of travelers
+
+PACKAGE COST CLASSIFICATION
+
+Per-person costs:
+
+* Airport arrival transfer: USD 60
+* Dinner show: USD 160
+* Dinner-show round-trip transportation: USD 60
+* Airport departure transfer: USD 60
+
+Total Variable Cost:
+USD 340 per traveler
+
+Fixed group costs:
+
+* Day 2 private tour: USD 500
+* Day 3 private tour: USD 450
+
+Total Fixed Group Cost:
+USD 950 per group
+
+DYNAMIC PRICING FORMULA
+
+For each group size, calculate:
+
+Package Subtotal =
+(USD 340 × number of travelers) + USD 950
+
+Per Person Before Discount =
+USD 340 + (USD 950 ÷ number of travelers)
+
+PACKAGE DISCOUNT
+
+Use the same package-discount system already used on the Afro Rio Soul package.
+
+Default Discount:
+5%
+
+Apply the discount only after calculating all package costs.
+
+Package Total After Discount =
+Package Subtotal × 0.95
+
+Per Person After Discount =
+Package Total After Discount ÷ number of travelers
+
+Equivalent formula:
+
+Per Person After Discount =
+[USD 340 + (USD 950 ÷ travelers)] × 0.95
+
+The discount must be editable or removable from the Admin Dashboard.
+
+Do not hardcode it permanently.
+
+CALCULATION EXAMPLES
+
+1 traveler:
+
+Package Subtotal:
+USD 1,290
+
+Package Total After 5% Discount:
+USD 1,225.50
+
+Displayed Per-Person Price:
+USD 1,226
+
+2 travelers:
+
+Package Subtotal:
+USD 1,630
+
+Package Total After 5% Discount:
+USD 1,548.50
+
+Displayed Per-Person Price:
+USD 774
+
+5 travelers:
+
+Package Subtotal:
+USD 2,650
+
+Package Total After 5% Discount:
+USD 2,517.50
+
+Displayed Per-Person Price:
+USD 504
+
+10 travelers:
+
+Package Subtotal:
+USD 4,350
+
+Package Total After 5% Discount:
+USD 4,132.50
+
+Displayed Per-Person Price:
+USD 413
+
+20 travelers:
+
+Package Subtotal:
+USD 7,750
+
+Package Total After 5% Discount:
+USD 7,362.50
+
+Displayed Per-Person Price:
+USD 368
+
+PRICE BY GROUP SIZE TABLE
+
+Create a dynamic table for:
+
+* 1 traveler
+* 2 travelers
+* 3 travelers
+* Continue automatically through 40 travelers
+
+Columns:
+
+* Travelers
+* Package Total (-5%)
+* Per Person
+
+Requirements:
+
+* Generate all rows using the calculation engine
+* Do not manually enter static prices
+* Display package totals in green
+* Highlight the selected row in light green
+* Show a “Selected” badge
+* Display whole-dollar amounts
+* Use the same visual style as the Afro Rio Soul table
+* Make it fully responsive on mobile
+* Allow horizontal scrolling only when necessary
+
+PRICE TABLE DESCRIPTION
+
+Display:
+
+“All prices include the listed experiences, airport transfers, dinner-show transportation, two private full-day tours, tickets and included meals. A 5% package discount has already been applied.”
+
+SELECTED GROUP SIZE BEHAVIOR
+
+When a visitor selects a group-size row:
+
+* Update the selected number of travelers
+* Update the final package total
+* Update the per-person amount
+* Update the booking summary
+* Update the booking or proposal form
+* Preserve the selected group size when continuing
+* Use the correct amount at checkout or proposal submission
+
+PACKAGE PAGE STRUCTURE
+
+Follow the existing package-page structure and include:
+
+* Premium hero banner
+* Package overview
+* Package highlights
+* Day-by-day itinerary
+* Included services
+* Excluded services
+* Price by Group Size table
+* Booking summary
+* Optional accommodation
+* Optional extras
+* Important information
+* FAQ
+* Booking or proposal CTA
+* Related packages and experiences
+
+PACKAGE HIGHLIGHTS
+
+* Private airport arrival and departure transfers
+* Airport welcome assistance
+* Premium dinner show
+* Three-course dinner
+* Two full-day private tours
+* Christ the Redeemer
+* Sugarloaf Mountain
+* South Zone beaches
+* Selarón Steps
+* Lapa
+* Santa Teresa
+* Little Africa
+* Professional guides
+* Attraction tickets
+* Included lunches
+* Local Janeiro Tour & Travel support
+
+WHAT IS INCLUDED
+
+* Airport arrival transfer
+* Airport welcome assistance
+* Transportation to the accommodation
+* Dinner-show ticket
+* Three-course dinner
+* Opening act with Banda Roxy
+* Aquele Abraço show
+* Round-trip dinner-show transportation
+* Day 2 private full-day tour
+* Day 3 private full-day tour
+* Professional guides
+* Private transportation during both tours
+* Applicable attraction tickets
+* Lunch on Day 2
+* Lunch on Day 3
+* Airport departure transfer
+* Local support
+
+WHAT IS NOT INCLUDED
+
+* Accommodation unless selected separately
+* International or domestic flights
+* Travel insurance
+* Meals not specifically mentioned
+* Personal expenses
+* Tips and gratuities
+* Optional activities
+* Early check-in
+* Late check-out
+* Services not expressly listed as included
+
+ACCOMMODATION ADD-ON
+
+Accommodation is not included in the base package price.
+
+Connect this package to the existing global hotel catalog.
+
+Allow the visitor to select:
+
+* No accommodation
+* Preferred hotel
+* Number of rooms
+* Number of nights
+* Check-in date
+* Check-out date
+* Number of adults
+* Number of children
+
+Calculate hotel costs separately:
+
+Hotel Total =
+Nightly room rate × number of rooms × number of nights
+
+Do not include hotel costs in the base Price by Group Size table.
+
+OPTIONAL EXTRAS
+
+Allow customers to add existing published experiences and extras from the website.
+
+Examples:
+
+* Helicopter experience
+* Hang gliding
+* Paragliding
+* Rio by Night
+* Additional dinner
+* Professional photographer
+* Yacht experience
+* Extra night
+* Additional airport assistance
+* Additional private tour
+
+Load active extras dynamically from the existing product database when possible.
+
+BOOKING SUMMARY
+
+Display:
+
+* Package name
+* Number of travelers
+* Arrival transfer total
+* Dinner-show total
+* Dinner-show transportation total
+* Day 2 group tour cost
+* Day 3 group tour cost
+* Departure transfer total
+* Package subtotal
+* Package discount
+* Final package total
+* Final price per person
+* Optional accommodation
+* Optional extras
+* Final grand total
+
+ADMIN DASHBOARD
+
+Create this package as a fully editable package in the Admin Dashboard.
+
+Allow the administrator to edit:
+
+* Package title
+* URL slug
+* Description
+* Hero image
+* Gallery
+* Duration
+* Itinerary
+* Highlights
+* Arrival transfer price
+* Dinner-show price
+* Dinner transportation price
+* Day 2 fixed group price
+* Day 3 fixed group price
+* Departure transfer price
+* Discount percentage
+* Minimum travelers
+* Maximum travelers
+* Included services
+* Excluded services
+* Hotel options
+* Optional extras
+* FAQ
+* SEO title
+* Meta description
+* Published or unpublished status
+
+Allow every cost item to be classified as:
+
+* Per person
+* Per group
+* Per vehicle
+* Per room
+* Per booking
+
+MULTILINGUAL REQUIREMENT
+
+Create separate editable versions in:
+
+* English
+* Spanish
+* Brazilian Portuguese
+
+Translate:
+
+* Package title
+* Descriptions
+* Itinerary
+* Highlights
+* Included and excluded services
+* Table labels
+* Buttons
+* Booking summary
+* Price notices
+* Special-season notices
+* SEO metadata
+
+Do not leave mixed-language content.
+
+SPECIAL-SEASON NOTICE
+
+Display:
+
+“Special-season pricing applies during Carnival, New Year’s Eve, holidays and major events. Final rates and availability require confirmation.”
+
+GENERAL PRICE NOTICE
+
+Display:
+
+“Prices are preliminary and subject to availability, travel dates, supplier confirmation, attraction availability and final group size.”
+
+IMPORTANT
+
+Create this package from scratch.
+Do not modify the Afro Rio Soul package.
+Do not copy its content.
+Use only its layout, dynamic pricing behavior and selected-row functionality as reference.
+Do not redesign the website.
+Do not change unrelated pages or components.
+Preserve the Janeiro Tour & Travel visual identity.
