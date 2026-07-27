@@ -1,0 +1,141 @@
+Adjust the mobile header on the homepage only, improving spacing, alignment, usability and visual consistency while preserving the Janeiro Tour & Travel brand identity.
+
+Do not redesign the desktop version.
+
+Do not modify the header on internal pages unless necessary for consistency.
+
+Current Issues
+
+On the mobile homepage:
+
+The yellow header occupies too much vertical space.
+Elements are too close together.
+The logo appears slightly oversized.
+The "Book Now" button competes visually with the navigation.
+Icons do not have balanced spacing.
+The header should feel cleaner and more premium.
+Requirements
+Header Height
+
+Reduce the overall header height by approximately 15–20%.
+
+Maintain comfortable touch targets while creating a lighter appearance.
+
+Logo
+
+Reduce the logo size slightly.
+
+Keep it perfectly centered vertically.
+
+Maintain its proportions.
+
+Do not distort or crop the logo.
+
+Book Now Button
+
+Reduce the height and horizontal padding.
+
+Keep the same yellow style and branding.
+
+Maintain high contrast.
+
+The button should remain prominent without dominating the header.
+
+Icons
+
+Improve spacing between:
+
+Shopping cart
+Hamburger menu
+
+Ensure all icons are vertically centered.
+
+Use consistent icon sizing.
+
+Increase the touch area without increasing the visible icon size.
+
+Alignment
+
+Align all elements on a single horizontal baseline:
+
+Logo
+Book Now button
+Cart icon
+Menu icon
+
+No element should appear higher or lower than the others.
+
+Horizontal Padding
+
+Increase left and right internal padding slightly.
+
+Nothing should appear too close to the screen edges.
+
+Sticky Header
+
+Keep the mobile header sticky while scrolling.
+
+Maintain a subtle shadow when scrolling.
+
+Avoid large visual jumps.
+
+Hero Section
+
+Reduce the top spacing between the header and the hero section.
+
+The first banner should appear closer to the header without overlapping.
+
+Performance
+
+Do not introduce layout shifts.
+
+Avoid CLS (Cumulative Layout Shift).
+
+Maintain fast rendering.
+
+Accessibility
+
+Maintain:
+
+Touch targets of at least 44px
+High contrast
+Keyboard accessibility
+Screen-reader compatibility
+Responsive Breakpoints
+
+Optimize for:
+
+320px
+360px
+375px
+390px
+414px
+430px
+
+Ensure the header looks balanced across all common mobile widths.
+
+Preserve Existing Functionality
+
+Do not change:
+
+Navigation behavior
+Shopping cart behavior
+Mobile menu functionality
+Language selector
+Currency selector
+Book Now functionality
+
+Only improve the visual layout and spacing.
+
+Visual Goal
+
+The mobile header should feel:
+
+Cleaner
+More premium
+Better balanced
+More modern
+Less crowded
+Easier to use with one hand
+
+Keep the existing Janeiro Tour & Travel visual identity while refining the mobile user experience.

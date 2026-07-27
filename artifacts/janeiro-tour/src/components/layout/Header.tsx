@@ -187,7 +187,8 @@ export function Header() {
     isScrolled || mobileOpen
       ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm"
       : isHero
-      ? "bg-transparent"
+      // Mobile: solid primary so hero doesn't bleed through; desktop: transparent
+      ? "bg-primary lg:bg-transparent"
       : "bg-white border-b border-gray-200"
   );
 
@@ -203,14 +204,14 @@ export function Header() {
   return (
     <>
       <header className={headerClass}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 lg:h-[68px] flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 h-12 lg:h-[68px] flex items-center gap-2">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center mr-2" onClick={closeMobile}>
             <img
               src="/janeiro-logo.png"
               alt="Janeiro Tour & Travel"
-              className={cn("h-8 lg:h-11 w-auto transition-all", isHero ? "brightness-0 invert" : "")}
+              className={cn("h-7 lg:h-11 w-auto transition-all", isHero ? "lg:brightness-0 lg:invert" : "")}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
                 const next = (e.target as HTMLImageElement).nextElementSibling as HTMLElement | null;
@@ -438,33 +439,51 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile: right side (cart + hamburger) */}
-          <div className="lg:hidden ml-auto flex items-center gap-2">
+          {/* Mobile: Book Now CTA + icons */}
+          <div className="lg:hidden ml-auto flex items-center gap-1.5">
+            {/* Compact Book Now button — dark text on yellow (hero) or yellow on white (scrolled) */}
+            <Link href="/tours" onClick={closeMobile}>
+              <span className={cn(
+                "inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95",
+                isHero
+                  ? "bg-black/15 text-gray-900 hover:bg-black/20"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90"
+              )}>
+                {t.book} →
+              </span>
+            </Link>
+
+            {/* Cart */}
             <button
               onClick={openCart}
-              className={cn("relative w-9 h-9 rounded-full flex items-center justify-center",
-                isHero ? "text-white/90" : "text-gray-700")}
+              className={cn(
+                "relative w-9 h-9 flex items-center justify-center rounded-full transition-colors",
+                isHero ? "text-gray-900 hover:bg-black/10" : "text-gray-700 hover:bg-gray-100"
+              )}
+              aria-label="Cart"
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="w-[18px] h-[18px]" />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-gray-900 text-white text-[10px] font-bold flex items-center justify-center">
                   {totalItems > 9 ? "9+" : totalItems}
                 </span>
               )}
             </button>
+
+            {/* Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className={cn(
-                "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
                 mobileOpen
                   ? "bg-gray-100 text-gray-900"
                   : isHero
-                  ? "text-white"
+                  ? "text-gray-900 hover:bg-black/10"
                   : "text-gray-700 hover:bg-gray-100"
               )}
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-[18px] h-[18px]" /> : <Menu className="w-[18px] h-[18px]" />}
             </button>
           </div>
         </div>
@@ -486,7 +505,7 @@ export function Header() {
         {/* Slide-in panel */}
         <div
           className={cn(
-            "absolute top-[68px] left-0 right-0 bottom-0 bg-white flex flex-col transition-transform duration-300 ease-out",
+            "absolute top-12 lg:top-[68px] left-0 right-0 bottom-0 bg-white flex flex-col transition-transform duration-300 ease-out",
             mobileOpen ? "translate-y-0" : "-translate-y-full"
           )}
         >
