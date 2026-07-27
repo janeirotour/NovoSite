@@ -35,7 +35,19 @@ router.post("/admin/login", async (req, res): Promise<void> => {
   req.session.adminId = admin.id;
   req.session.adminUsername = admin.username;
   req.session.adminRole = admin.role;
-  res.json({ success: true, message: "Logged in" });
+
+  // Explicitly save the session to the PostgreSQL store BEFORE responding.
+  // Without this, the response races the async store write and the browser
+  // receives the Set-Cookie header before the session row exists in the DB,
+  // causing the next request to fail with 401 in production.
+  req.session.save((err) => {
+    if (err) {
+      logger.error({ err }, "Session save error on login");
+      res.status(500).json({ success: false, message: "Session error" });
+      return;
+    }
+    res.json({ success: true, message: "Logged in" });
+  });
 });
 
 router.post("/admin/logout", async (req, res): Promise<void> => {
