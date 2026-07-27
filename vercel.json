@@ -1,7 +1,7 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "pnpm --filter @workspace/janeiro-tour run build",
-  "outputDirectory": "artifacts/janeiro-tour/dist",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/api/:path*",
