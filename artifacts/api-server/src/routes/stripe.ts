@@ -51,7 +51,8 @@ interface PricingTier {
   label: string;
   minPax: number;
   maxPax: number | null;
-  pricePerPerson: number;
+  pricePerPerson?: number;    // regular tours
+  pricePerVehicle?: number;   // transfers: flat price regardless of pax
   currency: string;
 }
 
@@ -76,9 +77,17 @@ function calcTourPrice(pax: number, pricingRules: PricingTier[] | null | undefin
   }
   const tier = pricingRules.find((t) => pax >= t.minPax && (t.maxPax == null || pax <= t.maxPax));
   const activeTier = tier ?? pricingRules[pricingRules.length - 1];
+  // Transfer (vehicle) pricing: flat rate per vehicle
+  if (activeTier.pricePerVehicle !== undefined) {
+    return {
+      total: activeTier.pricePerVehicle,
+      label: `${activeTier.label} — $${activeTier.pricePerVehicle}/vehicle`,
+    };
+  }
+  const ppp = activeTier.pricePerPerson ?? priceFrom;
   return {
-    total: activeTier.pricePerPerson * pax,
-    label: `${activeTier.label} — $${activeTier.pricePerPerson} × ${pax}`,
+    total: ppp * pax,
+    label: `${activeTier.label} — $${ppp} × ${pax}`,
   };
 }
 
@@ -252,7 +261,7 @@ interface PkgTourEntry {
   slug: string;
   title: string;
   priceFrom: number;
-  pricingRules: { minPax: number; maxPax: number | null; pricePerPerson: number }[];
+  pricingRules: { minPax: number; maxPax: number | null; pricePerPerson?: number; pricePerVehicle?: number }[];
 }
 
 function pkgVehicleTier(pax: number) {
@@ -264,7 +273,8 @@ function pkgTourTotal(tour: PkgTourEntry, pax: number) {
   if (tour.pricingRules?.length > 0) {
     const tier = tour.pricingRules.find(t => pax >= t.minPax && (t.maxPax === null || pax <= t.maxPax))
       ?? tour.pricingRules[tour.pricingRules.length - 1];
-    return tier.pricePerPerson * pax;
+    if (tier.pricePerVehicle !== undefined) return tier.pricePerVehicle;
+    return (tier.pricePerPerson ?? tour.priceFrom) * pax;
   }
   return tour.priceFrom * pax;
 }

@@ -138,18 +138,32 @@ export default function TourDetailPage() {
   };
 
   // Dynamic pricing: read tour.pricingRules from DB
-  interface PricingTier { label: string; minPax: number; maxPax: number | null; pricePerPerson: number; currency: string; }
+  interface PricingTier {
+    label: string;
+    minPax: number;
+    maxPax: number | null;
+    pricePerPerson?: number;    // regular tours: price multiplied by pax
+    pricePerVehicle?: number;   // transfers: flat vehicle price regardless of pax
+    currency: string;
+  }
   interface TransportationTier { minPax: number; maxPax: number | null; vehicle: string; price: number; currency: string; }
   interface TransportationPricing { enabled: boolean; name: string; description: string; tiers: TransportationTier[]; }
 
   const pricingRules = (tour?.pricingRules as PricingTier[] | null | undefined);
   const activePricingTier = pricingRules?.find((t) => localPax >= t.minPax && (t.maxPax == null || localPax <= t.maxPax))
     ?? (pricingRules ? pricingRules[pricingRules.length - 1] : undefined);
+
+  // Transfers use a flat per-vehicle price; regular tours multiply per-person × pax
+  const isVehiclePricing = !!(activePricingTier?.pricePerVehicle !== undefined);
   const calculatedTourPrice = activePricingTier
-    ? activePricingTier.pricePerPerson * localPax
+    ? isVehiclePricing
+      ? activePricingTier.pricePerVehicle!
+      : (activePricingTier.pricePerPerson ?? 0) * localPax
     : Number(tour?.priceFrom ?? 0) * localPax;
   const appliedPricingLabel = activePricingTier
-    ? `${activePricingTier.label} — $${activePricingTier.pricePerPerson}/person × ${localPax}`
+    ? isVehiclePricing
+      ? `${activePricingTier.label} — $${activePricingTier.pricePerVehicle}/vehicle`
+      : `${activePricingTier.label} — $${activePricingTier.pricePerPerson}/person × ${localPax}`
     : `$${tour?.priceFrom}/person × ${localPax}`;
 
   // Transportation add-on

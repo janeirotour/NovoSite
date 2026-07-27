@@ -71,7 +71,8 @@ export const ListToursResponseItem = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -134,7 +135,8 @@ export const CreateTourBody = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -198,7 +200,8 @@ export const ListFeaturedToursResponseItem = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -267,7 +270,8 @@ export const GetTourResponse = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -333,7 +337,8 @@ export const UpdateTourBody = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -393,7 +398,8 @@ export const UpdateTourResponse = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({
@@ -469,7 +475,8 @@ export const GetTourBySlugResponse = zod.object({
   "label": zod.string(),
   "minPax": zod.number(),
   "maxPax": zod.number().nullish(),
-  "pricePerPerson": zod.number(),
+  "pricePerPerson": zod.number().optional(),
+  "pricePerVehicle": zod.number().optional(),
   "currency": zod.string()
 })).nullish(),
   "transportationPricing": zod.object({

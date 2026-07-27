@@ -10,6 +10,7 @@ export interface PricingTier {
   label: string;
   minPax: number;
   maxPax?: number | null;
-  pricePerPerson: number;
+  pricePerPerson?: number;    // regular tours: multiplied by pax count
+  pricePerVehicle?: number;   // transfers: flat vehicle price
   currency: string;
 }
