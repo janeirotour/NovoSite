@@ -28,6 +28,13 @@ function formatTime(t: string) {
   return `${displayHour}:${String(m).padStart(2, "0")} ${period}`;
 }
 
+/** Format HH:mm in 24-hour display (e.g. "05:40", "14:30") */
+function formatTime24(t: string) {
+  if (!t) return "";
+  const [h, m] = t.split(":").map(Number);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
 function getTomorrowStr() {
   const d = new Date();
   d.setDate(d.getDate() + 1);
@@ -155,7 +162,10 @@ export default function TourDetailPage() {
   // Auto-deselect transportation if no tier matches current pax
   const effectiveTransportation = transportationSelected && activeTransTier ? activeTransTier : null;
 
-  // Tour-specific time slots
+  // Is this a transfer product? (uses free-form 24h time picker instead of slots)
+  const isTransfer = tour?.category === "transfer";
+
+  // Tour-specific time slots (only used for non-transfer tours)
   const tourAvailableTimes = (tour?.availableTimes as string[] | null | undefined);
   const timeSlots = tourAvailableTimes && tourAvailableTimes.length > 0 ? tourAvailableTimes : DEFAULT_TIME_SLOTS;
 
@@ -627,22 +637,54 @@ export default function TourDetailPage() {
                   )}
                 </div>
 
-                {/* Preferred Time */}
+                {/* Time Selection — free-form 24h picker for transfers, slot dropdown for tours */}
                 <div>
-                  <label className="flex items-center gap-2 text-sm font-medium mb-1.5">
-                    <Clock size={14} className="text-muted-foreground" />
-                    Preferred Time
-                  </label>
-                  <select
-                    value={preferredTime}
-                    onChange={(e) => setPreferredTime(e.target.value)}
-                    className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    <option value="">Select a time…</option>
-                    {timeSlots.map((t) => (
-                      <option key={t} value={t}>{formatTime(t)}</option>
-                    ))}
-                  </select>
+                  {isTransfer ? (
+                    <>
+                      <label className="flex items-center gap-2 text-sm font-medium mb-1">
+                        <Clock size={14} className="text-muted-foreground" />
+                        Pickup / Flight Time
+                        <span className="ml-auto text-xs font-normal text-muted-foreground">24h format</span>
+                      </label>
+                      <p className="text-xs text-muted-foreground mb-2 leading-relaxed">
+                        Enter the exact time of your flight or required pickup (e.g. 05:15, 14:40, 23:50).
+                      </p>
+                      <div className="relative">
+                        <Clock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                        <input
+                          type="time"
+                          value={preferredTime}
+                          onChange={(e) => setPreferredTime(e.target.value)}
+                          step={60}
+                          className="w-full rounded-lg border bg-background pl-8 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 tabular-nums"
+                          style={{ colorScheme: "light" }}
+                        />
+                      </div>
+                      {preferredTime && (
+                        <p className="text-xs text-green-700 mt-1.5 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                          Time set: <strong>{formatTime24(preferredTime)}</strong>
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <label className="flex items-center gap-2 text-sm font-medium mb-1.5">
+                        <Clock size={14} className="text-muted-foreground" />
+                        Preferred Time
+                      </label>
+                      <select
+                        value={preferredTime}
+                        onChange={(e) => setPreferredTime(e.target.value)}
+                        className="w-full rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      >
+                        <option value="">Select a time…</option>
+                        {timeSlots.map((t) => (
+                          <option key={t} value={t}>{formatTime(t)}</option>
+                        ))}
+                      </select>
+                    </>
+                  )}
                 </div>
 
                 {/* Round-Trip Transportation Add-On */}
